@@ -1,5 +1,8 @@
-Generated: 2026-09-28 13:07:26 UTC
+Generated: 2026-10-01 21:12:05 UTC
 Rows: 7310
 Countries: 215
 Years: 1990 - 2023
 Source: https://databankfiles.worldbank.org/public/ddpext_download/WDI_CSV.zip
+Supplemented: fiscal_balance: IMF WEO for 195 countries
+Supplemented: inflation: 559 gaps filled from IMF WEO
+Supplemented: inflation (Argentina): 27 years from INDEC / provincial CPIs

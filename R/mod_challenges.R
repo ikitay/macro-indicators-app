@@ -26,10 +26,12 @@ challenges_ui <- function(id) {
         col_widths = c(5, 3, 4),
         card(
           card_body(padding="10px",
-            selectInput(ns("challenge_select"), "Choose a challenge:",
+            # Attach the dropdown to <body> so the card's overflow doesn't clip it
+            selectizeInput(ns("challenge_select"), "Choose a challenge:",
               choices  = CHALLENGE_CHOICES,
               selected = 1,
-              width    = "100%"
+              width    = "100%",
+              options  = list(dropdownParent = "body")
             )
           )
         ),

@@ -191,7 +191,8 @@ explore_country_server <- function(id, data) {
             text       = paste0(
               "<b>", var_label(v), "</b><br>",
               "Year: ", df$year, "<br>",
-              "Value: ", round(vals, 2), " ", var_unit(v)
+              "Value: ", round(vals, 2), " ", var_unit(v),
+              source_hover(var_source(df, v))
             ),
             hoverinfo  = "text",
             showlegend = FALSE

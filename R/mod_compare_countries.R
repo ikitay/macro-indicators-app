@@ -171,7 +171,8 @@ compare_countries_server <- function(id, data) {
           year  >= input$year_range[1],
           year  <= input$year_range[2]
         ) %>%
-        select(country, iso2c, year, val = all_of(input$variable)) %>%
+        select(country, iso2c, year, val = all_of(input$variable),
+               src = any_of(paste0(input$variable, "_source"))) %>%
         arrange(country, year)
 
       # Indexed mode: divide by base-year value × 100
@@ -244,7 +245,8 @@ compare_countries_server <- function(id, data) {
           text       = paste0(
             "<b>", cname, "</b><br>",
             "Year: ", df_c$year, "<br>",
-            round(df_c$val, 2), unit_lbl
+            round(df_c$val, 2), unit_lbl,
+            source_hover(df_c$src)
           ),
           hoverinfo  = "text"
         )
@@ -327,6 +329,7 @@ compare_countries_server <- function(id, data) {
     output$data_table <- renderTable({
       req(plot_data())
       plot_data() %>%
+        select(-any_of("src")) %>%
         pivot_wider(names_from = iso2c, values_from = val) %>%
         rename(Year = year) %>%
         select(-country) %>%

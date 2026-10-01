@@ -52,7 +52,7 @@ VARS <- list(
     )
   ),
   fiscal_balance = list(
-    code            = "GC.BAL.CASH.GD.ZS",
+    code            = "GC.NLD.TOTL.GD.ZS",
     label           = "Fiscal Balance (% of GDP)",
     short           = "Fiscal Balance",
     color           = "#7c3aed",
@@ -60,7 +60,8 @@ VARS <- list(
     higher_is_better = TRUE,
     zero_line       = TRUE,
     description     = paste0(
-      "Government revenues minus expenditures, as a percentage of GDP. ",
+      "General government net lending (+) / net borrowing (–): revenues minus expenditures ",
+      "(including net investment), as a percentage of GDP. ",
       "A positive value is a budget surplus (government earns more than it spends). ",
       "A negative value is a deficit (government borrows to cover expenditures)."
     )
@@ -158,18 +159,21 @@ load_fallback_data <- function(cache, demo_key, reason) {
   df
 }
 
-wdi_refresh_requested <- function() {
-  tolower(Sys.getenv("REFRESH_WDI", "false")) %in% c("true", "1", "yes")
-}
-
 # Standardise raw WDI output (API or rebuilt snapshot) into app schema
 clean_wdi_dataframe <- function(df_raw, start_year = YEAR_MIN, end_year = YEAR_MAX) {
+  # Indicators the source lacks become all-NA columns, so modules never see NULL
+  for (v in setdiff(names(VARS), names(df_raw))) {
+    message("[macro_data] Indicator '", v, "' missing from source; filling with NA.")
+    df_raw[[v]] <- NA_real_
+  }
+
   df_raw %>%
     filter(!is.na(region), region != "Aggregates") %>%
     filter(year >= start_year, year <= end_year) %>%
     select(
       country, iso2c, year, region, income,
-      any_of(names(VARS))
+      any_of(names(VARS)),
+      any_of(paste0(names(VARS), "_source"))
     ) %>%
     mutate(across(any_of(CORE_VARS), as.numeric),
            across(any_of("population"), as.numeric)) %>%
@@ -245,15 +249,8 @@ fetch_wdi_from_api <- function(cache, cache_key, demo_key,
 get_macro_data <- function(start_year = YEAR_MIN, end_year = YEAR_MAX) {
 
   cache      <- setup_cache()
-  cache_key  <- paste0("wdi_macro_", start_year, "_", end_year, "_v4")
+  cache_key  <- paste0("wdi_macro_", start_year, "_", end_year, "_v5")
   demo_key   <- paste0("demo_macro_", start_year, "_", end_year, "_v1")
-
-  # ── Optional forced API refresh (REFRESH_WDI=1) ─────────────────────────────
-  if (wdi_refresh_requested()) {
-    refreshed <- fetch_wdi_from_api(cache, cache_key, demo_key, start_year, end_year)
-    if (!is.null(refreshed)) return(refreshed)
-    message("[macro_data] API refresh failed; falling back to local sources.")
-  }
 
   # ── Bundled CSV snapshot (primary offline source) ───────────────────────────
   bundled <- load_bundled_snapshot(start_year, end_year)
@@ -290,7 +287,7 @@ get_macro_data <- function(start_year = YEAR_MIN, end_year = YEAR_MAX) {
       paste0(
         "No bundled snapshot at ", WDI_SNAPSHOT_PATH,
         " and World Bank API unavailable. ",
-        "Run scripts/prepare_wdi_snapshot.R or set REFRESH_WDI=1 when API is up."
+        "Run scripts/prepare_wdi_snapshot.R to rebuild it."
       )
     )
   }
@@ -322,6 +319,7 @@ normalize_for_radar <- function(df) {
   for (v in CORE_VARS) {
     if (!v %in% names(df)) next
     vals    <- df[[v]]
+    if (all(is.na(vals))) { df_out[[paste0(v, "_norm")]] <- NA_real_; next }
     lo      <- quantile(vals, 0.05, na.rm = TRUE)
     hi      <- quantile(vals, 0.95, na.rm = TRUE)
     if (hi <= lo) { df_out[[paste0(v, "_norm")]] <- 0.5; next }
@@ -341,6 +339,17 @@ var_label <- function(v)  if (v %in% names(VARS)) VARS[[v]]$label  else v
 var_short  <- function(v)  if (v %in% names(VARS)) VARS[[v]]$short  else v
 var_color  <- function(v)  if (v %in% names(VARS)) VARS[[v]]$color  else "#666"
 var_unit   <- function(v)  if (v %in% names(VARS)) VARS[[v]]$unit   else ""
+
+# Per-row data source for variable v (NA when the data has no source column)
+var_source <- function(df, v) {
+  col <- paste0(v, "_source")
+  if (col %in% names(df)) df[[col]] else rep(NA_character_, nrow(df))
+}
+
+# Tooltip line naming the data source ("" when unknown)
+source_hover <- function(src) {
+  ifelse(is.na(src) | src == "", "", paste0("<br><i>Source: ", src, "</i>"))
+}
 
 # Choices list for variable selectors (core 5 only)
 core_var_choices <- function() {

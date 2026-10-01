@@ -116,7 +116,8 @@ historical_events_server <- function(id, data) {
       df <- data() %>%
         filter(iso2c %in% input$countries,
                year >= input$year_range[1], year <= input$year_range[2]) %>%
-        select(country, iso2c, year, val = all_of(input$variable)) %>%
+        select(country, iso2c, year, val = all_of(input$variable),
+               src = any_of(paste0(input$variable, "_source"))) %>%
         arrange(country, year)
 
       palette <- c("#2563eb","#dc2626","#16a34a","#d97706","#7c3aed","#0891b2")
@@ -134,7 +135,8 @@ historical_events_server <- function(id, data) {
           line=list(color=col_c, width=2.5),
           marker=list(color=col_c, size=5),
           text=paste0("<b>",cname,"</b><br>Year: ",df_c$year,"<br>",
-                      round(df_c$val,2)," ",var_unit(input$variable)),
+                      round(df_c$val,2)," ",var_unit(input$variable),
+                      source_hover(df_c$src)),
           hoverinfo="text"
         )
       }

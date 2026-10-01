@@ -18,7 +18,8 @@ shiny::runApp(".")
 The app loads data in this order:
 
 1. **`data/wdi_snapshot.csv`** — bundled offline snapshot (recommended)
-2. Disk cache / live World Bank API
+2. Disk cache / live World Bank API — emergency fallback only if the snapshot is
+   missing; World Bank data alone, without the IMF and Argentine supplements
 3. Synthetic demo data (25 countries) if nothing else is available
 
 The snapshot is committed to the repo, so the app works right after cloning.
@@ -28,26 +29,21 @@ The snapshot is committed to the repo, so the app works right after cloning.
 To refresh the snapshot with newer World Bank data:
 
 ```r
-install.packages(c("dplyr", "tidyr"))
+install.packages(c("dplyr", "tidyr", "jsonlite"))
 Rscript scripts/prepare_wdi_snapshot.R
 ```
 
 This downloads the full WDI bulk file (~280 MB zip, ~540 MB extracted) into
 `data/wdi_download_tmp/`, which is git-ignored and safe to delete afterwards.
+Later runs reuse the extracted files; set `WDI_FORCE_DOWNLOAD=1` to fetch a fresh copy.
 See **`data/README.md`** for manual download steps if the script cannot reach the World Bank.
-
-Optional: force a live API refresh when the API is up:
-
-```r
-Sys.setenv(REFRESH_WDI = "1")
-shiny::runApp(".")
-```
 
 ## Structure
 ```
 app.R                         # Entry point
 scripts/
   prepare_wdi_snapshot.R        # Builds data/wdi_snapshot.csv from WDI bulk CSV
+  supplementary_sources.R       # IMF + Argentine CPI gap filling used by the build
 data/
   wdi_snapshot.csv              # Bundled real data (committed, ~1 MB)
   wdi_snapshot_meta.txt         # Build info for the snapshot
@@ -70,6 +66,15 @@ www/
   styles.css                  # Custom styles
 ```
 
-## Data Source
-World Bank WDI — prefer the bundled CSV in `data/` (see above).
-Live API and synthetic demo data are fallbacks.
+## Data Sources
+
+| Variable | Source |
+|---|---|
+| GDP growth, employment, trade balance, population | World Bank WDI |
+| Inflation | World Bank WDI, with missing years filled from IMF World Economic Outlook (`PCPIPCH`) |
+| Fiscal balance | IMF World Economic Outlook, general government net lending/borrowing (`GGXCNL_NGDP`) |
+| Argentina's inflation, 1990–2016 | INDEC official CPI through 2006; median of independent provincial CPIs (San Luis, Neuquén, Chaco, CABA) for 2007–2016, via [datos.gob.ar](https://datos.gob.ar) |
+
+Inflation and fiscal-balance tooltips in the app show the source of each value.
+The supplements are applied by `scripts/supplementary_sources.R` when the
+snapshot is built; see `data/README.md` for details.

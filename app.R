@@ -111,22 +111,30 @@ welcome_modal <- function() {
 about_modal <- function() {
   modalDialog(
     title = tags$span("ℹ️ About This Application"),
-    tags$p("Pedagogical tool for undergraduate economics students using real World Bank data."),
+    tags$p("Pedagogical tool for undergraduate economics students using real World Bank and IMF data."),
     tags$h6("Variables", style="color:#1e3a5f; font-weight:700; margin-top:14px;"),
     tags$table(
       class = "table table-sm table-bordered",
       style = "font-size:0.85rem;",
       tags$thead(class="table-light",
-        tags$tr(tags$th("Variable"), tags$th("WDI Code"))),
+        tags$tr(tags$th("Variable"), tags$th("Source"))),
       tags$tbody(
-        tags$tr(tags$td("GDP Growth (%)"),        tags$td(tags$code("NY.GDP.MKTP.KD.ZG"))),
-        tags$tr(tags$td("Employment Rate (%)"),   tags$td(tags$code("SL.EMP.TOTL.SP.ZS"))),
-        tags$tr(tags$td("Inflation (%)"),         tags$td(tags$code("FP.CPI.TOTL.ZG"))),
-        tags$tr(tags$td("Fiscal Balance (% GDP)"),tags$td(tags$code("GC.BAL.CASH.GD.ZS"))),
-        tags$tr(tags$td("Trade Balance (% GDP)"), tags$td(tags$code("NE.RSB.GNFS.ZS")))
+        tags$tr(tags$td("GDP Growth (%)"),        tags$td("World Bank ", tags$code("NY.GDP.MKTP.KD.ZG"))),
+        tags$tr(tags$td("Employment Rate (%)"),   tags$td("World Bank ", tags$code("SL.EMP.TOTL.SP.ZS"))),
+        tags$tr(tags$td("Inflation (%)"),         tags$td("World Bank ", tags$code("FP.CPI.TOTL.ZG"),
+                                                          "; gaps filled from IMF WEO ", tags$code("PCPIPCH"))),
+        tags$tr(tags$td("Fiscal Balance (% GDP)"),tags$td("IMF WEO ", tags$code("GGXCNL_NGDP"),
+                                                          " (general government net lending/borrowing)")),
+        tags$tr(tags$td("Trade Balance (% GDP)"), tags$td("World Bank ", tags$code("NE.RSB.GNFS.ZS")))
       )
     ),
-    tags$small(style="color:#888;", "Data: World Bank WDI | Cache: 7-day disk | Coverage: ~215 countries, 1990–2023"),
+    tags$h6("Argentina's inflation", style="color:#1e3a5f; font-weight:700; margin-top:14px;"),
+    tags$p(style="font-size:0.85rem;",
+      "INDEC's official CPI is used through 2006. From 2007 to 2016 the official index was ",
+      "discredited and later suspended, so the app uses the median of independent provincial CPIs ",
+      "(San Luis, Neuquén, Chaco and, from 2014, the City of Buenos Aires), published on datos.gob.ar. ",
+      "Hover over a point to see which source it comes from."),
+    tags$small(style="color:#888;", "Data: World Bank WDI, IMF WEO, datos.gob.ar | Coverage: ~215 countries, 1990–2023"),
     footer = modalButton("Close"),
     size = "m", easyClose = TRUE
   )

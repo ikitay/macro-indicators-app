@@ -22,6 +22,7 @@ suppressPackageStartupMessages({
 
 source("R/constants.R")
 source("R/data_utils.R")
+source("scripts/supplementary_sources.R")
 
 WDI_ZIP_URL <- "https://databankfiles.worldbank.org/public/ddpext_download/WDI_CSV.zip"
 TMP_DIR     <- file.path("data", "wdi_download_tmp")
@@ -46,23 +47,32 @@ pick_csv <- function(dir, patterns) {
   stop("No file matching [", paste(patterns, collapse = ", "), "] in ", dir)
 }
 
-message("Downloading WDI bulk CSV (~280 MB)…")
-zip_path <- file.path(TMP_DIR, "WDI_CSV.zip")
-tryCatch(
-  download.file(WDI_ZIP_URL, zip_path, mode = "wb", quiet = TRUE),
-  error = function(e) {
-    stop(
-      "Download failed: ", conditionMessage(e),
-      "\n\nManual fallback:\n",
-      "  1. Open https://databank.worldbank.org/source/world-development-indicators\n",
-      "  2. Download CSV, unzip, and re-run this script\n",
-      "  3. Or place the unzipped CSVs in ", TMP_DIR
-    )
-  }
-)
+# Reuse previously extracted CSVs (e.g. a manual download) unless
+# WDI_FORCE_DOWNLOAD=1 is set.
+force_download <- tolower(Sys.getenv("WDI_FORCE_DOWNLOAD", "false")) %in% c("true", "1", "yes")
+have_extracted <- length(list.files(TMP_DIR, pattern = "^WDICSV\\.csv$", ignore.case = TRUE)) > 0
 
-message("Extracting…")
-utils::unzip(zip_path, exdir = TMP_DIR)
+if (have_extracted && !force_download) {
+  message("Using existing CSVs in ", TMP_DIR, " (set WDI_FORCE_DOWNLOAD=1 to re-download).")
+} else {
+  message("Downloading WDI bulk CSV (~280 MB)…")
+  zip_path <- file.path(TMP_DIR, "WDI_CSV.zip")
+  tryCatch(
+    download.file(WDI_ZIP_URL, zip_path, mode = "wb", quiet = TRUE),
+    error = function(e) {
+      stop(
+        "Download failed: ", conditionMessage(e),
+        "\n\nManual fallback:\n",
+        "  1. Open https://databank.worldbank.org/source/world-development-indicators\n",
+        "  2. Download CSV, unzip, and re-run this script\n",
+        "  3. Or place the unzipped CSVs in ", TMP_DIR
+      )
+    }
+  )
+
+  message("Extracting…")
+  utils::unzip(zip_path, exdir = TMP_DIR)
+}
 
 data_csv    <- pick_csv(TMP_DIR, c("^WDICSV\\.csv$", "^WDI.?Data\\.csv$", "Data\\.csv$"))
 country_csv <- pick_csv(TMP_DIR, c("^WDICountry\\.csv$"))
@@ -105,6 +115,15 @@ country_meta <- country_raw %>%
          !is.na(region), region != "", region != "Aggregates",
          !is.na(income), income != "")
 
+missing_codes <- setdiff(indicator_codes, unique(wdi_raw[[indicator_col]]))
+if (length(missing_codes)) {
+  stop(
+    "Indicator code(s) not found in the WDI bulk file: ",
+    paste0(missing_codes, " (", code_to_var[missing_codes], ")", collapse = ", "),
+    "\nThe World Bank may have retired them; update VARS in R/data_utils.R."
+  )
+}
+
 message("Filtering ", length(indicator_codes), " indicators, ",
         length(year_cols), " years…")
 
@@ -130,8 +149,14 @@ wdi_long <- wdi_raw %>%
 snapshot <- wdi_long %>%
   pivot_wider(names_from = variable, values_from = value) %>%
   left_join(country_meta, by = "iso3") %>%
-  select(country, iso2c, year, region, income, any_of(names(VARS))) %>%
   filter(!is.na(region), region != "Aggregates", nchar(iso2c) == 2) %>%
+  apply_supplements()
+
+supplement_log <- attr(snapshot, "supplement_log")
+
+snapshot <- snapshot %>%
+  select(country, iso2c, year, region, income, any_of(names(VARS)),
+         any_of(paste0(names(VARS), "_source"))) %>%
   arrange(country, year)
 
 if (!is_valid_macro_df(snapshot)) {
@@ -146,11 +171,13 @@ writeLines(c(
   paste("Rows:", nrow(snapshot)),
   paste("Countries:", length(unique(snapshot$iso2c))),
   paste("Years:", min(snapshot$year), "-", max(snapshot$year)),
-  paste("Source:", WDI_ZIP_URL)
+  paste("Source:", WDI_ZIP_URL),
+  if (length(supplement_log)) paste("Supplemented:", supplement_log)
 ), meta_path)
 
 message("Saved ", OUT_PATH)
 message("  ", nrow(snapshot), " rows, ",
         length(unique(snapshot$iso2c)), " countries, ",
         min(snapshot$year), "–", max(snapshot$year))
+for (line in supplement_log) message("  ", line)
 message("Restart the app — it will load the bundled snapshot without calling the API.")
