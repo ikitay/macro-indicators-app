@@ -1,0 +1,191 @@
+/* =============================================================================
+   EXPLORING MACROECONOMICS THROUGH DATA — Custom Stylesheet
+   ============================================================================= */
+
+/* ── Base & Typography ─────────────────────────────────────────────────────── */
+body {
+  background-color: #f0f2f5;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h4, h5, h6 { font-weight: 700; }
+
+/* ── Navbar ────────────────────────────────────────────────────────────────── */
+.navbar {
+  background-color: #1e3a5f !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  padding: 0 16px !important;
+}
+.navbar-brand,
+.navbar .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+.navbar-brand {
+  font-size: 1.05rem !important;
+  letter-spacing: 0.2px;
+}
+.navbar .nav-link {
+  font-size: 0.85rem !important;
+  padding: 8px 14px !important;
+  transition: background 0.15s;
+  border-radius: 6px;
+}
+.navbar .nav-link:hover { background: rgba(255,255,255,0.12); }
+.navbar .nav-link.active {
+  background: rgba(255,255,255,0.20) !important;
+  font-weight: 600;
+}
+
+/* ── Cards ─────────────────────────────────────────────────────────────────── */
+.card {
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  background: #ffffff;
+  transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.10); }
+.card-header {
+  background: #ffffff !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  padding: 12px 16px !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.card-footer {
+  background: #fafbfc !important;
+  border-top: 1px solid #f1f5f9 !important;
+  padding: 10px 16px !important;
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────────────────── */
+.bslib-sidebar-layout > .sidebar {
+  background: #ffffff !important;
+  border-right: 1px solid #e2e8f0 !important;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+}
+.bslib-sidebar-layout > .sidebar .sidebar-content { padding: 14px 14px 20px; }
+.sidebar label {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;
+}
+.sidebar .form-control, .sidebar .selectize-input {
+  font-size: 0.85rem !important;
+  border-color: #d1d5db !important;
+}
+.sidebar hr { border-color: #e2e8f0; margin: 12px 0; }
+.sidebar-intro { margin-bottom: 6px; }
+
+/* ── Form Controls ─────────────────────────────────────────────────────────── */
+.selectize-input {
+  border-radius: 6px !important;
+  font-size: 0.85rem;
+}
+.selectize-dropdown { font-size: 0.85rem; border-radius: 6px; }
+.irs--shiny .irs-line  { background: #e2e8f0; }
+.irs--shiny .irs-bar   { background: #2563eb; }
+.irs--shiny .irs-handle { background: #2563eb; border-color: #1d4ed8; }
+.irs--shiny .irs-single { background: #1e3a5f; font-size: 0.78rem; }
+.irs--shiny .irs-from, .irs--shiny .irs-to { background: #1e3a5f; font-size: 0.72rem; }
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+.btn { border-radius: 6px !important; font-weight: 500; transition: all 0.15s; }
+.btn-primary  { background: #2563eb; border-color: #1d4ed8; }
+.btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
+.btn-outline-primary { color: #2563eb; border-color: #2563eb; }
+.btn-outline-primary:hover { background: #2563eb; color: white; }
+.btn-outline-warning  { color: #d97706; border-color: #d97706; }
+.btn-outline-warning:hover  { background: #d97706; color: white; }
+.btn-outline-success  { color: #16a34a; border-color: #16a34a; }
+.btn-outline-success:hover  { background: #16a34a; color: white; }
+.btn-outline-light { border-color: rgba(255,255,255,0.5) !important; }
+
+/* ── Info / Alert boxes ────────────────────────────────────────────────────── */
+.info-box {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #0c4a6e;
+  line-height: 1.6;
+}
+.warning-box {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #78350f;
+}
+.success-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #166534;
+}
+
+/* ── Modals ────────────────────────────────────────────────────────────────── */
+.modal-content  { border-radius: 12px !important; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.modal-header   { border-bottom: 1px solid #f1f5f9; padding: 16px 20px; }
+.modal-title    { font-weight: 700; color: #1e3a5f; }
+.modal-body     { padding: 16px 20px; }
+.modal-footer   { border-top: 1px solid #f1f5f9; padding: 12px 20px; }
+
+/* ── Tables ────────────────────────────────────────────────────────────────── */
+.table { font-size: 0.84rem; }
+.table th { background: #f8fafc; font-weight: 600; color: #475569; }
+.table-hover tbody tr:hover { background: #f0f9ff; }
+
+/* ── Plotly containers ─────────────────────────────────────────────────────── */
+.plotly { border-radius: 0 0 8px 8px; }
+.js-plotly-plot .plotly .modebar { opacity: 0.35; transition: opacity 0.2s; }
+.js-plotly-plot .plotly .modebar:hover { opacity: 1; }
+
+/* ── Glossary ──────────────────────────────────────────────────────────────── */
+.glossary-entry { transition: box-shadow 0.15s; }
+.glossary-entry:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
+
+/* ── Progress / Loading ────────────────────────────────────────────────────── */
+.shiny-notification {
+  background: #1e3a5f;
+  color: white;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  border: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.shiny-notification-close { color: rgba(255,255,255,0.6); }
+.progress-bar { background-color: #2563eb; }
+
+/* ── Checkboxes & Radios ───────────────────────────────────────────────────── */
+.checkbox label, .radio label { font-size: 0.84rem; color: #374151; }
+.shiny-input-checkboxgroup label.checkbox { margin-bottom: 2px; }
+
+/* ── Responsive adjustments ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .navbar .nav-link { font-size: 0.78rem !important; padding: 6px 8px !important; }
+  .bslib-sidebar-layout > .sidebar { min-width: 220px !important; }
+  .modal-dialog { margin: 10px; }
+  .card-header { padding: 10px 12px !important; }
+  .card-body   { padding: 10px !important; }
+}
+
+/* ── Page fill helpers ─────────────────────────────────────────────────────── */
+.bslib-page-fill { background: #f0f2f5; }
+.bslib-gap-spacing { gap: 10px !important; }
+
+/* ── Scrollbar styling (webkit) ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* ── Animation ─────────────────────────────────────────────────────────────── */
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+.card { animation: fadeIn 0.25s ease; }

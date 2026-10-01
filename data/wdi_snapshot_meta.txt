@@ -1,0 +1,5 @@
+Generated: 2026-09-28 13:07:26 UTC
+Rows: 7310
+Countries: 215
+Years: 1990 - 2023
+Source: https://databankfiles.worldbank.org/public/ddpext_download/WDI_CSV.zip

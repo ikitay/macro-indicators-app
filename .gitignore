@@ -1,0 +1,6 @@
+data/wdi_cache/
+data/wdi_download_tmp/
+.Rhistory
+.Rproj.user/
+
+# data/wdi_snapshot.csv is intentionally committed (small, lets the app run offline).
