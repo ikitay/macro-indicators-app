@@ -210,7 +210,7 @@ glossary_modal <- function() {
     # Filter by category
     tags$div(
       style = "margin-bottom:16px;",
-      shinyWidgets::radioGroupButtons(
+      radioGroupButtons(
         inputId  = "glossary_filter",
         label    = NULL,
         choices  = c("All", "Output", "Labour", "Prices", "Government",

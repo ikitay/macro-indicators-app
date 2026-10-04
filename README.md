@@ -13,6 +13,21 @@ install.packages(c("shiny","bslib","plotly","dplyr","tidyr",
 shiny::runApp(".")
 ```
 
+## Tests
+
+```r
+install.packages("testthat")
+```
+
+Run from the app root:
+
+```sh
+Rscript tests/testthat.R
+```
+
+The tests load the bundled snapshot, build every tab's UI and render every
+chart and panel with real data, so a change that breaks a tab fails the run.
+
 ## Data
 
 The app loads data in this order:
