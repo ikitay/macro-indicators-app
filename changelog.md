@@ -2,6 +2,20 @@
 
 Notable changes to *Exploring Macroeconomics Through Data*.
 
+## 2026-10-04 (Global Explorer scales)
+
+### Added
+- **Global Explorer: "Escala de los ejes"** with three options. The default is
+  unchanged (all countries, linear). "Sin los valores extremos" leaves out the
+  countries that are orders of magnitude away from the rest (more than 10 times
+  as far from the median as the 90th percentile of distances), so one case such
+  as Venezuela 2019 (19.906% inflation) no longer flattens the chart, and says
+  in the sidebar which countries are not drawn and their values. Argentina 2019
+  (53%) stays. "Escala logarítmica simétrica" plots sign(x)·log10(1+|x|), which
+  also handles zero and negative values (deflation, recessions), with ticks in
+  the original units; the tooltips always show the real values.
+- Tests in `tests/testthat/test-global-scales.R`.
+
 ## 2026-10-04 (data rebuild)
 
 ### Added
