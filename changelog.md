@@ -14,6 +14,11 @@ Notable changes to *Exploring Macroeconomics Through Data*.
   public debt, trade balance and current account with their values five years
   earlier.
 - Glossary entries for Cuenta corriente and Inversión extranjera directa.
+- **Diagnóstico** lists every indicator under its objective, as in the notes'
+  table: full employment shows the unemployment and employment rates, fiscal
+  sustainability the fiscal balance and public debt, external sustainability the
+  trade balance, current account and FDI inflows. The claim to assess now uses
+  the notes' wording ("el PBI creció y el desempleo bajó") when the data allow.
 
 ## 2026-10-04
 
