@@ -3,14 +3,6 @@
 
 data_r <- reactive(macro_df)
 
-# Runs code with CHALLENGE_ANSWERS_HIDDEN_UNTIL set to `until`
-with_lock <- function(until, code) {
-  old <- CHALLENGE_ANSWERS_HIDDEN_UNTIL
-  assign("CHALLENGE_ANSWERS_HIDDEN_UNTIL", until, envir = globalenv())
-  on.exit(assign("CHALLENGE_ANSWERS_HIDDEN_UNTIL", old, envir = globalenv()))
-  code
-}
-
 test_that("challenge_answers_hidden follows the date, inclusive", {
   expect_false(challenge_answers_hidden(as.Date("2026-10-20"), NULL))
   expect_true(challenge_answers_hidden(as.Date("2026-10-19"), as.Date("2026-10-20")))

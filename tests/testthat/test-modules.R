@@ -72,14 +72,15 @@ test_that("Historical Events renders", {
 })
 
 test_that("Discovery Challenges renders every challenge", {
-  testServer(challenges_server, args = list(data = data_r), {
+  # With the answers shown, whatever the date in R/constants.R
+  with_lock(NULL, testServer(challenges_server, args = list(data = data_r), {
     for (i in seq_along(CHALLENGES)) {
       session$setInputs(challenge_select = as.character(i), instructor_mode = TRUE,
                         show_hint = 1, show_solution = 1)
       render_all_outputs(output, c("challenge_card", "hint_panel",
                                    "instructor_panel", "solution_panel"))
     }
-  })
+  }))
 })
 
 test_that("Correlation Explorer renders", {

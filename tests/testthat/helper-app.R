@@ -48,3 +48,11 @@ render_all_outputs <- function(output, names) {
     expect_no_error(output[[nm]], message = nm)
   }
 }
+
+# Runs code with CHALLENGE_ANSWERS_HIDDEN_UNTIL set to `until`
+with_lock <- function(until, code) {
+  old <- CHALLENGE_ANSWERS_HIDDEN_UNTIL
+  assign("CHALLENGE_ANSWERS_HIDDEN_UNTIL", until, envir = globalenv())
+  on.exit(assign("CHALLENGE_ANSWERS_HIDDEN_UNTIL", old, envir = globalenv()))
+  code
+}

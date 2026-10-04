@@ -11,7 +11,7 @@ Notable changes to *Exploring Macroeconomics Through Data*.
   never render on the server, so their text is never sent to the browser. The
   date is checked per session, so the answers come back the next day without
   restarting the app. `NULL` (the default) never hides them. Meant for graded
-  assignments on the same countries as the challenges.
+  assignments on the same countries as the challenges. Set to 14/10/2026.
 - Tests in `tests/testthat/test-challenge-lock.R`.
 
 ## 2026-10-04 (glossary aligned with the course notes)
