@@ -307,29 +307,43 @@ get_country_choices <- function(df) {
 }
 
 # =============================================================================
-# NORMALIZATION FOR RADAR CHART
+# SCORES FOR THE COUNTRY PROFILE
 # =============================================================================
-#' Normalize core variables to [0,1] based on global percentile distribution.
-#' Inflation is reverse-scaled so that "higher score = better performance".
+# Only the three central objectives are scored. The fiscal and trade balances
+# are sustainability information: a deficit is not automatically worse than a
+# surplus, so they are shown with context but never scored.
+CENTRAL_VARS <- c("gdp_growth", "employment", "inflation")
+SUSTAINABILITY_VARS <- c("fiscal_balance", "trade_balance")
+
+# Inflation closest to this rate scores best on price stability; deflation and
+# high inflation both score lower.
+INFLATION_TARGET <- 2
+
+#' Score the central objectives as percentile ranks (0–100) against every
+#' country-year in df: a score of 70 means better than 70% of observations.
+#' Price stability is ranked by distance from INFLATION_TARGET.
 #'
-#' @param df  Wide data frame with CORE_VARS columns
-#' @return  df with additional *_norm columns
-normalize_for_radar <- function(df) {
-  df_out <- df
-  for (v in CORE_VARS) {
-    if (!v %in% names(df)) next
-    vals    <- df[[v]]
-    if (all(is.na(vals))) { df_out[[paste0(v, "_norm")]] <- NA_real_; next }
-    lo      <- quantile(vals, 0.05, na.rm = TRUE)
-    hi      <- quantile(vals, 0.95, na.rm = TRUE)
-    if (hi <= lo) { df_out[[paste0(v, "_norm")]] <- 0.5; next }
-    norm    <- (vals - lo) / (hi - lo)
-    norm    <- pmax(0, pmin(1, norm))
-    # Reverse inflation: lower inflation → better score
-    if (v == "inflation") norm <- 1 - norm
-    df_out[[paste0(v, "_norm")]] <- norm
+#' @param df  Wide data frame with CENTRAL_VARS columns
+#' @return  df with additional *_score columns (NA where the value is missing)
+score_central_objectives <- function(df) {
+  # Higher "goodness" is better for every variable
+  goodness <- list(
+    gdp_growth = df$gdp_growth,
+    employment = df$employment,
+    inflation  = -abs(df$inflation - INFLATION_TARGET)
+  )
+  for (v in CENTRAL_VARS) {
+    g   <- goodness[[v]]
+    obs <- sort(g[!is.na(g)])
+    df[[paste0(v, "_score")]] <- if (length(obs) == 0) {
+      NA_real_
+    } else {
+      # Share of observations strictly worse than this one
+      ifelse(is.na(g), NA_real_,
+             100 * findInterval(g, obs, left.open = TRUE) / length(obs))
+    }
   }
-  df_out
+  df
 }
 
 # =============================================================================

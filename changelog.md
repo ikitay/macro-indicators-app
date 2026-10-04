@@ -2,6 +2,43 @@
 
 Notable changes to *Exploring Macroeconomics Through Data*.
 
+## 2026-10-04
+
+Changes to bring the app in line with the course notes *La mirada
+macroeconómica: objetivos e indicadores*.
+
+### Changed
+- **Country Profile** now scores only the three central objectives: growth,
+  employment and price stability. Fiscal and trade balances are shown beside
+  the chart with their value five years earlier, and are not scored, because a
+  deficit is not automatically worse than a surplus.
+- Country Profile scores are now true percentile ranks, so "70 means better
+  than 70% of all observations" is accurate. Price stability rewards inflation
+  near 2%: deflation no longer gets the top score. Missing data shows as
+  "no data" instead of a score of zero.
+- **Compare Countries:** "Indexed (base = 100)" is now "Change since base
+  year". GDP growth becomes a real GDP index (base year = 100); the other
+  indicators show the change in percentage points. Dividing rates by their
+  base-year value gave meaningless results (2% → 4% growth showed as 200).
+- **Discovery Challenges:** C02 is now "The Cost of Bringing Inflation Down",
+  and C04 "Good Today, Sustainable Tomorrow?" scores the central objectives
+  first, then asks about fiscal and external sustainability.
+- **Glossary:** recession, inflation, GDP growth, fiscal balance and trade
+  balance follow the course definitions (real vs nominal GDP, CPI vs inflation,
+  "a deficit is not necessarily a problem"). New entries: Balance of Payments,
+  Fiscal Sustainability, Nominal GDP.
+
+### Fixed
+- Challenge solutions that the app's own data contradicted (for example,
+  Russia 1999–2008 as "growth without jobs", when its employment rate rose).
+  Every quoted solution is now checked against the data by the tests.
+- Hyperinflation example: Argentina 1990 (2,314%) instead of 2023, which was
+  far below the 50%-a-month definition.
+- The glossary failed to open when the shinyWidgets package was not installed.
+
+### Added
+- Automated tests (`Rscript tests/testthat.R`).
+
 ## 2026-10-01
 
 ### Added

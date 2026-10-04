@@ -47,7 +47,7 @@ test_that("Global Explorer renders", {
 test_that("Country Profile renders", {
   testServer(country_profile_server, args = list(data = data_r), {
     session$setInputs(countries = c("US", "DE", "KR", "AR"), year = 2019, fill_area = TRUE)
-    render_all_outputs(output, c("chart_title", "radar_plot", "score_table"))
+    render_all_outputs(output, c("chart_title", "radar_plot", "score_table", "sustainability_table"))
   })
 })
 
