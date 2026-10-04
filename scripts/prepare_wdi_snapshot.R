@@ -179,6 +179,13 @@ if (!is_valid_macro_df(snapshot)) {
 
 write.csv(snapshot, OUT_PATH, row.names = FALSE)
 
+# One line per extra series: how many country-years have data, or "missing"
+extra_series_log <- sapply(names(EXTRA_SERIES), function(v) {
+  n <- if (v %in% names(snapshot)) sum(!is.na(snapshot[[v]])) else 0
+  paste0("Extra series: ", v, " (", EXTRA_SERIES[[v]]$code, "): ",
+         if (n > 0) paste(n, "country-years") else "missing")
+}, USE.NAMES = FALSE)
+
 meta_path <- file.path("data", "wdi_snapshot_meta.txt")
 writeLines(c(
   paste("Generated:", format(Sys.time(), tz = "UTC", usetz = TRUE)),
@@ -186,12 +193,13 @@ writeLines(c(
   paste("Countries:", length(unique(snapshot$iso2c))),
   paste("Years:", min(snapshot$year), "-", max(snapshot$year)),
   paste("Source:", WDI_ZIP_URL),
-  if (length(supplement_log)) paste("Supplemented:", supplement_log)
+  if (length(supplement_log)) paste("Supplemented:", supplement_log),
+  extra_series_log
 ), meta_path)
 
 message("Saved ", OUT_PATH)
 message("  ", nrow(snapshot), " rows, ",
         length(unique(snapshot$iso2c)), " countries, ",
         min(snapshot$year), "–", max(snapshot$year))
-for (line in supplement_log) message("  ", line)
+for (line in c(supplement_log, extra_series_log)) message("  ", line)
 message("Restart the app — it will load the bundled snapshot without calling the API.")
