@@ -1,4 +1,12 @@
 # Loads the app's code (everything app.R sources) without starting the app.
+
+# The source files are UTF-8 (emoji, accents); read them as such even when the
+# session starts in a non-UTF-8 locale such as "C".
+if (!isTRUE(l10n_info()[["UTF-8"]])) {
+  for (loc in c("C.UTF-8", "en_US.UTF-8", "English_United States.utf8")) {
+    if (nzchar(suppressWarnings(Sys.setlocale("LC_CTYPE", loc)))) break
+  }
+}
 suppressPackageStartupMessages({
   library(shiny)
   library(bslib)

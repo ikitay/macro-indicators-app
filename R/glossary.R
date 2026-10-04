@@ -161,6 +161,33 @@ GLOSSARY_TERMS <- list(
   ),
 
   list(
+    term       = "Objective vs Indicator",
+    category   = "Concepts",
+    definition = paste0(
+      "A macroeconomic objective is a result an economy seeks to achieve or preserve: ",
+      "economic growth, full employment, price stability, fiscal and external ",
+      "sustainability. An indicator is a variable we observe to follow that objective: ",
+      "real GDP for growth, the unemployment rate for full employment, the CPI and ",
+      "inflation for price stability. An objective is not the same as its indicator."
+    ),
+    example    = "A thermometer tells you whether someone has a fever, but the goal is for the person to be healthy, not to change the number on the thermometer.",
+    related    = "GDP Growth, Inflation, Sustainability"
+  ),
+
+  list(
+    term       = "Sustainability",
+    category   = "Concepts",
+    definition = paste0(
+      "The capacity to maintain an economic situation over time without building up ",
+      "imbalances that end up making it impossible to sustain. Central objectives ask ",
+      "'what is happening?'; sustainability objectives (fiscal and external) ask 'can ",
+      "it last?'. A complete assessment looks at both."
+    ),
+    example    = "An economy can grow, create jobs and keep inflation low while running ever larger fiscal or external deficits that will be hard to finance.",
+    related    = "Fiscal Sustainability, Balance of Payments, Objective vs Indicator"
+  ),
+
+  list(
     term       = "Trade-off",
     category   = "Concepts",
     definition = paste0(

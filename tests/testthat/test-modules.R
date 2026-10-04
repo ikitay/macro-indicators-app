@@ -14,8 +14,15 @@ test_that("every module UI builds", {
 test_that("Explore Country renders", {
   testServer(explore_country_server, args = list(data = data_r), {
     session$setInputs(country = "AR", year_range = c(1990, 2023),
-                      show_vars = CORE_VARS, show_trend = TRUE, show_recession = TRUE)
+                      show_central = group_vars("central"),
+                      show_sustainability = group_vars("sustainability"),
+                      show_trend = TRUE, show_recession = TRUE)
     render_all_outputs(output, c("chart_title", "summary_cards", "main_plot"))
+    expect_match(as.character(output$summary_cards$html), "Price stability · Inflation")
+    # Only the central objectives
+    session$setInputs(show_sustainability = character(0))
+    expect_equal(shown_vars(), c("gdp_growth", "employment", "inflation"))
+    render_all_outputs(output, c("summary_cards", "main_plot"))
   })
 })
 
@@ -96,4 +103,14 @@ test_that("glossary has the terms the course notes rely on", {
   for (f in c("All", unique(sapply(GLOSSARY_TERMS, `[[`, "category")))) {
     expect_no_error(htmltools::renderTags(render_glossary(f)))
   }
+})
+
+test_that("indicators are grouped into central and sustainability objectives", {
+  ch <- core_var_choices()
+  expect_equal(names(ch), unname(OBJECTIVE_GROUPS))
+  expect_equal(unname(ch[[1]]), c("gdp_growth", "employment", "inflation"))
+  expect_equal(unname(ch[[2]]), c("fiscal_balance", "trade_balance"))
+  expect_equal(sort(unlist(ch, use.names = FALSE)), sort(CORE_VARS))
+  for (v in CORE_VARS) expect_false(is.null(VARS[[v]]$objective), label = v)
+  expect_equal(var_objective_label("inflation"), "Price stability: Inflation (%)")
 })

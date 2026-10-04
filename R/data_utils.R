@@ -9,6 +9,9 @@
 # ---------------------------------------------------------------------------
 VARS <- list(
   gdp_growth = list(
+    objective       = "Economic growth",
+    group           = "central",
+    dimension       = "Production",
     code            = "NY.GDP.MKTP.KD.ZG",
     label           = "GDP Growth (%)",
     short           = "GDP Growth",
@@ -23,6 +26,9 @@ VARS <- list(
     )
   ),
   employment = list(
+    objective       = "Full employment",
+    group           = "central",
+    dimension       = "Employment",
     code            = "SL.EMP.TOTL.SP.ZS",
     label           = "Employment Rate (%)",
     short           = "Employment",
@@ -37,6 +43,9 @@ VARS <- list(
     )
   ),
   inflation = list(
+    objective       = "Price stability",
+    group           = "central",
+    dimension       = "Prices",
     code            = "FP.CPI.TOTL.ZG",
     label           = "Inflation (%)",
     short           = "Inflation",
@@ -52,6 +61,9 @@ VARS <- list(
     )
   ),
   fiscal_balance = list(
+    objective       = "Fiscal sustainability",
+    group           = "sustainability",
+    dimension       = "Public finances",
     code            = "GC.NLD.TOTL.GD.ZS",
     label           = "Fiscal Balance (% of GDP)",
     short           = "Fiscal Balance",
@@ -67,6 +79,9 @@ VARS <- list(
     )
   ),
   trade_balance = list(
+    objective       = "External sustainability",
+    group           = "sustainability",
+    dimension       = "External sector",
     code            = "NE.RSB.GNFS.ZS",
     label           = "Trade Balance (% of GDP)",
     short           = "Trade Balance",
@@ -353,6 +368,9 @@ var_label <- function(v)  if (v %in% names(VARS)) VARS[[v]]$label  else v
 var_short  <- function(v)  if (v %in% names(VARS)) VARS[[v]]$short  else v
 var_color  <- function(v)  if (v %in% names(VARS)) VARS[[v]]$color  else "#666"
 var_unit   <- function(v)  if (v %in% names(VARS)) VARS[[v]]$unit   else ""
+var_objective <- function(v) if (v %in% names(VARS)) VARS[[v]]$objective else v
+# "Economic growth: GDP Growth (%)"
+var_objective_label <- function(v) paste0(var_objective(v), ": ", var_label(v))
 
 # Per-row data source for variable v (NA when the data has no source column)
 var_source <- function(df, v) {
@@ -366,9 +384,21 @@ source_hover <- function(src) {
 }
 
 # Choices list for variable selectors (core 5 only)
+# Indicators grouped by the kind of objective they observe, labelled
+# "Objective: indicator", for selectInput (the names become option groups)
 core_var_choices <- function() {
-  setNames(CORE_VARS, sapply(CORE_VARS, var_label))
+  group_choices <- function(g) {
+    vs <- CORE_VARS[sapply(CORE_VARS, function(v) VARS[[v]]$group == g)]
+    setNames(vs, sapply(vs, var_objective_label))
+  }
+  setNames(
+    list(group_choices("central"), group_choices("sustainability")),
+    c(OBJECTIVE_GROUPS[["central"]], OBJECTIVE_GROUPS[["sustainability"]])
+  )
 }
+
+# Variables of one objective group, in CORE_VARS order
+group_vars <- function(g) CORE_VARS[sapply(CORE_VARS, function(v) VARS[[v]]$group == g)]
 
 # =============================================================================
 # FALLBACK DATA

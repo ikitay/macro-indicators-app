@@ -19,9 +19,8 @@ global_explorer_ui <- function(id) {
       selectInput(ns("x_var"), "↔ X-axis",    choices = core_var_choices(), selected = "gdp_growth"),
       selectInput(ns("y_var"), "↕ Y-axis",    choices = core_var_choices(), selected = "inflation"),
       selectInput(ns("size_var"), "⬤ Bubble size",
-        choices  = c("Equal size" = "equal",
-                     setNames(CORE_VARS, sapply(CORE_VARS, var_label)),
-                     "Population" = "population"),
+        choices  = c(list("Other" = c("Equal size" = "equal", "Population" = "population")),
+                     core_var_choices()),
         selected = "population"
       ),
       hr(),

@@ -50,10 +50,17 @@ explore_country_ui <- function(id) {
 
       # ── Indicator toggles ────────────────────────────────────────────────
       checkboxGroupInput(
-        ns("show_vars"),
-        label   = "📊 Show indicators",
-        choices = setNames(CORE_VARS, sapply(CORE_VARS, var_label)),
-        selected = CORE_VARS
+        ns("show_central"),
+        label    = OBJECTIVE_GROUPS[["central"]],
+        choices  = setNames(group_vars("central"), sapply(group_vars("central"), var_objective_label)),
+        selected = group_vars("central")
+      ),
+      checkboxGroupInput(
+        ns("show_sustainability"),
+        label    = OBJECTIVE_GROUPS[["sustainability"]],
+        choices  = setNames(group_vars("sustainability"),
+                            sapply(group_vars("sustainability"), var_objective_label)),
+        selected = group_vars("sustainability")
       ),
 
       hr(),
@@ -128,11 +135,16 @@ explore_country_server <- function(id, data) {
       )
     })
 
+    # Indicators ticked in either group, in CORE_VARS order
+    shown_vars <- reactive({
+      intersect(CORE_VARS, c(input$show_central, input$show_sustainability))
+    })
+
     # ── Summary statistics cards ────────────────────────────────────────────
     output$summary_cards <- renderUI({
       req(country_data())
       df <- country_data()
-      vars_shown <- intersect(input$show_vars, CORE_VARS)
+      vars_shown <- shown_vars()
 
       tags$div(
         lapply(vars_shown, function(v) {
@@ -148,7 +160,7 @@ explore_country_server <- function(id, data) {
             ),
             tags$div(
               style = "font-size:0.75rem; color:#64748b; font-weight:600;",
-              var_short(v)
+              paste0(var_objective(v), " · ", var_short(v))
             ),
             tags$div(
               style = "display:flex; justify-content:space-between; font-size:0.82rem;",
@@ -168,9 +180,9 @@ explore_country_server <- function(id, data) {
 
     # ── Main synchronized subplot ──────────────────────────────────────────
     output$main_plot <- renderPlotly({
-      req(country_data(), input$show_vars)
+      req(country_data())
       df        <- country_data()
-      vars_show <- intersect(input$show_vars, CORE_VARS)
+      vars_show <- shown_vars()
       if (length(vars_show) == 0) return(plotly_empty())
 
       # Build one subplot per variable

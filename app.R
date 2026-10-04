@@ -79,6 +79,14 @@ welcome_modal <- function() {
         "variables are not fixed — they vary across countries, periods, and historical contexts.\""
       )
     ),
+    tags$h5("🎯 Two kinds of objectives", style = "color:#1e3a5f;"),
+    tags$div(
+      style = "display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px;",
+      tab_card("Central objectives — what is happening?",
+               "Economic growth, full employment and price stability"),
+      tab_card("Sustainability — can it last?",
+               "Fiscal sustainability and external sustainability")
+    ),
     tags$h5("🧭 Questions to explore:", style = "color:#1e3a5f;"),
     tags$ul(
       style = "color:#333; line-height:1.9;",
@@ -112,22 +120,40 @@ about_modal <- function() {
   modalDialog(
     title = tags$span("ℹ️ About This Application"),
     tags$p("Pedagogical tool for undergraduate economics students using real World Bank and IMF data."),
-    tags$h6("Variables", style="color:#1e3a5f; font-weight:700; margin-top:14px;"),
+    tags$h6("Objectives and indicators", style="color:#1e3a5f; font-weight:700; margin-top:14px;"),
+    tags$p(style="font-size:0.85rem;",
+      "An objective is what an economy seeks to achieve; an indicator is the variable we ",
+      "observe to follow it. Real GDP is not the objective: growth is. A thermometer tells ",
+      "you whether someone has a fever, but the goal is for the person to be healthy, not ",
+      "to change the number on the thermometer."),
     tags$table(
       class = "table table-sm table-bordered",
       style = "font-size:0.85rem;",
       tags$thead(class="table-light",
-        tags$tr(tags$th("Variable"), tags$th("Source"))),
+        tags$tr(tags$th("Objective"), tags$th("Indicator in this app"), tags$th("Source"))),
       tags$tbody(
-        tags$tr(tags$td("GDP Growth (%)"),        tags$td("World Bank ", tags$code("NY.GDP.MKTP.KD.ZG"))),
-        tags$tr(tags$td("Employment Rate (%)"),   tags$td("World Bank ", tags$code("SL.EMP.TOTL.SP.ZS"))),
-        tags$tr(tags$td("Inflation (%)"),         tags$td("World Bank ", tags$code("FP.CPI.TOTL.ZG"),
-                                                          "; gaps filled from IMF WEO ", tags$code("PCPIPCH"))),
-        tags$tr(tags$td("Fiscal Balance (% GDP)"),tags$td("IMF WEO ", tags$code("GGXCNL_NGDP"),
-                                                          " (general government net lending/borrowing)")),
-        tags$tr(tags$td("Trade Balance (% GDP)"), tags$td("World Bank ", tags$code("NE.RSB.GNFS.ZS")))
+        tags$tr(tags$td(colspan = 3, class = "table-light", tags$b(OBJECTIVE_GROUPS[["central"]]))),
+        tags$tr(tags$td("Economic growth"), tags$td("GDP growth (%), change in real GDP"),
+                tags$td("World Bank ", tags$code("NY.GDP.MKTP.KD.ZG"))),
+        tags$tr(tags$td("Full employment"),
+                tags$td("Employment rate (%)", tags$br(),
+                        tags$small(style = "color:#64748b;",
+                                   "The course's main indicator is the unemployment rate.")),
+                tags$td("World Bank ", tags$code("SL.EMP.TOTL.SP.ZS"))),
+        tags$tr(tags$td("Price stability"), tags$td("Inflation (%), change in the CPI"),
+                tags$td("World Bank ", tags$code("FP.CPI.TOTL.ZG"),
+                        "; gaps filled from IMF WEO ", tags$code("PCPIPCH"))),
+        tags$tr(tags$td(colspan = 3, class = "table-light", tags$b(OBJECTIVE_GROUPS[["sustainability"]]))),
+        tags$tr(tags$td("Fiscal sustainability"), tags$td("Fiscal balance (% of GDP)"),
+                tags$td("IMF WEO ", tags$code("GGXCNL_NGDP"),
+                        " (general government net lending/borrowing)")),
+        tags$tr(tags$td("External sustainability"), tags$td("Trade balance (% of GDP), goods and services"),
+                tags$td("World Bank ", tags$code("NE.RSB.GNFS.ZS")))
       )
     ),
+    tags$p(style="font-size:0.8rem; color:#64748b;",
+      "Sustainability needs more than one year's balance: the path of public debt and how ",
+      "external deficits are financed (the balance of payments)."),
     tags$h6("Argentina's inflation", style="color:#1e3a5f; font-weight:700; margin-top:14px;"),
     tags$p(style="font-size:0.85rem;",
       "INDEC's official CPI is used through 2006. From 2007 to 2016 the official index was ",

@@ -6,6 +6,12 @@
 # The five core macroeconomic variables (excluding population)
 CORE_VARS <- c("gdp_growth", "employment", "inflation", "fiscal_balance", "trade_balance")
 
+# The two kinds of macroeconomic objectives, each with the question it answers
+OBJECTIVE_GROUPS <- c(
+  central        = "Central objectives — what is happening?",
+  sustainability = "Sustainability — can it last?"
+)
+
 # Default year range
 YEAR_MIN <- 1990
 YEAR_MAX <- 2023
