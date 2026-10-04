@@ -3,13 +3,17 @@
 # Shared values used across modules. Source this file before any other R/ scripts.
 # =============================================================================
 
-# The five core macroeconomic variables (excluding population)
-CORE_VARS <- c("gdp_growth", "employment", "inflation", "fiscal_balance", "trade_balance")
+# The indicators shown in the app (excluding population), grouped by objective
+# in VARS (R/data_utils.R)
+CORE_VARS <- c("gdp_growth", "unemployment", "inflation",
+               "fiscal_balance", "public_debt", "trade_balance", "current_account",
+               "fdi_inflows", "employment")
 
 # The two kinds of macroeconomic objectives, each with the question it answers
 OBJECTIVE_GROUPS <- c(
   central        = "Objetivos centrales: ¿qué está ocurriendo?",
-  sustainability = "Objetivos de sostenibilidad: ¿puede sostenerse?"
+  sustainability = "Objetivos de sostenibilidad: ¿puede sostenerse?",
+  other          = "Otros indicadores"
 )
 
 # Default year range

@@ -1,7 +1,7 @@
 test_that("rows hold each objective's value, the previous year and five years earlier", {
   r <- diagnosis_rows(macro_df, "AR", 2017)
   expect_equal(r$var, CORE_VARS)
-  expect_equal(r$group, c("central", "central", "central", "sustainability", "sustainability"))
+  expect_equal(r$group, unname(sapply(CORE_VARS, function(v) VARS[[v]]$group)))
   expect_equal(r$value[r$var == "inflation"], snap("Argentina", 2017, "inflation"))
   expect_equal(r$previous[r$var == "inflation"], snap("Argentina", 2016, "inflation"))
   expect_equal(r$past[r$var == "fiscal_balance"], snap("Argentina", 2012, "fiscal_balance"))

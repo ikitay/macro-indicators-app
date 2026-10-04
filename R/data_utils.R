@@ -12,6 +12,7 @@ VARS <- list(
     objective       = "Crecimiento económico",
     group           = "central",
     dimension       = "Producción",
+    source          = "wdi",
     code            = "NY.GDP.MKTP.KD.ZG",
     label           = "Crecimiento del PBI real (%)",
     short           = "Crecimiento del PBI",
@@ -24,26 +25,27 @@ VARS <- list(
       "Es el principal indicador del objetivo de crecimiento económico."
     )
   ),
-  employment = list(
+  unemployment = list(
     objective       = "Pleno empleo",
     group           = "central",
     dimension       = "Empleo",
-    code            = "SL.EMP.TOTL.SP.ZS",
-    label           = "Tasa de empleo (%)",
-    short           = "Tasa de empleo",
+    source          = "wdi",
+    code            = "SL.UEM.TOTL.ZS",
+    label           = "Tasa de desempleo (%)",
+    short           = "Tasa de desempleo",
     color           = "#16a34a",
     unit            = "%",
     zero_line       = FALSE,
     description     = paste0(
-      "Porcentaje de la población de 15 años o más que tiene empleo. ",
-      "No es la tasa de desempleo, que mide qué parte de la población económicamente ",
-      "activa busca trabajo y no lo encuentra."
+      "Porcentaje de la población económicamente activa que busca trabajo y no lo ",
+      "encuentra (estimación de la OIT, desde 1991). Es el principal indicador del pleno empleo."
     )
   ),
   inflation = list(
     objective       = "Estabilidad de precios",
     group           = "central",
     dimension       = "Precios",
+    source          = "wdi",
     code            = "FP.CPI.TOTL.ZG",
     label           = "Inflación (%)",
     short           = "Inflación",
@@ -60,6 +62,7 @@ VARS <- list(
     objective       = "Sostenibilidad fiscal",
     group           = "sustainability",
     dimension       = "Situación fiscal",
+    source          = "wdi",
     code            = "GC.NLD.TOTL.GD.ZS",
     label           = "Resultado fiscal (% del PBI)",
     short           = "Resultado fiscal",
@@ -71,10 +74,27 @@ VARS <- list(
       "Un valor positivo es un superávit fiscal; uno negativo, un déficit fiscal."
     )
   ),
+  public_debt = list(
+    objective       = "Sostenibilidad fiscal",
+    group           = "sustainability",
+    dimension       = "Situación fiscal",
+    source          = "imf",
+    code            = "GGXWDG_NGDP",
+    label           = "Deuda pública (% del PBI)",
+    short           = "Deuda pública",
+    color           = "#a21caf",
+    unit            = "% del PBI",
+    zero_line       = FALSE,
+    description     = paste0(
+      "Deuda bruta del gobierno general, en porcentaje del PBI (FMI). Para la ",
+      "sostenibilidad fiscal importa su trayectoria: si crece, se mantiene o baja."
+    )
+  ),
   trade_balance = list(
     objective       = "Sostenibilidad externa",
     group           = "sustainability",
     dimension       = "Sector externo",
+    source          = "wdi",
     code            = "NE.RSB.GNFS.ZS",
     label           = "Saldo comercial de bienes y servicios (% del PBI)",
     short           = "Saldo comercial",
@@ -87,7 +107,58 @@ VARS <- list(
       "Es más acotado que la balanza de pagos."
     )
   ),
+  current_account = list(
+    objective       = "Sostenibilidad externa",
+    group           = "sustainability",
+    dimension       = "Sector externo",
+    source          = "wdi",
+    code            = "BN.CAB.XOKA.GD.ZS",
+    label           = "Cuenta corriente (% del PBI)",
+    short           = "Cuenta corriente",
+    color           = "#0891b2",
+    unit            = "% del PBI",
+    zero_line       = TRUE,
+    description     = paste0(
+      "Saldo de la cuenta corriente de la balanza de pagos: comercio de bienes y ",
+      "servicios más ingresos y transferencias con el resto del mundo. Un déficit ",
+      "tiene que financiarse con ingresos de capital, por ejemplo inversiones o préstamos."
+    )
+  ),
+  fdi_inflows = list(
+    objective       = "Sostenibilidad externa",
+    group           = "sustainability",
+    dimension       = "Sector externo",
+    source          = "wdi",
+    code            = "BX.KLT.DINV.WD.GD.ZS",
+    label           = "Inversión extranjera directa, ingreso neto (% del PBI)",
+    short           = "Inversión extranjera directa",
+    color           = "#65a30d",
+    unit            = "% del PBI",
+    zero_line       = TRUE,
+    description     = paste0(
+      "Ingreso neto de inversión extranjera directa, en porcentaje del PBI: una de las ",
+      "formas de financiar un déficit de cuenta corriente."
+    )
+  ),
+  employment = list(
+    objective       = "Pleno empleo",
+    group           = "other",
+    dimension       = "Empleo",
+    source          = "wdi",
+    code            = "SL.EMP.TOTL.SP.ZS",
+    label           = "Tasa de empleo (%)",
+    short           = "Tasa de empleo",
+    color           = "#15803d",
+    unit            = "%",
+    zero_line       = FALSE,
+    description     = paste0(
+      "Porcentaje de la población de 15 años o más que tiene empleo. ",
+      "No es la tasa de desempleo, que mide qué parte de la población económicamente ",
+      "activa busca trabajo y no lo encuentra."
+    )
+  ),
   population = list(
+    source          = "wdi",
     code            = "SP.POP.TOTL",
     label           = "Población",
     short           = "Población",
@@ -100,32 +171,11 @@ VARS <- list(
 
 # ---------------------------------------------------------------------------
 # EXTRA SERIES
-# Included in the snapshot by scripts/prepare_wdi_snapshot.R for the indicators
-# the course notes rely on but the tabs do not use yet: the unemployment rate,
-# public debt, the external accounts, and price and GDP levels.
+# Levels kept in the snapshot for the levels-vs-rates view: they are not
+# indicators of an objective, so they do not appear in the indicator menus.
 # `source` is "wdi" (World Bank bulk file) or "imf" (IMF DataMapper).
 # ---------------------------------------------------------------------------
 EXTRA_SERIES <- list(
-  unemployment = list(
-    source = "wdi", code = "SL.UEM.TOTL.ZS",
-    label  = "Tasa de desempleo (%)", unit = "%",
-    description = "Porcentaje de la población económicamente activa que busca trabajo y no lo encuentra (estimación de la OIT)."
-  ),
-  public_debt = list(
-    source = "imf", code = "GGXWDG_NGDP",
-    label  = "Deuda pública bruta (% del PBI)", unit = "% del PBI",
-    description = "Deuda bruta del gobierno general, en porcentaje del PBI (FMI, World Economic Outlook)."
-  ),
-  current_account = list(
-    source = "wdi", code = "BN.CAB.XOKA.GD.ZS",
-    label  = "Cuenta corriente (% del PBI)", unit = "% del PBI",
-    description = "Saldo de la cuenta corriente de la balanza de pagos: comercio de bienes y servicios, ingresos y transferencias con el resto del mundo."
-  ),
-  fdi_inflows = list(
-    source = "wdi", code = "BX.KLT.DINV.WD.GD.ZS",
-    label  = "Inversión extranjera directa, entrada neta (% del PBI)", unit = "% del PBI",
-    description = "Ingreso neto de inversión extranjera directa: una de las formas de financiar un déficit externo."
-  ),
   cpi_index = list(
     source = "wdi", code = "FP.CPI.TOTL",
     label  = "IPC (índice, 2010 = 100)", unit = "",
@@ -149,11 +199,12 @@ EXTRA_WDI_CODES <- local({
   setNames(sapply(wdi, `[[`, "code"), names(wdi))
 })
 
-# Named vector of indicator codes for WDI download
-ALL_CODES <- setNames(
-  sapply(VARS, `[[`, "code"),
-  names(VARS)
-)
+# World Bank codes of the indicators (the IMF ones come from
+# scripts/supplementary_sources.R), named by column
+ALL_CODES <- local({
+  wdi <- Filter(function(s) s$source == "wdi", VARS)
+  setNames(sapply(wdi, `[[`, "code"), names(wdi))
+})
 
 # =============================================================================
 # CACHE SETUP
@@ -372,8 +423,8 @@ get_country_choices <- function(df) {
 # Only the three central objectives are scored. The fiscal and trade balances
 # are sustainability information: a deficit is not automatically worse than a
 # surplus, so they are shown with context but never scored.
-CENTRAL_VARS <- c("gdp_growth", "employment", "inflation")
-SUSTAINABILITY_VARS <- c("fiscal_balance", "trade_balance")
+CENTRAL_VARS <- c("gdp_growth", "unemployment", "inflation")
+SUSTAINABILITY_VARS <- c("fiscal_balance", "public_debt", "trade_balance", "current_account")
 
 # Inflation closest to this rate scores best on price stability; deflation and
 # high inflation both score lower.
@@ -389,7 +440,7 @@ score_central_objectives <- function(df) {
   # Higher "goodness" is better for every variable
   goodness <- list(
     gdp_growth = df$gdp_growth,
-    employment = df$employment,
+    unemployment = -df$unemployment,
     inflation  = -abs(df$inflation - INFLATION_TARGET)
   )
   for (v in CENTRAL_VARS) {
@@ -451,10 +502,8 @@ core_var_choices <- function() {
     vs <- CORE_VARS[sapply(CORE_VARS, function(v) VARS[[v]]$group == g)]
     setNames(vs, sapply(vs, var_objective_label))
   }
-  setNames(
-    list(group_choices("central"), group_choices("sustainability")),
-    c(OBJECTIVE_GROUPS[["central"]], OBJECTIVE_GROUPS[["sustainability"]])
-  )
+  groups <- names(OBJECTIVE_GROUPS)
+  setNames(lapply(groups, group_choices), unname(OBJECTIVE_GROUPS[groups]))
 }
 
 # Variables of one objective group, in CORE_VARS order
@@ -555,5 +604,8 @@ generate_fallback_data <- function() {
     )
   })
 
-  translate_country_fields(dplyr::bind_rows(result_list))
+  df <- dplyr::bind_rows(result_list)
+  # The demo data has no series for the other indicators
+  for (v in setdiff(names(VARS), names(df))) df[[v]] <- NA_real_
+  translate_country_fields(df)
 }

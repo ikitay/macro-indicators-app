@@ -60,7 +60,13 @@ explore_country_ui <- function(id) {
         label    = OBJECTIVE_GROUPS[["sustainability"]],
         choices  = setNames(group_vars("sustainability"),
                             sapply(group_vars("sustainability"), var_objective_label)),
-        selected = group_vars("sustainability")
+        selected = c("fiscal_balance", "public_debt", "trade_balance", "current_account")
+      ),
+      checkboxGroupInput(
+        ns("show_other"),
+        label    = OBJECTIVE_GROUPS[["other"]],
+        choices  = setNames(group_vars("other"), sapply(group_vars("other"), var_objective_label)),
+        selected = character(0)
       ),
 
       hr(),
@@ -89,7 +95,7 @@ explore_country_ui <- function(id) {
       ),
       card_body(
         padding = "0",
-        plotlyOutput(ns("main_plot"), height = "580px")
+        uiOutput(ns("plot_container"))
       )
     )
   )
@@ -137,7 +143,12 @@ explore_country_server <- function(id, data) {
 
     # Indicators ticked in either group, in CORE_VARS order
     shown_vars <- reactive({
-      intersect(CORE_VARS, c(input$show_central, input$show_sustainability))
+      intersect(CORE_VARS, c(input$show_central, input$show_sustainability, input$show_other))
+    })
+
+    # One panel per indicator, so the chart grows with the number shown
+    output$plot_container <- renderUI({
+      plotlyOutput(ns("main_plot"), height = paste0(max(300, 115 * length(shown_vars()) + 60), "px"))
     })
 
     # ── Summary statistics cards ────────────────────────────────────────────

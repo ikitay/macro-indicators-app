@@ -2,6 +2,19 @@
 
 Notable changes to *Exploring Macroeconomics Through Data*.
 
+## 2026-10-04 (data rebuild)
+
+### Added
+- **New indicators from the rebuilt snapshot**: unemployment rate (now the main
+  indicator of full employment, as in the course notes), public debt, current
+  account and foreign direct investment inflows. The employment rate stays
+  available under "Otros indicadores".
+- **Country Profile:** the radar scores unemployment (lower is better) instead
+  of the employment rate, and the sustainability table shows the fiscal balance,
+  public debt, trade balance and current account with their values five years
+  earlier.
+- Glossary entries for Cuenta corriente and Inversión extranjera directa.
+
 ## 2026-10-04
 
 Changes to bring the app in line with the course notes *La mirada

@@ -32,7 +32,7 @@ HISTORICAL_EVENTS <- list(
     ),
     affected_iso2c   = c("KR", "TH", "ID", "MY", "PH"),
     affected_regions = c("Asia oriental y Pacífico"),
-    key_variables    = c("gdp_growth", "employment", "inflation")
+    key_variables    = c("gdp_growth", "unemployment", "inflation")
   ),
 
   argentina_crisis = list(
@@ -64,7 +64,7 @@ HISTORICAL_EVENTS <- list(
     ),
     affected_iso2c   = c("AR"),
     affected_regions = c("América Latina y el Caribe"),
-    key_variables    = c("gdp_growth", "employment", "inflation", "fiscal_balance", "trade_balance")
+    key_variables    = c("gdp_growth", "unemployment", "inflation", "fiscal_balance", "trade_balance")
   ),
 
   gfc = list(
@@ -97,7 +97,7 @@ HISTORICAL_EVENTS <- list(
     ),
     affected_iso2c   = c("US", "GB", "DE", "FR", "ES", "GR", "JP", "KR", "AU"),
     affected_regions = c("Europa y Asia central", "América del Norte", "Asia oriental y Pacífico"),
-    key_variables    = c("gdp_growth", "employment", "fiscal_balance")
+    key_variables    = c("gdp_growth", "unemployment", "fiscal_balance")
   ),
 
   covid = list(
@@ -132,7 +132,7 @@ HISTORICAL_EVENTS <- list(
     affected_regions = c("Asia oriental y Pacífico", "Europa y Asia central",
                          "América Latina y el Caribe", "América del Norte",
                          "Asia meridional", "África subsahariana"),
-    key_variables    = c("gdp_growth", "employment", "fiscal_balance", "trade_balance")
+    key_variables    = c("gdp_growth", "unemployment", "fiscal_balance", "trade_balance")
   ),
 
   energy_crisis = list(

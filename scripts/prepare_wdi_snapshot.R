@@ -179,10 +179,11 @@ if (!is_valid_macro_df(snapshot)) {
 
 write.csv(snapshot, OUT_PATH, row.names = FALSE)
 
-# One line per extra series: how many country-years have data, or "missing"
-extra_series_log <- sapply(names(EXTRA_SERIES), function(v) {
+# One line per series: how many country-years have data, or "missing"
+all_series <- c(VARS[setdiff(names(VARS), "population")], EXTRA_SERIES)
+extra_series_log <- sapply(names(all_series), function(v) {
   n <- if (v %in% names(snapshot)) sum(!is.na(snapshot[[v]])) else 0
-  paste0("Extra series: ", v, " (", EXTRA_SERIES[[v]]$code, "): ",
+  paste0("Series: ", v, " (", all_series[[v]]$code, "): ",
          if (n > 0) paste(n, "country-years") else "missing")
 }, USE.NAMES = FALSE)
 

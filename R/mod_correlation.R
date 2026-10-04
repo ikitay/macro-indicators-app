@@ -25,7 +25,7 @@ correlation_ui <- function(id) {
       selectInput(ns("x_var"), "↔ Variable del eje X",
         choices=core_var_choices(), selected="gdp_growth"),
       selectInput(ns("y_var"), "↕ Variable del eje Y",
-        choices=core_var_choices(), selected="employment"),
+        choices=core_var_choices(), selected="unemployment"),
       sliderInput(ns("year_range"), "📅 Período",
         min=YEAR_MIN, max=YEAR_MAX, value=c(1995,YEAR_MAX), step=1, sep=""
       ),

@@ -9,13 +9,21 @@ PROFILE_PALETTE <- c("#2563eb", "#dc2626", "#16a34a", "#d97706")
 
 PROFILE_AXES <- c(
   gdp_growth = "Crecimiento económico\n(crecimiento del PBI)",
-  employment = "Pleno empleo\n(tasa de empleo)",
+  unemployment = "Pleno empleo\n(desempleo bajo)",
   inflation  = "Estabilidad de precios\n(inflación cerca del 2%)"
+)
+
+# Column headers of the sustainability table, in SUSTAINABILITY_VARS order
+PROFILE_SUSTAINABILITY_LABELS <- c(
+  fiscal_balance  = "Resultado",
+  public_debt     = "Deuda",
+  trade_balance   = "Saldo comercial",
+  current_account = "Cuenta corriente"
 )
 
 PROFILE_SCORE_LABELS <- c(
   gdp_growth = "Crecimiento",
-  employment = "Empleo",
+  unemployment = "Empleo",
   inflation  = "Precios"
 )
 
@@ -76,7 +84,7 @@ country_profile_ui <- function(id) {
           "un área más grande indica mejores resultados en los tres objetivos centrales ese año. ",
           "No dice si esos resultados pueden sostenerse: una economía puede crecer, crear empleo ",
           "y mantener la inflación baja mientras acumula desequilibrios fiscales o externos. ",
-          "Por eso el resultado fiscal y el saldo comercial se muestran aparte, sin puntaje."
+          "Por eso la información fiscal y externa se muestra aparte, sin puntaje."
         )
       )
     )
@@ -229,16 +237,23 @@ country_profile_server <- function(id, data) {
       df    <- df[order[!is.na(order)], , drop = FALSE]
       validate(need(nrow(df) > 0, ""))
 
-      fmt <- function(x) if (is.na(x)) "sin datos" else paste0(if (x > 0) "+", num_es(x), "%")
-      cell <- function(now, past) {
-        tags$td(style = "text-align:right;",
-          tags$span(style = "font-weight:600; color:#334155;", fmt(now)),
-          tags$br(),
-          tags$span(style = "font-size:0.7rem; color:#64748b;",
-                    paste0(input$year - 5, ": ", fmt(past)))
-        )
+      # Balances get a sign; debt is a stock and is always positive
+      fmt <- function(x, v) {
+        if (is.na(x)) return("s/d")
+        paste0(if (v != "public_debt" && x > 0) "+", num_es(x), "%")
       }
       col_of <- function(x) if (x %in% names(df)) df[[x]] else rep(NA_real_, nrow(df))
+      cell <- function(v, i) {
+        tags$td(style = "text-align:right;",
+          tags$span(style = "font-weight:600; color:#334155;", fmt(col_of(v)[i], v)),
+          tags$br(),
+          tags$span(style = "font-size:0.68rem; color:#64748b;",
+                    paste0(input$year - 5, ": ", fmt(col_of(paste0(v, "_past"))[i], v)))
+        )
+      }
+      group_head <- function(label) {
+        tags$th(colspan = 2, style = "text-align:center; border-bottom:1px solid #cbd5e1;", label)
+      }
 
       tags$div(
         style = "padding:4px 10px 10px;",
@@ -246,24 +261,27 @@ country_profile_server <- function(id, data) {
                "Información de sostenibilidad: % del PBI, sin puntaje"),
         tags$table(
           class = "table table-sm",
-          style = "font-size:0.78rem; margin-bottom:6px;",
-          tags$thead(tags$tr(
-            tags$th(""), tags$th(style = "text-align:right;", "Resultado fiscal"),
-            tags$th(style = "text-align:right;", "Saldo comercial")
-          )),
+          style = "font-size:0.76rem; margin-bottom:6px;",
+          tags$thead(
+            tags$tr(tags$th(""), group_head("Fiscal"), group_head("Externa")),
+            tags$tr(
+              tags$th(""),
+              lapply(SUSTAINABILITY_VARS, function(v)
+                tags$th(style = "text-align:right; font-weight:600;", PROFILE_SUSTAINABILITY_LABELS[[v]]))
+            )
+          ),
           tags$tbody(lapply(seq_len(nrow(df)), function(i) {
             col <- PROFILE_PALETTE[match(df$iso2c[i], profile_data()$iso2c)]
             tags$tr(
               tags$td(style = paste0("font-weight:700; color:", col, ";"), df$country[i]),
-              cell(col_of("fiscal_balance")[i], col_of("fiscal_balance_past")[i]),
-              cell(col_of("trade_balance")[i],  col_of("trade_balance_past")[i])
+              lapply(SUSTAINABILITY_VARS, cell, i = i)
             )
           }))
         ),
         tags$p(style = "font-size:0.74rem; color:#64748b; margin:0; line-height:1.4;",
           "Un déficit (valor negativo) no es automáticamente un problema. La sostenibilidad ",
           "fiscal depende de la trayectoria de la deuda pública; la externa, de cómo se ",
-          "financia el déficit (la balanza de pagos). Compará con cinco años antes: ",
+          "financia el déficit de cuenta corriente. Compará con cinco años antes: ",
           "¿el desequilibrio crece o se achica?"
         )
       )

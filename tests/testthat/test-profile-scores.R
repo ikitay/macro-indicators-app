@@ -1,13 +1,14 @@
 toy <- data.frame(
   gdp_growth = c(-2, 0, 2, 4, NA),
-  employment = c(50, 60, 70, 80, 55),
+  unemployment = c(5, 10, 15, 20, 8),
   inflation  = c(2, 5, -3, 50, 1)
 )
 
 test_that("a score is the share of observations that are strictly worse", {
   s <- score_central_objectives(toy)
   expect_equal(s$gdp_growth_score, c(0, 25, 50, 75, NA))  # 4 observed values
-  expect_equal(s$employment_score, c(0, 40, 60, 80, 20))
+  # Lower unemployment is better
+  expect_equal(s$unemployment_score, c(80, 40, 20, 0, 60))
 })
 
 test_that("price stability rewards inflation near 2%; deflation does not score best", {
@@ -40,6 +41,10 @@ test_that("Country Profile shows unscored sustainability information with its 5-
     html <- as.character(output$sustainability_table$html)
     expect_match(html, "sin puntaje")
     expect_match(html, "2002:")
+    # Debt and the current account are part of the sustainability information
+    expect_equal(sd$public_debt[sd$country == "Grecia"], snap("Grecia", 2007, "public_debt"))
+    expect_match(html, num_es(snap("Grecia", 2007, "public_debt")), fixed = TRUE)
+    expect_match(html, "Cuenta corriente")
     expect_false(any(grepl("balance_score", names(profile_data()))))
   })
 })

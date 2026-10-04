@@ -77,8 +77,8 @@ GLOSSARY_TERMS <- list(
     definition = paste0(
       "Porcentaje de la población económicamente activa que busca trabajo y no lo encuentra. ",
       "Una persona está desempleada cuando no tiene trabajo, quiere trabajar y lo busca ",
-      "activamente. Es el principal indicador del pleno empleo. Por ahora la app muestra la ",
-      "tasa de empleo, que es un indicador distinto."
+      "activamente. Es el principal indicador del pleno empleo. La app usa la estimación de ",
+      "la OIT publicada por el Banco Mundial, disponible desde 1991."
     ),
     example    = "Si de 100 personas que trabajan o buscan trabajo, 8 buscan y no encuentran, la tasa de desempleo es del 8%.",
     related    = "Tasa de empleo, Población económicamente activa, Pleno empleo"
@@ -219,6 +219,33 @@ GLOSSARY_TERMS <- list(
     ),
     example    = "Una empresa extranjera que instala una fábrica en el país no aparece en la balanza comercial, pero sí en la balanza de pagos.",
     related    = "Saldo comercial, Sostenibilidad externa"
+  ),
+
+  list(
+    term       = "Cuenta corriente",
+    category   = "Sector externo",
+    definition = paste0(
+      "Parte de la balanza de pagos que registra el comercio de bienes y servicios, los ",
+      "ingresos (como intereses y utilidades) y las transferencias con el resto del mundo. ",
+      "Un déficit de cuenta corriente significa que el país paga al exterior más de lo que ",
+      "recibe por esos conceptos, y tiene que financiarse con ingresos de capital: ",
+      "inversiones o préstamos del exterior, o con reservas."
+    ),
+    example    = "Un país puede tener superávit comercial y aun así déficit de cuenta corriente si paga muchos intereses de deuda externa.",
+    related    = "Balanza de pagos, Saldo comercial, Inversión extranjera directa"
+  ),
+
+  list(
+    term       = "Inversión extranjera directa",
+    category   = "Sector externo",
+    definition = paste0(
+      "Inversión de empresas o personas del exterior para instalar, comprar o ampliar ",
+      "empresas en el país, con intención de largo plazo. Queda registrada en la balanza de ",
+      "pagos y es una de las formas de financiar un déficit de cuenta corriente, en general ",
+      "más estable que los préstamos de corto plazo."
+    ),
+    example    = "Una empresa extranjera que construye una fábrica en el país es inversión extranjera directa.",
+    related    = "Cuenta corriente, Balanza de pagos, Sostenibilidad externa"
   ),
 
   list(
