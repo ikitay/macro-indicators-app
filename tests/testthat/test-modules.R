@@ -99,13 +99,14 @@ test_that("glossary has the terms the course notes rely on", {
   terms <- sapply(GLOSSARY_TERMS, `[[`, "term")
   for (t in c("Balanza de pagos", "Sostenibilidad fiscal", "PBI nominal", "Inflación",
               "Recesión", "Saldo comercial", "Tasa de desempleo", "Pleno empleo",
-              "IPC (Índice de Precios al Consumidor)", "Objetivo e indicador")) {
+              "IPC (Índice de Precios al Consumidor)", "Objetivo macroeconómico", "Indicador")) {
     expect_true(t %in% terms, label = t)
   }
   for (cat in sapply(GLOSSARY_TERMS, `[[`, "category")) expect_false(is.na(category_color(cat)))
-  for (f in c("All", unique(sapply(GLOSSARY_TERMS, `[[`, "category")))) {
+  for (f in c("Todos", unique(sapply(GLOSSARY_TERMS, `[[`, "category")))) {
     expect_no_error(htmltools::renderTags(render_glossary(f)))
   }
+  expect_gt(length(htmltools::renderTags(render_glossary("Todos"))$html), 0)
 })
 
 test_that("indicators are grouped into central and sustainability objectives", {

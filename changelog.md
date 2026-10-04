@@ -2,6 +2,41 @@
 
 Notable changes to *Exploring Macroeconomics Through Data*.
 
+## 2026-10-04 (glossary aligned with the course notes)
+
+### Added
+- Glossary terms of the notes that were missing: Macroeconomía, Objetivo
+  macroeconómico, Indicador, Crecimiento económico, PBI (Producto Bruto Interno),
+  PBI real, Empleo, Desempleo, Estabilidad de precios, Nivel general de precios,
+  Déficit fiscal, Superávit fiscal, Sector externo, Balanza comercial and
+  Déficit y superávit externo. Wording and examples follow the notes.
+- The notes' key distinctions appear in the definitions: crecimiento económico ≠
+  PBI, déficit fiscal ≠ necesariamente un problema, balanza comercial ≠ balanza
+  de pagos, déficit externo ≠ necesariamente insostenibilidad externa.
+- Tests in `tests/testthat/test-glossary-notes.R`: every term of the notes is
+  present, order, no broken "Relacionado" links, key distinctions kept.
+
+### Changed
+- **Order:** the glossary no longer sorts alphabetically. It follows the
+  structure of the notes (general concepts, then each objective with its
+  indicator), as the notes' own glossary does. Terms the notes do not cover yet
+  (policies, statistics) come last. The order is `GLOSSARY_ORDER` in
+  `R/glossary.R`.
+- "Objetivo e indicador" is now two entries, "Objetivo macroeconómico" and
+  "Indicador", as in the notes. The category "Conceptos" is now "Conceptos
+  generales" and comes first.
+- "Crecimiento del PBI" and "Saldo comercial" are marked as the indicators the
+  app uses, and linked to the notes' terms (Crecimiento económico, PBI real,
+  Balanza comercial).
+- "Disyuntiva (trade-off)" starts from the notes' idea (the objectives do not
+  always move together) and keeps the Phillips curve as one example.
+- **Explore Country:** the 📖 icon next to "País" showed the definition of GDP
+  growth, which had nothing to do with the field. It is now next to the two
+  objective headings (Objetivo macroeconómico, Sostenibilidad).
+
+### Fixed
+- The glossary test filtered with "All" instead of "Todos", so it checked nothing.
+
 ## 2026-10-04 (Argentina as default)
 
 ### Changed

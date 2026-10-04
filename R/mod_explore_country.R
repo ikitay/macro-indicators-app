@@ -26,7 +26,7 @@ explore_country_ui <- function(id) {
       # ── Country selector ─────────────────────────────────────────────────
       selectizeInput(
         ns("country"),
-        label   = tags$span("🌍 País", info_icon("Crecimiento del PBI")),
+        label   = "🌍 País",
         choices = NULL,       # Populated server-side
         selected = DEFAULT_COUNTRY,
         options = list(
@@ -51,13 +51,13 @@ explore_country_ui <- function(id) {
       # ── Indicator toggles ────────────────────────────────────────────────
       checkboxGroupInput(
         ns("show_central"),
-        label    = OBJECTIVE_GROUPS[["central"]],
+        label    = tags$span(OBJECTIVE_GROUPS[["central"]], info_icon("Objetivo macroeconómico")),
         choices  = setNames(group_vars("central"), sapply(group_vars("central"), var_objective_label)),
         selected = group_vars("central")
       ),
       checkboxGroupInput(
         ns("show_sustainability"),
-        label    = OBJECTIVE_GROUPS[["sustainability"]],
+        label    = tags$span(OBJECTIVE_GROUPS[["sustainability"]], info_icon("Sostenibilidad")),
         choices  = setNames(group_vars("sustainability"),
                             sapply(group_vars("sustainability"), var_objective_label)),
         selected = c("fiscal_balance", "public_debt", "trade_balance", "current_account")

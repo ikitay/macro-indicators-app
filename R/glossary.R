@@ -1,24 +1,215 @@
 # =============================================================================
 # GLOSSARY
 # Macroeconomic term definitions for undergraduate students, following the
-# course notes "La mirada macroeconómica: objetivos e indicadores"
+# course notes "La mirada macroeconómica: objetivos e indicadores". The terms
+# and their wording come from the glossary of the notes; the entries marked
+# "indicador de la app" or in the last categories add what the app needs (the
+# series it shows, statistics, policies). Order: GLOSSARY_ORDER, the structure
+# of the notes, not alphabetical.
 # =============================================================================
 
 GLOSSARY_TERMS <- list(
 
   list(
+    term       = "Macroeconomía",
+    category   = "Conceptos generales",
+    definition = paste0(
+      "Parte de la economía que estudia el funcionamiento de la economía considerada en su ",
+      "conjunto: producción, empleo, precios y relaciones con el exterior. No deja de importar ",
+      "lo que hacen las personas, las empresas o el Estado: interesa cómo esas decisiones se ",
+      "reflejan en resultados agregados, es decir, que corresponden a toda la economía y no a un ",
+      "participante en particular."
+    ),
+    example    = "Que una empresa contrate a 50 personas es un dato de una empresa; la tasa de desempleo de todo el país es un resultado agregado.",
+    related    = "Objetivo macroeconómico, Indicador"
+  ),
+
+  list(
+    term       = "Objetivo macroeconómico",
+    category   = "Conceptos generales",
+    definition = paste0(
+      "Resultado que se busca alcanzar o preservar en una economía. Los objetivos centrales ",
+      "son el crecimiento económico, el pleno empleo y la estabilidad de precios; los objetivos ",
+      "de sostenibilidad son la sostenibilidad fiscal y la sostenibilidad externa. Un objetivo ",
+      "no es lo mismo que el indicador que se usa para observarlo."
+    ),
+    example    = "Un termómetro permite saber si una persona tiene fiebre, pero el objetivo no es cambiar el número del termómetro, sino que la persona esté sana.",
+    related    = "Indicador, Crecimiento económico, Pleno empleo, Estabilidad de precios, Sostenibilidad"
+  ),
+
+  list(
+    term       = "Indicador",
+    category   = "Conceptos generales",
+    definition = paste0(
+      "Variable que permite observar y evaluar la evolución de una determinada situación u ",
+      "objetivo. Indicadores principales: el PBI real para el crecimiento económico, la tasa de ",
+      "desempleo para el pleno empleo, el IPC y la inflación para la estabilidad de precios; para ",
+      "la sostenibilidad, el resultado fiscal junto con la trayectoria de la deuda pública (fiscal) ",
+      "y la balanza de pagos junto con otros indicadores externos (externa)."
+    ),
+    example    = "El PBI real no es el objetivo: el objetivo es el crecimiento económico, y el PBI real nos da información para analizarlo.",
+    related    = "Objetivo macroeconómico, PBI real, Tasa de desempleo, IPC (Índice de Precios al Consumidor)"
+  ),
+
+  list(
+    term       = "Crecimiento económico",
+    category   = "Producción",
+    definition = paste0(
+      "Aumento de la producción de bienes y servicios de una economía a lo largo del tiempo. Es ",
+      "un objetivo macroeconómico central; su indicador principal es el PBI real. Crecimiento ",
+      "económico ≠ PBI: el crecimiento es la evolución de la producción, y el PBI real es el ",
+      "indicador que usamos para observarla."
+    ),
+    example    = "Un país puede tener un PBI muy grande y no estar creciendo, si este año produce lo mismo que el año anterior.",
+    related    = "PBI, PBI real, Crecimiento del PBI, Objetivo macroeconómico"
+  ),
+
+  list(
+    term       = "PBI (Producto Bruto Interno)",
+    category   = "Producción",
+    definition = paste0(
+      "Valor de los bienes y servicios finales producidos dentro de una economía durante un ",
+      "período determinado. Su valor puede cambiar por dos motivos: porque se producen más o ",
+      "menos bienes y servicios, o porque cambian sus precios. Por eso se distingue entre PBI ",
+      "nominal y PBI real."
+    ),
+    example    = "Un país con un PBI muy grande no es por eso un país que crece: crecer es producir más que antes.",
+    related    = "PBI nominal, PBI real, Crecimiento económico"
+  ),
+
+  list(
+    term       = "PBI real",
+    category   = "Producción",
+    definition = paste0(
+      "Medida de la producción que descuenta el efecto de los cambios de precios y permite ",
+      "observar, en términos generales, cómo evolucionan las cantidades producidas. Es el ",
+      "principal indicador del crecimiento económico: para comparar cuánto produce una economía ",
+      "en distintos momentos interesa su evolución."
+    ),
+    example    = "Si el PBI real aumenta respecto del año anterior, la producción de la economía aumentó.",
+    related    = "PBI nominal, Crecimiento del PBI, Crecimiento económico"
+  ),
+
+  list(
+    term       = "Empleo",
+    category   = "Empleo",
+    definition = paste0(
+      "Situación de las personas que realizan un trabajo a cambio de un ingreso."
+    ),
+    example    = "Quien atiende un comercio a cambio de un sueldo tiene empleo.",
+    related    = "Desempleo, Tasa de empleo, Población económicamente activa"
+  ),
+
+  list(
+    term       = "Desempleo",
+    category   = "Empleo",
+    definition = paste0(
+      "Situación de las personas que no tienen trabajo, quieren trabajar y lo buscan ",
+      "activamente."
+    ),
+    example    = "Quien estudia a tiempo completo y no busca trabajo no está desempleado: no forma parte de la población económicamente activa.",
+    related    = "Tasa de desempleo, Población económicamente activa, Empleo"
+  ),
+
+  list(
+    term       = "Estabilidad de precios",
+    category   = "Precios",
+    definition = paste0(
+      "Situación en la que no existe una inflación elevada e inestable, que dificulte las ",
+      "decisiones de hogares y empresas. No significa que ningún precio pueda aumentar. Es un ",
+      "objetivo macroeconómico central; se observa con el IPC y la inflación."
+    ),
+    example    = "Que suba el precio de un producto no implica que falte estabilidad de precios: lo que importa es el nivel general de precios.",
+    related    = "Nivel general de precios, Inflación, IPC (Índice de Precios al Consumidor)"
+  ),
+
+  list(
+    term       = "Nivel general de precios",
+    category   = "Precios",
+    definition = paste0(
+      "Nivel promedio de los precios de los bienes y servicios de una economía. Es lo que ",
+      "interesa a nivel macroeconómico: que algunos precios suban o bajen no significa ",
+      "necesariamente que exista inflación."
+    ),
+    example    = "Si sube el precio de las verduras pero baja el de la ropa, el nivel general de precios puede casi no cambiar.",
+    related    = "Inflación, Deflación, Estabilidad de precios"
+  ),
+
+  list(
+    term       = "Déficit fiscal",
+    category   = "Sector público",
+    definition = paste0(
+      "Situación en la que los gastos del Estado superan sus ingresos. Hay que financiarlo, ",
+      "por ejemplo pidiendo prestado, y de ahí surge la deuda pública. Déficit fiscal ≠ ",
+      "necesariamente un problema: puede ser transitorio y compatible con una situación fiscal ",
+      "sostenible."
+    ),
+    example    = "Durante una recesión, un Estado puede tener déficit porque cae la recaudación. Si la deuda se mantiene estable en relación con el tamaño de la economía, eso no implica una situación insostenible.",
+    related    = "Resultado fiscal, Superávit fiscal, Deuda pública, Sostenibilidad fiscal"
+  ),
+
+  list(
+    term       = "Superávit fiscal",
+    category   = "Sector público",
+    definition = paste0(
+      "Situación en la que los ingresos del Estado superan sus gastos."
+    ),
+    example    = "Si el Estado recauda el 22% del PBI y gasta el 20%, tiene un superávit fiscal del 2% del PBI.",
+    related    = "Resultado fiscal, Déficit fiscal"
+  ),
+
+  list(
+    term       = "Sector externo",
+    category   = "Sector externo",
+    definition = paste0(
+      "Conjunto de relaciones económicas que una economía mantiene con el resto del mundo: ",
+      "compra y venta de bienes y servicios, pagos, ingresos provenientes del exterior, ",
+      "inversiones y préstamos internacionales."
+    ),
+    example    = "Exportar soja, recibir una inversión extranjera y pagar intereses de una deuda externa son operaciones del sector externo.",
+    related    = "Balanza de pagos, Sostenibilidad externa"
+  ),
+
+  list(
+    term       = "Balanza comercial",
+    category   = "Sector externo",
+    definition = paste0(
+      "Registro de las exportaciones e importaciones de bienes. Es más acotada que la balanza ",
+      "de pagos: balanza comercial ≠ balanza de pagos. El indicador \"Saldo comercial\" de esta ",
+      "app mide un concepto cercano, que incluye también los servicios."
+    ),
+    example    = "Si un país exporta bienes por 100 e importa bienes por 120, su balanza comercial tiene un déficit de 20.",
+    related    = "Saldo comercial, Balanza de pagos"
+  ),
+
+  list(
+    term       = "Déficit y superávit externo",
+    category   = "Sector externo",
+    definition = paste0(
+      "Cuando los pagos que un país realiza al exterior por sus compras y otros gastos superan ",
+      "los ingresos que recibe por sus ventas y otros cobros, tiene un déficit externo; en la ",
+      "situación contraria, un superávit externo. El déficit comercial es un caso particular: ",
+      "las importaciones de bienes superan a las exportaciones. Ninguno de los dos resultados es ",
+      "automáticamente bueno o malo: un déficit externo tiene que financiarse, por ejemplo, con ",
+      "inversiones o préstamos provenientes del exterior. Déficit externo ≠ necesariamente ",
+      "insostenibilidad externa."
+    ),
+    example    = "Un déficit externo financiado con inversión extranjera directa no genera la misma vulnerabilidad que uno financiado con préstamos de corto plazo.",
+    related    = "Cuenta corriente, Saldo comercial, Sostenibilidad externa, Inversión extranjera directa"
+  ),
+
+  list(
     term       = "Crecimiento del PBI",
     category   = "Producción",
     definition = paste0(
-      "Variación porcentual anual del Producto Bruto Interno (PBI) real, es decir, medido a ",
-      "precios constantes. El PBI es el valor de los bienes y servicios finales producidos ",
-      "dentro de una economía durante un período. El PBI nominal usa los precios de cada año, ",
-      "así que puede aumentar solo porque subieron los precios; el PBI real descuenta ese ",
-      "efecto y muestra si la economía produjo más. El crecimiento económico es el objetivo; ",
-      "la variación del PBI real es el indicador que usamos para observarlo."
+      "Indicador de la app: variación porcentual anual del Producto Bruto Interno (PBI) real, ",
+      "es decir, medido a precios constantes. El PBI nominal usa los precios de cada año, así ",
+      "que puede aumentar solo porque subieron los precios; el PBI real descuenta ese efecto y ",
+      "muestra si la economía produjo más. El crecimiento económico es el objetivo; la ",
+      "variación del PBI real es el indicador que usamos para observarlo."
     ),
     example    = "Si el PBI real crece un 3%, la economía produjo un 3% más de bienes y servicios que el año anterior.",
-    related    = "Recesión, Ciclo económico, PBI nominal"
+    related    = "Crecimiento económico, PBI real, PBI nominal, Recesión"
   ),
 
   list(
@@ -30,7 +221,7 @@ GLOSSARY_TERMS <- list(
       "producción hay que mirar el PBI real, que descuenta el efecto de los cambios de precios."
     ),
     example    = "Si una economía produce exactamente lo mismo que el año pasado pero todos los precios suben un 20%, el PBI nominal aumenta un 20% y el PBI real no cambia.",
-    related    = "Crecimiento del PBI, Inflación"
+    related    = "PBI (Producto Bruto Interno), PBI real, Crecimiento del PBI, Inflación"
   ),
 
   list(
@@ -196,7 +387,7 @@ GLOSSARY_TERMS <- list(
     term       = "Saldo comercial",
     category   = "Sector externo",
     definition = paste0(
-      "Exportaciones menos importaciones, en porcentaje del PBI. Un saldo positivo es un ",
+      "Indicador de la app: exportaciones menos importaciones, en porcentaje del PBI. Un saldo positivo es un ",
       "superávit comercial; uno negativo, un déficit comercial. La balanza comercial, en sentido ",
       "estricto, registra solo bienes; el indicador de esta app incluye también servicios. ",
       "En ambos casos es más acotado que la balanza de pagos, que registra además inversiones, ",
@@ -204,7 +395,7 @@ GLOSSARY_TERMS <- list(
       "insostenible: importa cómo se financia y si puede mantenerse en el tiempo."
     ),
     example    = "Alemania suele tener un gran superávit comercial porque sus exportaciones superan ampliamente a sus importaciones.",
-    related    = "Balanza de pagos, Sostenibilidad externa"
+    related    = "Balanza comercial, Balanza de pagos, Déficit y superávit externo, Sostenibilidad externa"
   ),
 
   list(
@@ -218,7 +409,7 @@ GLOSSARY_TERMS <- list(
       "acumular una vulnerabilidad creciente."
     ),
     example    = "Una empresa extranjera que instala una fábrica en el país no aparece en la balanza comercial, pero sí en la balanza de pagos.",
-    related    = "Saldo comercial, Sostenibilidad externa"
+    related    = "Sector externo, Balanza comercial, Saldo comercial, Cuenta corriente, Sostenibilidad externa"
   ),
 
   list(
@@ -258,26 +449,12 @@ GLOSSARY_TERMS <- list(
       "inversiones o préstamos del exterior."
     ),
     example    = "Un país que importa maquinaria para ampliar su capacidad productiva puede tener un déficit comercial durante algunos años y, gracias a esa inversión, producir y exportar más en el futuro.",
-    related    = "Balanza de pagos, Saldo comercial"
-  ),
-
-  list(
-    term       = "Objetivo e indicador",
-    category   = "Conceptos",
-    definition = paste0(
-      "Un objetivo macroeconómico es un resultado que se busca alcanzar o preservar: ",
-      "crecimiento económico, pleno empleo, estabilidad de precios, sostenibilidad fiscal y ",
-      "externa. Un indicador es una variable que observamos para seguir ese objetivo: el PBI ",
-      "real para el crecimiento, la tasa de desempleo para el pleno empleo, el IPC y la ",
-      "inflación para la estabilidad de precios. Un objetivo no es lo mismo que su indicador."
-    ),
-    example    = "Un termómetro permite saber si una persona tiene fiebre, pero el objetivo no es cambiar el número del termómetro, sino que la persona esté sana.",
-    related    = "Crecimiento del PBI, Inflación, Sostenibilidad"
+    related    = "Sector externo, Balanza de pagos, Déficit y superávit externo, Saldo comercial"
   ),
 
   list(
     term       = "Sostenibilidad",
-    category   = "Conceptos",
+    category   = "Conceptos generales",
     definition = paste0(
       "Capacidad de mantener una situación económica en el tiempo sin acumular desequilibrios ",
       "que terminen haciendo imposible sostenerla. Los objetivos centrales preguntan qué está ",
@@ -285,25 +462,26 @@ GLOSSARY_TERMS <- list(
       "Una evaluación completa mira los dos grupos."
     ),
     example    = "Una economía puede crecer, crear empleo y mantener la inflación baja mientras acumula déficits fiscales o externos cada vez más difíciles de financiar.",
-    related    = "Sostenibilidad fiscal, Sostenibilidad externa, Objetivo e indicador"
+    related    = "Sostenibilidad fiscal, Sostenibilidad externa, Objetivo macroeconómico"
   ),
 
   list(
     term       = "Disyuntiva (trade-off)",
-    category   = "Conceptos",
+    category   = "Conceptos generales",
     definition = paste0(
-      "Situación en la que mejorar un objetivo hace más difícil alcanzar otro. La curva de ",
-      "Phillips plantea una disyuntiva entre inflación y desempleo: bajar el desempleo podría ",
-      "subir la inflación, y viceversa. Pero esa relación no es estable en todos los países ",
-      "ni en todos los períodos."
+      "Situación en la que mejorar un objetivo hace más difícil alcanzar otro: los objetivos ",
+      "macroeconómicos no siempre evolucionan en la misma dirección, y pueden aparecer ",
+      "tensiones entre ellos. Una tensión clásica es la que plantea la curva de Phillips ",
+      "entre inflación y desempleo: bajar el desempleo podría subir la inflación, y viceversa. ",
+      "Pero esa relación no es estable en todos los países ni en todos los períodos."
     ),
-    example    = "Un gobierno puede estimular la economía para bajar el desempleo, con el riesgo de que suba la inflación.",
-    related    = "Política monetaria, Objetivo e indicador"
+    example    = "Una economía puede aumentar su producción y reducir el desempleo, pero mantener una inflación elevada; o reducir la inflación y atravesar una desaceleración de la actividad.",
+    related    = "Política monetaria, Objetivo macroeconómico"
   ),
 
   list(
     term       = "Ciclo económico",
-    category   = "Conceptos",
+    category   = "Conceptos generales",
     definition = paste0(
       "Alternancia de fases de expansión y de contracción (recesión) alrededor de la tendencia ",
       "de crecimiento de largo plazo. Los ciclos varían en duración e intensidad. Ayudan a ",
@@ -367,20 +545,44 @@ GLOSSARY_TERMS <- list(
   )
 )
 
-# Sort alphabetically, ignoring accents ("Índice" goes with "I")
-GLOSSARY_TERMS <- GLOSSARY_TERMS[order(tolower(iconv(sapply(GLOSSARY_TERMS, `[[`, "term"),
-                                                     to = "ASCII//TRANSLIT")))]
+# Order of the notes' glossary: general concepts, then each objective with its
+# indicator and the concepts needed to read it; what the notes do not cover yet
+# (policies, statistics) goes last
+GLOSSARY_ORDER <- c(
+  # Conceptos generales
+  "Macroeconomía", "Objetivo macroeconómico", "Indicador", "Sostenibilidad",
+  "Disyuntiva (trade-off)", "Ciclo económico",
+  # Crecimiento económico
+  "Crecimiento económico", "PBI (Producto Bruto Interno)", "PBI nominal", "PBI real",
+  "Crecimiento del PBI", "Recesión",
+  # Pleno empleo
+  "Pleno empleo", "Empleo", "Desempleo", "Población económicamente activa",
+  "Tasa de desempleo", "Tasa de empleo",
+  # Estabilidad de precios
+  "Estabilidad de precios", "Nivel general de precios", "Inflación", "Deflación",
+  "IPC (Índice de Precios al Consumidor)", "Hiperinflación",
+  # Sostenibilidad fiscal
+  "Sostenibilidad fiscal", "Resultado fiscal", "Déficit fiscal", "Superávit fiscal",
+  "Deuda pública",
+  # Sostenibilidad externa
+  "Sostenibilidad externa", "Sector externo", "Balanza de pagos", "Balanza comercial",
+  "Saldo comercial", "Déficit y superávit externo", "Cuenta corriente",
+  "Inversión extranjera directa",
+  # Más allá del apunte
+  "Política monetaria", "Política fiscal", "Correlación", "Causalidad"
+)
+GLOSSARY_TERMS <- GLOSSARY_TERMS[order(match(sapply(GLOSSARY_TERMS, `[[`, "term"), GLOSSARY_ORDER))]
 
 # Categories in display order, with their colours
 GLOSSARY_CATEGORY_COLORS <- c(
-  "Producción"     = "#2563eb",
-  "Empleo"         = "#16a34a",
-  "Precios"        = "#dc2626",
-  "Sector público" = "#7c3aed",
-  "Sector externo" = "#d97706",
-  "Políticas"      = "#0891b2",
-  "Conceptos"      = "#db2777",
-  "Estadística"    = "#475569"
+  "Conceptos generales" = "#db2777",
+  "Producción"          = "#2563eb",
+  "Empleo"              = "#16a34a",
+  "Precios"             = "#dc2626",
+  "Sector público"      = "#7c3aed",
+  "Sector externo"      = "#d97706",
+  "Políticas"           = "#0891b2",
+  "Estadística"         = "#475569"
 )
 
 # =============================================================================
@@ -396,7 +598,9 @@ glossary_modal <- function() {
       tags$p(
         style = "color:#555; margin:0;",
         "Pasá el mouse sobre los íconos ", tags$code("📖"), " de la aplicación para ver definiciones breves.",
-        " Este glosario tiene las explicaciones completas, con ejemplos."
+        " Este glosario tiene las explicaciones completas, con ejemplos. ",
+        "Los términos siguen el orden del apunte \"La mirada macroeconómica\": primero los ",
+        "conceptos generales y luego cada objetivo con su indicador."
       )
     ),
     # Filter by category
