@@ -1,7 +1,8 @@
 # =============================================================================
 # MODULE: COMPARE COUNTRIES (Tab 2)
 # Purpose: Compare economic trajectories of multiple countries on one chart.
-# Supports raw values and indexed values (base = 100 at start year).
+# Supports raw values and change since a base year: a real GDP index
+# (base year = 100) for GDP growth, percentage-point change for the rest.
 # =============================================================================
 
 # ── UI ────────────────────────────────────────────────────────────────────────
@@ -18,7 +19,7 @@ compare_countries_ui <- function(id) {
         tags$p(
           style = "font-size:0.83rem; color:#555; line-height:1.5; margin-bottom:12px;",
           "Select up to 6 countries and one indicator. Switch between raw values ",
-          "and indexed values (all starting at 100) to compare trajectories."
+          "and the change since a base year to compare trajectories."
         )
       ),
 
@@ -63,7 +64,7 @@ compare_countries_ui <- function(id) {
         label    = "Display mode",
         choices  = c(
           "Raw values"           = "raw",
-          "Indexed (base = 100)" = "indexed"
+          "Change since base year" = "indexed"
         ),
         selected = "raw"
       ),
@@ -81,7 +82,8 @@ compare_countries_ui <- function(id) {
         ),
         tags$small(
           style = "color:#64748b; font-size:0.78rem;",
-          "All countries start at 100 in the base year, showing relative change from that point."
+          "GDP growth becomes a real GDP index (base year = 100). The other indicators ",
+          "are already rates or ratios, so they show the change in percentage points."
         )
       ),
 
@@ -117,14 +119,7 @@ compare_countries_ui <- function(id) {
       # Pedagogical note on indexed values
       conditionalPanel(
         condition = paste0("input['", ns("display_mode"), "'] == 'indexed'"),
-        tags$div(
-          class = "info-box mt-2",
-          tags$span("📌 "),
-          tags$b("About indexed values: "),
-          "When using base 100, all countries start at the same point, making it easy to ",
-          "compare relative changes. A value of 110 means 10% above the base year level; ",
-          "90 means 10% below. This is especially useful for comparing different-sized economies."
-        )
+        uiOutput(ns("change_note"))
       ),
       # Data table (optional)
       conditionalPanel(
@@ -166,29 +161,50 @@ compare_countries_server <- function(id, data) {
       )
 
       df <- data() %>%
-        filter(
-          iso2c %in% input$countries,
-          year  >= input$year_range[1],
-          year  <= input$year_range[2]
-        ) %>%
+        filter(iso2c %in% input$countries) %>%
         select(country, iso2c, year, val = all_of(input$variable),
                src = any_of(paste0(input$variable, "_source"))) %>%
         arrange(country, year)
 
-      # Indexed mode: divide by base-year value × 100
+      # Change since base year, computed on all years so the base year may lie
+      # outside the plotted range
       if (input$display_mode == "indexed") {
         req(input$base_year)
-        base_vals <- df %>%
-          filter(year == input$base_year) %>%
-          select(iso2c, base_val = val)
-
         df <- df %>%
-          left_join(base_vals, by = "iso2c") %>%
-          mutate(val = ifelse(!is.na(base_val) & base_val != 0,
-                              (val / base_val) * 100, NA)) %>%
-          select(-base_val)
+          group_by(iso2c) %>%
+          mutate(val = change_since_base(val, year, input$base_year,
+                                         input$variable == "gdp_growth")) %>%
+          ungroup() %>%
+          as.data.frame()
       }
-      df
+
+      df %>% filter(year >= input$year_range[1], year <= input$year_range[2])
+    })
+
+    output$change_note <- renderUI({
+      req(input$variable)
+      tags$div(
+        class = "info-box mt-2",
+        tags$span("📌 "),
+        if (input$variable == "gdp_growth") {
+          tagList(
+            tags$b("Real GDP index: "),
+            "the growth rates are chained into the level of real GDP, set to 100 in the base ",
+            "year. A value of 110 means the economy produces 10% more than in the base year. ",
+            "Growth is the change in real GDP: a country whose growth rises from 2% to 4% ",
+            "doubles its growth rate, but its real GDP is only about 6% higher after those ",
+            "two years."
+          )
+        } else {
+          tagList(
+            tags$b("Change in percentage points: "),
+            var_short(input$variable), " is already a rate or a ratio, so dividing it by its ",
+            "base-year value would be meaningless (a rate that goes from 2% to 4% is not ",
+            "\"twice as much economy\"). The chart shows how many percentage points it moved ",
+            "since the base year: +2 means 2 points higher than in the base year."
+          )
+        }
+      )
     })
 
     output$chart_title <- renderUI({
@@ -196,7 +212,7 @@ compare_countries_server <- function(id, data) {
       mode_txt <- if (input$display_mode == "raw") {
         var_label(input$variable)
       } else {
-        paste0(var_short(input$variable), " — Indexed (base = 100 in ", input$base_year, ")")
+        change_label(input$variable, input$base_year)
       }
       tags$span(style = "font-weight:700; color:#1e3a5f;", mode_txt)
     })
@@ -230,8 +246,13 @@ compare_countries_server <- function(id, data) {
           df_c$val
         }
 
-        y_lab  <- if (input$display_mode == "raw") var_unit(var_sel) else "Index (100 = base)"
-        unit_lbl <- if (input$display_mode == "raw") paste0(" ", var_unit(var_sel)) else ""
+        unit_lbl <- if (input$display_mode == "raw") {
+          paste0(" ", var_unit(var_sel))
+        } else if (var_sel == "gdp_growth") {
+          " (index)"
+        } else {
+          " pp"
+        }
 
         p <- p %>% add_trace(
           data       = df_c,
@@ -282,7 +303,8 @@ compare_countries_server <- function(id, data) {
       }
 
       # Zero line
-      zero_line_shapes <- if (VARS[[var_sel]]$zero_line) {
+      zero_line_shapes <- if (input$display_mode == "raw" && VARS[[var_sel]]$zero_line ||
+                              input$display_mode == "indexed" && var_sel != "gdp_growth") {
         list(list(
           type = "line",
           x0 = min(df$year), x1 = max(df$year),
@@ -299,7 +321,8 @@ compare_countries_server <- function(id, data) {
             gridcolor = "#f1f5f9"
           ),
           yaxis = list(
-            title    = if (input$display_mode == "raw") var_label(var_sel) else "Index",
+            title    = if (input$display_mode == "raw") var_label(var_sel)
+                       else change_label(var_sel, input$base_year),
             tickfont = list(size = 11),
             gridcolor = "#f1f5f9",
             zerolinecolor = "#94a3b8"
@@ -336,4 +359,36 @@ compare_countries_server <- function(id, data) {
         mutate(across(-Year, ~ round(.x, 2)))
     }, striped = TRUE, hover = TRUE, bordered = TRUE, digits = 2)
   })
+}
+
+# Change since base year for one country's series (sorted by year).
+# Growth rates are chained into a level index (base year = 100); any other
+# rate or ratio becomes its difference in percentage points from the base year.
+# Returns NA where the base year is missing or a gap breaks the chain.
+change_since_base <- function(val, year, base_year, chain_growth) {
+  out <- rep(NA_real_, length(val))
+  b <- match(base_year, year)
+  if (is.na(b) || (!chain_growth && is.na(val[b]))) return(out)
+  if (!chain_growth) return(val - val[b])
+
+  out[b] <- 100
+  # Forward: the level grows by each year's growth rate
+  for (i in seq_len(length(val) - b) + b) {
+    if (year[i] != year[i - 1] + 1 || is.na(val[i])) break
+    out[i] <- out[i - 1] * (1 + val[i] / 100)
+  }
+  # Backward: undo the growth of the following year
+  for (i in rev(seq_len(b - 1))) {
+    if (year[i + 1] != year[i] + 1 || is.na(val[i + 1])) break
+    out[i] <- out[i + 1] / (1 + val[i + 1] / 100)
+  }
+  out
+}
+
+change_label <- function(v, base_year) {
+  if (v == "gdp_growth") {
+    paste0("Real GDP index (", base_year, " = 100)")
+  } else {
+    paste0(var_short(v), " — change since ", base_year, " (percentage points)")
+  }
 }

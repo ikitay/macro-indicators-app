@@ -27,7 +27,7 @@ test_that("Compare Countries renders in every display mode", {
                           year_range = c(1990, 2023), display_mode = mode,
                           base_year = 2000, show_crisis = TRUE,
                           smooth_lines = FALSE, show_table = TRUE)
-        render_all_outputs(output, c("chart_title", "compare_plot", "data_table"))
+        render_all_outputs(output, c("chart_title", "compare_plot", "data_table", "change_note"))
       }
     }
   })
