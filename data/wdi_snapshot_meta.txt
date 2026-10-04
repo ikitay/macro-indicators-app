@@ -1,8 +1,16 @@
-Generated: 2026-10-01 21:12:05 UTC
+Generated: 2026-10-04 18:06:14 UTC
 Rows: 7310
 Countries: 215
 Years: 1990 - 2023
 Source: https://databankfiles.worldbank.org/public/ddpext_download/WDI_CSV.zip
 Supplemented: fiscal_balance: IMF WEO for 195 countries
 Supplemented: inflation: 559 gaps filled from IMF WEO
+Supplemented: public_debt: IMF WEO, 5351 country-years
 Supplemented: inflation (Argentina): 27 years from INDEC / provincial CPIs
+Extra series: unemployment (SL.UEM.TOTL.ZS): 6101 country-years
+Extra series: public_debt (GGXWDG_NGDP): 5351 country-years
+Extra series: current_account (BN.CAB.XOKA.GD.ZS): 5614 country-years
+Extra series: fdi_inflows (BX.KLT.DINV.WD.GD.ZS): 6313 country-years
+Extra series: cpi_index (FP.CPI.TOTL): 5879 country-years
+Extra series: gdp_nominal_lcu (NY.GDP.MKTP.CN): 6976 country-years
+Extra series: gdp_real_lcu (NY.GDP.MKTP.KN): 6900 country-years
