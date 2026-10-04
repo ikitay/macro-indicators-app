@@ -14,6 +14,11 @@ Notable changes to *Exploring Macroeconomics Through Data*.
   public debt, trade balance and current account with their values five years
   earlier.
 - Glossary entries for Cuenta corriente and Inversión extranjera directa.
+- **Explore Country: "Niveles y tasas"**, below the main chart: a price index
+  built from the inflation series next to its yearly rates (IPC ≠ inflación),
+  and nominal vs real GDP as indices (PBI nominal ≠ PBI real), with a log scale
+  when the range is very wide. For Argentina 1995–2023, nominal GDP grew 746-fold
+  and real GDP 1.7-fold.
 - **Challenges** use the new series: C02 (cost of disinflation) and C06
   (recoveries) use the unemployment rate; C04 (good today, sustainable
   tomorrow?) uses unemployment, public debt and the current account, contrasting

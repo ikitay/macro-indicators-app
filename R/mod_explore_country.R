@@ -8,7 +8,7 @@
 explore_country_ui <- function(id) {
   ns <- NS(id)
   layout_sidebar(
-    fillable = TRUE,
+    fillable = FALSE,
     sidebar = sidebar(
       width = 270,
       open  = "open",
@@ -96,6 +96,35 @@ explore_country_ui <- function(id) {
       card_body(
         padding = "0",
         uiOutput(ns("plot_container"))
+      )
+    ),
+
+    # ── Levels vs rates ───────────────────────────────────────────────────────
+    card(
+      full_screen = TRUE,
+      card_header(tags$span(style = "font-weight:700; color:#1e3a5f;",
+                            "Niveles y tasas: IPC e inflación, PBI nominal y PBI real")),
+      card_body(
+        layout_columns(
+          col_widths = c(6, 6),
+          tags$div(
+            plotlyOutput(ns("price_level_plot"), height = "320px"),
+            tags$div(class = "info-box", style = "font-size:0.82rem;",
+              tags$b("IPC ≠ inflación. "),
+              "La línea es un índice de precios (el primer año del período = 100). La ",
+              "inflación de cada año es la variación porcentual de ese índice: si pasa de 100 ",
+              "a 110, la inflación fue del 10%. Pasá el mouse para ver la inflación de cada año.")
+          ),
+          tags$div(
+            plotlyOutput(ns("gdp_level_plot"), height = "320px"),
+            tags$div(class = "info-box", style = "font-size:0.82rem;",
+              tags$b("PBI nominal ≠ PBI real. "),
+              "El PBI nominal usa los precios de cada año, así que crece también cuando suben ",
+              "los precios. El PBI real descuenta ese efecto: solo crece si se produce más. ",
+              "La distancia entre las dos líneas es el efecto de los precios.")
+          )
+        ),
+        uiOutput(ns("levels_note"))
       )
     )
   )
@@ -306,6 +335,76 @@ explore_country_server <- function(id, data) {
           responsive = TRUE
         )
     })
+
+    # ── Levels vs rates ──────────────────────────────────────────────────────
+    levels_data <- reactive({
+      req(country_data())
+      df <- country_data()
+      base <- df$year[1]
+      data.frame(
+        year         = df$year,
+        inflation    = df$inflation,
+        price_index  = change_since_base(df$inflation, df$year, base, chain_growth = TRUE),
+        gdp_nominal  = level_index(df$gdp_nominal_lcu, df$year, base),
+        gdp_real     = level_index(df$gdp_real_lcu, df$year, base)
+      )
+    })
+
+    level_layout <- function(p, y_title, values) {
+      log_axis <- use_log_axis(values)
+      p %>%
+        layout(
+          xaxis = list(title = "Año", gridcolor = "#f1f5f9"),
+          yaxis = list(title = paste0(y_title, if (log_axis) "<br>escala logarítmica"),
+                       type = if (log_axis) "log" else "linear", gridcolor = "#f1f5f9"),
+          legend = list(orientation = "h", x = 0, y = -0.25),
+          hovermode = "x unified",
+          margin = list(l = 60, r = 20, t = 10, b = 40),
+          paper_bgcolor = "#ffffff", plot_bgcolor = "#ffffff"
+        ) %>%
+        config(displaylogo = FALSE, locale = "es", modeBarButtons = list(list("toImage")))
+    }
+
+    output$price_level_plot <- renderPlotly({
+      d <- levels_data()
+      validate(need(any(!is.na(d$price_index)), "No hay datos de inflación para este período."))
+      plot_ly(d, x = ~year) %>%
+        add_trace(y = ~price_index, type = "scatter", mode = "lines+markers",
+                  name = "Índice de precios", line = list(color = var_color("inflation"), width = 2.5),
+                  marker = list(color = var_color("inflation"), size = 5),
+                  text = paste0("Índice: ", num_es(d$price_index), "<br>Inflación del año: ",
+                                ifelse(is.na(d$inflation), "s/d", paste0(num_es(d$inflation), "%"))),
+                  hoverinfo = "text") %>%
+        level_layout(paste0("Índice de precios (", d$year[1], " = 100)"), d$price_index)
+    })
+
+    output$gdp_level_plot <- renderPlotly({
+      d <- levels_data()
+      validate(need(any(!is.na(d$gdp_nominal)) || any(!is.na(d$gdp_real)),
+                    "No hay datos del PBI en moneda local para este período."))
+      plot_ly(d, x = ~year) %>%
+        add_trace(y = ~gdp_nominal, type = "scatter", mode = "lines+markers", name = "PBI nominal",
+                  line = list(color = "#d97706", width = 2.5), marker = list(color = "#d97706", size = 5),
+                  text = paste0("PBI nominal: ", num_es(d$gdp_nominal)), hoverinfo = "text") %>%
+        add_trace(y = ~gdp_real, type = "scatter", mode = "lines+markers", name = "PBI real",
+                  line = list(color = var_color("gdp_growth"), width = 2.5),
+                  marker = list(color = var_color("gdp_growth"), size = 5),
+                  text = paste0("PBI real: ", num_es(d$gdp_real)), hoverinfo = "text") %>%
+        level_layout(paste0("Índice (", d$year[1], " = 100)"), c(d$gdp_nominal, d$gdp_real))
+    })
+
+    # The period's totals, in words
+    output$levels_note <- renderUI({
+      d <- levels_data()
+      last <- function(x) { x <- x[!is.na(x)]; if (length(x)) x[length(x)] else NA }
+      n <- last(d$gdp_nominal); r <- last(d$gdp_real); p <- last(d$price_index)
+      if (anyNA(c(n, r, p))) return(NULL)
+      # One string, so no whitespace appears around the bold numbers
+      tags$p(style = "font-size:0.85rem; color:#334155; margin:8px 0 0;", HTML(paste0(
+        "Entre ", d$year[1], " y ", d$year[nrow(d)], " el PBI nominal se multiplicó por <b>",
+        num_es(n / 100, 2), "</b> y el PBI real por <b>", num_es(r / 100, 2),
+        "</b>, mientras el índice de precios se multiplicó por <b>", num_es(p / 100, 2), "</b>.")))
+    })
   })
 }
 
@@ -328,4 +427,17 @@ negative_growth_shapes <- function(df) {
     x0 = y - 0.5, x1 = y + 0.5, y0 = 0, y1 = 1,
     fillcolor = "rgba(148,163,184,0.18)", line = list(width = 0), layer = "below"
   ))
+}
+
+# A level as an index, base year = 100 (NA when the base year has no value)
+level_index <- function(level, year, base_year) {
+  base <- level[match(base_year, year)]
+  if (length(base) == 0 || is.na(base) || base == 0) return(rep(NA_real_, length(level)))
+  100 * level / base
+}
+
+# Use a log axis when the series spans a very wide range (e.g. high inflation)
+use_log_axis <- function(values) {
+  v <- values[!is.na(values) & values > 0]
+  length(v) > 1 && max(v) / min(v) > 20
 }
