@@ -2,6 +2,18 @@
 
 Notable changes to *Exploring Macroeconomics Through Data*.
 
+## 2026-10-05 (no text boxes)
+
+### Removed
+- **Diagnóstico: the text boxes and "Descargar mis respuestas".** The app does
+  not record anything, so boxes to type answers into were misleading: the text
+  was lost on reload or disconnect unless downloaded. The tab keeps the table,
+  the guided reading and the activities, and says that the answers go in
+  writing, outside the app. The "¿Qué muestra el caso?" column is gone.
+
+### Added
+- A test that no tab has a text box.
+
 ## 2026-10-05 (idle tabs disconnect)
 
 ### Added

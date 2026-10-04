@@ -11,6 +11,16 @@ test_that("every module UI builds", {
   expect_no_error(htmltools::renderTags(glossary_modal()))
 })
 
+test_that("no tab has a text box: the app records nothing students write", {
+  for (ui_fn in list(explore_country_ui, compare_countries_ui, global_explorer_ui,
+                     country_profile_ui, diagnosis_ui, historical_events_ui, challenges_ui,
+                     correlation_ui)) {
+    html <- as.character(ui_fn("m"))
+    expect_false(grepl("<textarea", html))
+    expect_false(grepl('type="text"', html, fixed = TRUE))
+  }
+})
+
 test_that("Explore Country renders", {
   testServer(explore_country_server, args = list(data = data_r), {
     session$setInputs(country = "AR", year_range = c(1990, 2023),

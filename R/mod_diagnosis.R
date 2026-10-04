@@ -2,9 +2,10 @@
 # MODULE: ¿CÓMO ESTÁ ESTA ECONOMÍA? (Tab 5)
 # Purpose: The course notes' integrative case ("Caso integrador"), built from
 #   real data. Students pick a country and a year, read each objective's
-#   indicator, write what it shows, and assess the claim "the economy is fine
-#   because…" using growth, employment, prices and fiscal and external
-#   sustainability. Their answers can be downloaded as a text file.
+#   indicators, and assess the claim "the economy is fine because…" using
+#   growth, employment, prices and fiscal and external sustainability. They
+#   answer in writing outside the app: the app has no text boxes, because it
+#   does not record anything.
 # =============================================================================
 
 DIAGNOSIS_LOOKBACK <- 5  # years back for the sustainability trajectory
@@ -104,35 +105,6 @@ diagnosis_reading <- function(rows) {
   })
 }
 
-# Plain-text record of the student's work, for download.
-# `notes` is named by objective id.
-diagnosis_text <- function(country, year, rows, notes, claim, answers) {
-  fmt <- function(x, v) if (is.na(x)) "s/d" else paste0(num_es(x), var_unit(v))
-  lines <- c(
-    paste0("¿Cómo está esta economía? ", country, ", ", year),
-    strrep("=", 60), "",
-    "ACTIVIDAD 1. Identificar", ""
-  )
-  for (id in names(DIAGNOSIS_OBJECTIVES)) {
-    obj <- rows[rows$objective_id == id, ]
-    lines <- c(lines, paste0(obj$dimension[1], " / ", obj$objective[1]))
-    for (i in seq_len(nrow(obj))) {
-      lines <- c(lines,
-        paste0("  ", obj$indicator[i], ": ", fmt(obj$value[i], obj$var[i]),
-               " (", year - 1, ": ", fmt(obj$previous[i], obj$var[i]), "; ",
-               year - DIAGNOSIS_LOOKBACK, ": ", fmt(obj$past[i], obj$var[i]), ")"))
-    }
-    note <- notes[[id]] %||% ""
-    lines <- c(lines, paste0("  ¿Qué muestra?: ", if (nzchar(note)) note else "(sin responder)"), "")
-  }
-  section <- function(title, text) c(title, if (nzchar(text)) text else "(sin responder)", "")
-  c(lines,
-    section("ACTIVIDAD 2. Interpretar: ¿qué resultados parecen favorables y qué problemas permanecen?",
-            answers$interpret),
-    section(paste0("ACTIVIDAD 4. Evaluar la afirmación: \"", claim, "\""), answers$evaluate),
-    section("ACTIVIDAD 5. ¿Qué otra información necesitarías?", answers$missing))
-}
-
 diagnosis_ui <- function(id) {
   ns <- NS(id)
   layout_sidebar(
@@ -157,14 +129,15 @@ diagnosis_ui <- function(id) {
       tags$small(style = "color:#64748b; font-size:0.78rem;",
         "La lectura guiada describe los números; la interpretación la hacés vos."),
       hr(),
-      downloadButton(ns("download"), "Descargar mis respuestas", class = "btn btn-sm btn-success w-100")
+      tags$small(style = "color:#64748b; font-size:0.78rem; line-height:1.4;",
+        "✏️ Respondé las actividades por escrito, fuera de la app: la app no guarda respuestas.")
     ),
     card(
       card_header(uiOutput(ns("title"))),
       card_body(
         tags$h6(style = "color:#1e3a5f; font-weight:700;", "Actividad 1. Identificar"),
         tags$p(style = "font-size:0.85rem; color:#475569;",
-          "Para cada objetivo, mirá sus indicadores y escribí qué muestra el caso. Para la ",
+          "Para cada objetivo, mirá sus indicadores y anotá qué muestra el caso. Para la ",
           "sostenibilidad no alcanza con un año: compará con cinco años antes."),
         uiOutput(ns("table"))
       )
@@ -175,20 +148,14 @@ diagnosis_ui <- function(id) {
         tags$p(style = "font-size:0.85rem; color:#475569; margin-bottom:4px;",
           "¿Qué resultados parecen favorables? ¿Qué problemas permanecen? ¿Qué información ",
           "del caso permite evaluar la sostenibilidad fiscal y la externa?"),
-        textAreaInput(ns("interpret"), NULL, width = "100%", rows = 4,
-                      placeholder = "Escribí tu interpretación…"),
         tags$h6(style = "color:#1e3a5f; font-weight:700; margin-top:10px;", "Actividad 4. Evaluar"),
         uiOutput(ns("claim_box")),
-        textAreaInput(ns("evaluate"), NULL, width = "100%", rows = 6,
-                      placeholder = "La afirmación toma en cuenta…, pero no alcanza para evaluar la situación completa porque…"),
         tags$h6(style = "color:#1e3a5f; font-weight:700; margin-top:10px;", "Actividad 5. Integrar"),
         tags$p(style = "font-size:0.85rem; color:#475569; margin-bottom:4px;",
           "¿Qué otra información necesitarías para una evaluación más completa? Organizá tu ",
           "respuesta en producción, empleo, precios, situación fiscal y situación externa. ",
           "Pista: la app no muestra, por ejemplo, la balanza de pagos completa, las reservas ",
-          "internacionales ni las tasas de interés a las que se financia el Estado."),
-        textAreaInput(ns("missing"), NULL, width = "100%", rows = 4,
-                      placeholder = "Para evaluar mejor la situación fiscal necesitaría…")
+          "internacionales ni las tasas de interés a las que se financia el Estado.")
       )
     )
   )
@@ -196,7 +163,6 @@ diagnosis_ui <- function(id) {
 
 diagnosis_server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
-    ns <- session$ns
 
     observe({
       req(data())
@@ -244,7 +210,7 @@ diagnosis_server <- function(id, data) {
         paste0(if (v %in% BALANCE_VARS && x > 0) "+", num_es(x), "%")
       }
       group_row <- function(g) tags$tr(class = "table-light",
-        tags$td(colspan = 5, tags$b(OBJECTIVE_GROUPS[[g]])))
+        tags$td(colspan = 4, tags$b(OBJECTIVE_GROUPS[[g]])))
 
       body <- list()
       for (g in c("central", "sustainability")) {
@@ -253,11 +219,10 @@ diagnosis_server <- function(id, data) {
                                          r$objective_id %in% r$objective_id[r$group == g]])) {
           rows_i <- which(r$objective_id == id)
           n <- length(rows_i)
-          note_id <- paste0("note_", id)
           for (k in seq_along(rows_i)) {
             i <- rows_i[k]
             body <- c(body, list(tags$tr(
-              # The objective and the student's notes span all its indicators
+              # The objective spans all its indicators
               if (k == 1) tags$td(rowspan = n, style = "width:18%;",
                 tags$div(style = "font-weight:600;", r$objective[i]),
                 tags$div(style = "font-size:0.75rem; color:#64748b;", r$dimension[i])),
@@ -269,12 +234,7 @@ diagnosis_server <- function(id, data) {
               tags$td(style = "width:12%; text-align:right; font-size:0.78rem; color:#64748b;",
                 tags$div(paste0(input$year - 1, ": "), fmt(r$previous[i], r$var[i])),
                 if (r$group[i] == "sustainability")
-                  tags$div(paste0(input$year - DIAGNOSIS_LOOKBACK, ": "), fmt(r$past[i], r$var[i]))),
-              if (k == 1) tags$td(rowspan = n,
-                # Keep what the student already typed when the case changes
-                textAreaInput(ns(note_id), NULL, width = "100%", rows = 1 + 2 * n,
-                              value = isolate(input[[note_id]]) %||% "",
-                              placeholder = "¿Qué muestra el caso?"))
+                  tags$div(paste0(input$year - DIAGNOSIS_LOOKBACK, ": "), fmt(r$past[i], r$var[i])))
             )))
           }
         }
@@ -285,8 +245,7 @@ diagnosis_server <- function(id, data) {
         tags$thead(tags$tr(
           tags$th("Objetivo"), tags$th("Indicador"),
           tags$th(style = "text-align:right;", input$year),
-          tags$th(style = "text-align:right;", "Antes"),
-          tags$th("¿Qué muestra el caso?")
+          tags$th(style = "text-align:right;", "Antes")
         )),
         tags$tbody(body)
       )
@@ -300,27 +259,11 @@ diagnosis_server <- function(id, data) {
           style = "background:#eaf4fb; border-left:4px solid #2e86c1; padding:10px 14px; font-style:italic; margin-bottom:8px;",
           paste0("“", claim(), "”")),
         tags$p(style = "font-size:0.85rem; color:#475569; margin-bottom:4px;",
-          "¿Estás de acuerdo? Construí una respuesta que reconozca qué información de la ",
+          "¿Estás de acuerdo? Construí por escrito una respuesta que reconozca qué información de la ",
           "afirmación es positiva, señale qué dimensiones quedan fuera, incorpore la ",
           "inflación, la sostenibilidad fiscal y la situación externa, y formule una ",
           "conclusión general.")
       )
     })
-
-    output$download <- downloadHandler(
-      filename = function() {
-        paste0("diagnostico_", input$country, "_", input$year, ".txt")
-      },
-      content = function(file) {
-        notes <- lapply(setNames(nm = names(DIAGNOSIS_OBJECTIVES)),
-                        function(id) input[[paste0("note_", id)]] %||% "")
-        answers <- list(interpret = input$interpret %||% "",
-                        evaluate  = input$evaluate  %||% "",
-                        missing   = input$missing   %||% "")
-        writeLines(enc2utf8(diagnosis_text(country_name(), input$year, rows(), notes,
-                                           claim(), answers)),
-                   file, useBytes = TRUE)
-      }
-    )
   })
 }

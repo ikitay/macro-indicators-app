@@ -43,32 +43,20 @@ test_that("the guided reading describes without judging", {
   expect_false(any(grepl("bien|mal|bueno|malo|problema", reading)))
 })
 
-test_that("the tab renders, keeps typed notes and downloads the answers", {
+test_that("the tab renders, with no text boxes and nothing to download", {
+  html <- as.character(diagnosis_ui("d"))
+  expect_false(grepl("<textarea", html))
+  expect_false(grepl("download", html, ignore.case = TRUE))
+  expect_match(html, "la app no guarda respuestas")
   testServer(diagnosis_server, args = list(data = reactive(macro_df)), {
     session$setInputs(country = "AR", year = 2017, show_reading = TRUE)
     expect_no_error(output$title)
-    expect_no_error(output$claim_box)
+    expect_match(as.character(output$claim_box$html), "el PBI creció y la inflación bajó")
     html <- as.character(output$table$html)
     expect_match(html, "Objetivos centrales")
     expect_match(html, "2012:")  # sustainability rows show five years earlier
     expect_match(html, "La producción aumentó")
-
-    session$setInputs(note_prices = "Alta, pero bajando",
-                      interpret = "Crece, pero con inflación alta.",
-                      evaluate = "No alcanza.", missing = "Deuda pública.")
-    # Notes survive a re-render (e.g. toggling the guided reading)
-    session$setInputs(show_reading = FALSE)
-    expect_match(as.character(output$table$html), "Alta, pero bajando")
-
-    file <- output$download
-    txt <- readLines(file, encoding = "UTF-8")
-    expect_match(txt[1], "Argentina, 2017")
-    expect_true(any(grepl("Inflación (%): 25,7% (2016: 38,2%", txt, fixed = TRUE)))
-    expect_true(any(grepl("-6,7% del PBI", txt, fixed = TRUE)))
-    expect_true(any(grepl("¿Qué muestra\\?: Alta, pero bajando", txt)))
-    expect_true(any(grepl("el PBI creció y la inflación bajó", txt)))
-    expect_true(any(grepl("Deuda pública.", txt, fixed = TRUE)))
-    expect_true(any(grepl("(sin responder)", txt, fixed = TRUE)))  # untouched rows
+    expect_false(grepl("<textarea", html))
   })
 })
 
