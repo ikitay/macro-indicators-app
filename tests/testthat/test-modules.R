@@ -85,3 +85,15 @@ test_that("Correlation Explorer renders", {
     }
   })
 })
+
+test_that("glossary has the terms the course notes rely on", {
+  terms <- sapply(GLOSSARY_TERMS, `[[`, "term")
+  for (t in c("Balance of Payments", "Fiscal Sustainability", "Nominal GDP",
+              "Inflation", "Recession", "Trade Balance")) {
+    expect_true(t %in% terms, label = t)
+  }
+  for (cat in sapply(GLOSSARY_TERMS, `[[`, "category")) expect_false(is.na(category_color(cat)))
+  for (f in c("All", unique(sapply(GLOSSARY_TERMS, `[[`, "category")))) {
+    expect_no_error(htmltools::renderTags(render_glossary(f)))
+  }
+})

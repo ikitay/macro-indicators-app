@@ -9,23 +9,27 @@ GLOSSARY_TERMS <- list(
     term       = "GDP Growth",
     category   = "Output",
     definition = paste0(
-      "The annual percentage change in a country's Gross Domestic Product (GDP) ",
-      "at constant prices (adjusting for inflation). GDP measures the total value of ",
-      "all goods and services produced in an economy. Positive GDP growth means the ",
-      "economy is expanding; negative growth indicates contraction."
+      "The annual percentage change in a country's real Gross Domestic Product (GDP), ",
+      "measured at constant prices. GDP is the value of the final goods and services ",
+      "produced in an economy during a period. Nominal GDP uses each year's prices, so it ",
+      "can rise only because prices rose; real GDP removes that effect and shows whether ",
+      "the economy actually produced more. Economic growth is the objective; the change ",
+      "in real GDP is the indicator we use to observe it."
     ),
     example    = "If GDP grows by 3%, the economy produced 3% more goods and services than the previous year.",
-    related    = "Recession, Business Cycle, Real GDP"
+    related    = "Recession, Business Cycle, Nominal GDP"
   ),
 
   list(
     term       = "Recession",
     category   = "Output",
     definition = paste0(
-      "Conventionally defined as two consecutive quarters of negative GDP growth. ",
-      "Recessions are typically accompanied by rising unemployment, falling investment, ",
-      "and reduced consumer spending. The global financial crisis of 2008–09 caused ",
-      "simultaneous recessions in many countries."
+      "A period of sustained decline in production, income and employment. With quarterly ",
+      "data, a common rule of thumb is two consecutive quarters of falling real GDP. This ",
+      "app uses annual data, so a year of negative GDP growth is a signal of recession, not ",
+      "a definition. Recessions are typically accompanied by rising unemployment, falling ",
+      "investment and reduced consumer spending. The global financial crisis of 2008–09 ",
+      "caused simultaneous recessions in many countries."
     ),
     example    = "During 2020, many countries experienced their deepest recessions in decades due to COVID-19.",
     related    = "GDP Growth, Business Cycle, Unemployment"
@@ -60,12 +64,16 @@ GLOSSARY_TERMS <- list(
     term       = "Inflation",
     category   = "Prices",
     definition = paste0(
-      "The annual percentage change in the general price level, measured by the Consumer ",
-      "Price Index (CPI). Low, stable inflation (typically 2%) is the target of most ",
-      "central banks. Very high inflation erodes purchasing power; deflation (negative ",
-      "inflation) can cause consumers to delay purchases, depressing the economy."
+      "A sustained, generalised increase in the general price level. It is measured as the ",
+      "percentage change of a price index such as the Consumer Price Index (CPI). The CPI ",
+      "is not inflation: it is an index of the cost of a representative household basket; ",
+      "inflation is its rate of change. Price stability does not mean no price ever rises: ",
+      "the aim is to avoid high or unstable inflation. Low, stable inflation (typically 2%) ",
+      "is the target of most central banks. Very high inflation erodes purchasing power; ",
+      "deflation (a sustained fall in the price level) is not desirable either, especially ",
+      "when it reflects weak economic activity."
     ),
-    example    = "If a basket of goods costs $100 today and $103 next year, inflation is 3%.",
+    example    = "If the CPI goes from 100 to 110 in a year, the basket costs 10% more: inflation for that year is 10%. Saying \"the CPI was 110\" does not tell you how much inflation there was.",
     related    = "Hyperinflation, Deflation, Central Bank, Monetary Policy"
   ),
 
@@ -75,10 +83,10 @@ GLOSSARY_TERMS <- list(
     definition = paste0(
       "Extremely rapid inflation, often defined as exceeding 50% per month. ",
       "It destroys the value of savings, causes economic chaos, and typically results ",
-      "from excessive money creation. Argentina and Zimbabwe have experienced ",
-      "hyperinflation in recent decades."
+      "from excessive money creation. Argentina (1989–90), Venezuela (2017–19) and ",
+      "Zimbabwe (2007–08) have experienced hyperinflation in recent decades."
     ),
-    example    = "Argentina's inflation exceeded 200% annually in 2023.",
+    example    = "Argentina's annual inflation reached 2,314% in 1990, at the end of its 1989–90 hyperinflation (see Explore Country). High inflation is not always hyperinflation: Argentina's 133% in 2023 was very high, but far below 50% a month.",
     related    = "Inflation, Monetary Policy, Currency Crisis"
   ),
 
@@ -88,11 +96,14 @@ GLOSSARY_TERMS <- list(
     definition = paste0(
       "The difference between government revenues (taxes, fees) and expenditures ",
       "(spending, transfers), expressed as a percentage of GDP. A surplus means the ",
-      "government earns more than it spends; a deficit means it must borrow. Persistent ",
-      "deficits increase public debt."
+      "government earns more than it spends; a deficit means it must borrow, which adds ",
+      "to public debt. A deficit is not necessarily a problem: in a recession tax revenue ",
+      "falls while some spending rises, and a temporary deficit can be compatible with ",
+      "sound public finances. Fiscal sustainability depends on the path of public debt ",
+      "relative to the size of the economy, not on one year's result."
     ),
     example    = "A fiscal balance of –3% of GDP means the government spends 3% of GDP more than it collects.",
-    related    = "Budget Deficit, Public Debt, Austerity, Fiscal Policy"
+    related    = "Fiscal Sustainability, Public Debt, Austerity, Fiscal Policy"
   ),
 
   list(
@@ -101,11 +112,52 @@ GLOSSARY_TERMS <- list(
     definition = paste0(
       "Exports minus imports of goods and services, as a percentage of GDP. A trade ",
       "surplus (positive) means a country exports more than it imports. A trade deficit ",
-      "(negative) means it imports more. Trade balances are related to international ",
-      "capital flows and exchange rates."
+      "(negative) means it imports more. It is narrower than the balance of payments, ",
+      "which also records investment, loans and income flows with the rest of the world. ",
+      "A trade deficit is not necessarily unsustainable: what matters is how it is ",
+      "financed and whether it can be maintained over time."
     ),
     example    = "Germany typically runs a large trade surplus because its exports greatly exceed its imports.",
     related    = "Current Account, Exchange Rate, Trade Policy, Balance of Payments"
+  ),
+
+  list(
+    term       = "Balance of Payments",
+    category   = "External Sector",
+    definition = paste0(
+      "The record of all economic transactions between a country and the rest of the ",
+      "world during a period: trade in goods and services, but also income, transfers, ",
+      "investment and loans. It is the main tool for analysing external sustainability: ",
+      "whether a country can keep up its economic relations with the rest of the world ",
+      "without building up growing vulnerability."
+    ),
+    example    = "A foreign company building a factory in the country does not appear in the trade balance, but it does appear in the balance of payments.",
+    related    = "Trade Balance, External Sustainability, Exchange Rate"
+  ),
+
+  list(
+    term       = "Fiscal Sustainability",
+    category   = "Government",
+    definition = paste0(
+      "The government's capacity to meet its current and future commitments without ",
+      "building up fiscal and debt imbalances that become hard to finance. It is analysed ",
+      "with the fiscal balance together with the path of public debt over time, ",
+      "relative to the size of the economy."
+    ),
+    example    = "Two countries run the same deficit this year. In one, public debt stays stable relative to GDP; in the other it grows year after year and becomes harder to finance. Same fiscal balance, different sustainability.",
+    related    = "Fiscal Balance, Public Debt, Recession"
+  ),
+
+  list(
+    term       = "Nominal GDP",
+    category   = "Output",
+    definition = paste0(
+      "GDP valued at each period's own (current) prices. It can rise simply because ",
+      "prices rose, without the economy producing more. To know whether production ",
+      "grew, look at real GDP, which removes the effect of price changes."
+    ),
+    example    = "If an economy produces exactly the same as last year but all prices rise 20%, nominal GDP rises 20% and real GDP does not change.",
+    related    = "GDP Growth, Inflation"
   ),
 
   list(

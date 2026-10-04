@@ -19,7 +19,7 @@ VARS <- list(
     description     = paste0(
       "Annual percentage change in Gross Domestic Product at constant prices. ",
       "Positive values indicate economic expansion; negative values indicate contraction. ",
-      "Two consecutive quarters of negative growth define a recession."
+      "It is the main indicator of the economic growth objective."
     )
   ),
   employment = list(

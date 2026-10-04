@@ -19,20 +19,23 @@ CHALLENGES <- list(
     hint         = paste0(
       "Try looking at rapidly industrialising economies in the 1990s–2000s, or at ",
       "countries that invested heavily in capital-intensive industries. Also check ",
-      "Eastern European transition economies after 1990."
+      "Southeast Asia in the 2010s and Eastern European transition economies."
     ),
     variables    = c("gdp_growth", "employment"),
     solution_countries = list(
-      list(country = "China",    years = "1990–2005",
-           note = "Rapid growth but structural shift reduced agricultural employment share."),
-      list(country = "Russia",   years = "1999–2008",
-           note = "Strong GDP recovery but labour market restructuring kept employment subdued."),
-      list(country = "Germany",  years = "2003–2007",
-           note = "Hartz reforms and productivity gains produced growth with limited job creation initially.")
+      list(country = "China",    years = "1991–2005",
+           note = "Growth near 10% a year while the employment rate fell from 77% to 69%, as people left farm work and stayed longer in education."),
+      list(country = "Thailand", years = "2010–2019",
+           note = "Ten years of growth (3.6% a year on average) while the employment rate fell from 71% to 67%, partly because the population aged."),
+      list(country = "Serbia",   years = "2000–2008",
+           note = "Strong post-transition growth while the employment rate fell from 49% to 46% as state firms were restructured.")
     ),
     pedagogical_note = paste0(
       "Jobless growth often occurs during periods of rapid technological change or ",
-      "structural transformation. It raises important distributional questions: who ",
+      "structural transformation. Note that the employment rate can also fall for reasons ",
+      "unrelated to a lack of jobs (more years of schooling, an ageing population), which is ",
+      "why the unemployment rate (people looking for work who cannot find it) is the main ",
+      "indicator for the full-employment objective. It raises important distributional questions: who ",
       "benefits from growth? Discuss how GDP per capita can rise even if many workers ",
       "are displaced. Connect to debates about automation and income inequality."
     ),
@@ -45,39 +48,43 @@ CHALLENGES <- list(
 
   list(
     id           = "C02",
-    title        = "Falling Inflation, Rising Unemployment",
+    title        = "The Cost of Bringing Inflation Down",
     difficulty   = "Hard",
     icon         = "📉",
     description  = paste0(
-      "The Phillips Curve predicts a trade-off: reducing inflation should require ",
-      "accepting higher unemployment. Find a period in any country where inflation ",
-      "fell substantially AND employment also fell (or stayed low) — a case that ",
-      "appears to challenge the basic trade-off narrative."
+      "Bringing inflation down can come at a cost in jobs and activity — an example of ",
+      "two objectives in tension. Find a period of three to five years in which inflation ",
+      "fell sharply (to less than half its starting level) while the employment rate also ",
+      "fell. Then look for a counter-example: a period in which inflation fell and ",
+      "employment rose."
     ),
     hint         = paste0(
-      "This often occurs after a major supply shock or during structural transitions. ",
-      "Post-communist Eastern European countries in the 1990s, or countries experiencing ",
-      "both a demand contraction and currency stabilisation, are good starting points."
+      "Look at the stabilisation plans of the early 1990s: Latin American countries ",
+      "leaving high inflation behind, and post-communist economies in Eastern Europe. ",
+      "For the counter-example, look at Argentina just after the 2002 crisis."
     ),
     variables    = c("inflation", "employment"),
     solution_countries = list(
-      list(country = "Poland",    years = "1991–1995",
-           note = "Rapid disinflation coincided with high unemployment during transition."),
-      list(country = "Argentina", years = "2002–2004",
-           note = "Inflation spiked then fell, but unemployment remained very high."),
-      list(country = "Spain",     years = "2012–2016",
-           note = "Austerity reduced inflation but unemployment exceeded 25%.")
+      list(country = "Argentina", years = "1991–1994",
+           note = "The Convertibility plan cut inflation from 172% to 4% while the employment rate fell from 56.7% to 54.7%."),
+      list(country = "Brazil",    years = "1992–1996",
+           note = "Inflation fell from 952% to 16% around the Plan Real while the employment rate fell from 60.4% to 58.8%."),
+      list(country = "Poland",    years = "1991–1994",
+           note = "Transition-era disinflation (77% to 33%) while the employment rate fell from 53.0% to 50.9%."),
+      list(country = "Argentina (counter-example)", years = "2002–2004",
+           note = "Inflation fell from 26% to 4% while the employment rate rose from 48.4% to 53.6% in the recovery after the crisis.")
     ),
     pedagogical_note = paste0(
-      "The Phillips Curve relationship is empirically unstable. It held reasonably well ",
-      "in the 1960s but broke down in the 1970s stagflation and again in various country ",
-      "episodes. This challenge invites students to question whether macroeconomic ",
-      "'laws' are really universal relationships or context-specific regularities."
+      "Reducing inflation while activity slows is one of the tensions between objectives ",
+      "the course describes, and it is what the Phillips Curve predicts. The counter-example ",
+      "shows the relationship is not a fixed law: it depends on the starting point and the ",
+      "context. The Phillips Curve held reasonably well in the 1960s but broke down in the ",
+      "1970s stagflation (see 'Inflation Without Growth')."
     ),
     discussion_questions = c(
-      "When would you expect inflation and unemployment to fall together?",
-      "What is 'stagflation'? Can you find an example in the data?",
-      "Why did the Phillips Curve break down in the 1970s?"
+      "Do your cases confirm or challenge the idea of a trade-off between inflation and employment?",
+      "Why could inflation fall while employment rose in Argentina in 2002–2004?",
+      "Was bringing inflation down worth the cost in jobs? What else would you need to know to judge?"
     )
   ),
 
@@ -95,20 +102,20 @@ CHALLENGES <- list(
     hint         = paste0(
       "Many large manufacturing exporters run trade surpluses. But even if a country ",
       "exports a lot, its government can still spend more than it collects. Try looking ",
-      "at South Korea, Germany, or Japan in different periods."
+      "at Japan, Germany, or Malaysia in different periods."
     ),
     variables    = c("fiscal_balance", "trade_balance"),
     solution_countries = list(
-      list(country = "Japan",      years = "Most years 1990–2020",
-           note = "Japan runs persistent trade surpluses but also persistent fiscal deficits."),
-      list(country = "South Korea",years = "2008–2012",
-           note = "Strong exports but fiscal stimulus during the financial crisis."),
+      list(country = "Japan",      years = "1993–2010",
+           note = "Trade surpluses every year alongside fiscal deficits of up to 10% of GDP. From 2011 the trade balance turned negative too."),
       list(country = "Germany",    years = "2002–2005",
-           note = "Trade surplus but fiscal deficit under pressure from slow growth.")
+           note = "Trade surplus of 3.6–5% of GDP but a fiscal deficit above 3% of GDP while growth was slow."),
+      list(country = "Malaysia",   years = "1998–2023",
+           note = "A trade surplus and a fiscal deficit in every year since the Asian crisis.")
     ),
     pedagogical_note = paste0(
       "The trade balance and fiscal balance are related through the national accounts ",
-      "identity (S – I = X – M = CA), but they can move in different directions. ",
+      "identity (S – I = X – M), but they can move in different directions. ",
       "A government can borrow (fiscal deficit) while its private sector saves and exports ",
       "vigorously. Use this challenge to introduce the distinction between the public sector ",
       "balance and the external balance."
@@ -122,42 +129,42 @@ CHALLENGES <- list(
 
   list(
     id           = "C04",
-    title        = "The Macroeconomic All-Star",
+    title        = "Good Today, Sustainable Tomorrow?",
     difficulty   = "Hard",
     icon         = "⭐",
     description  = paste0(
-      "Find a country that achieved favourable outcomes on ALL FIVE indicators ",
-      "simultaneously for at least three consecutive years: ",
-      "positive GDP growth (>2%), employment rate above its historical average, ",
-      "low inflation (<5%), fiscal balance close to balance (> –3% of GDP), ",
-      "and non-negative trade balance. How long did this last? What ended it?"
+      "Find a country that did well on the three central objectives for at least three ",
+      "consecutive years: GDP growth above 2%, an employment rate above its own 1990–2023 ",
+      "average, and inflation between 0% and 5%. Then look at the sustainability side for ",
+      "the same years: what were the fiscal balance and the trade balance doing? ",
+      "Could the good run last? What ended it?"
     ),
     hint         = paste0(
-      "Small open economies with strong institutions and commodity wealth sometimes ",
-      "achieve this. Australia had an extraordinarily long period of uninterrupted growth. ",
-      "South Korea in the mid-2000s, Chile in the mid-1990s, and some Nordic countries ",
-      "are candidates."
+      "Look at Southern Europe in the years before 2008, and at East Asia in the 2010s. ",
+      "Compare a case where large deficits built up during the good years with one ",
+      "where they did not."
     ),
     variables    = c("gdp_growth", "employment", "inflation", "fiscal_balance", "trade_balance"),
     solution_countries = list(
-      list(country = "Australia",  years = "1993–2007",
-           note = "14 years of uninterrupted growth, low inflation, modest fiscal and trade positions."),
-      list(country = "Chile",      years = "1991–1997",
-           note = "Strong growth, fiscal discipline, improving trade balance, controlled inflation."),
-      list(country = "South Korea",years = "2004–2007",
-           note = "Solid performance across most indicators pre-crisis.")
+      list(country = "Spain",      years = "2001–2007",
+           note = "Good central results and a balanced budget, but a trade deficit of up to 6% of GDP. The 2008 crisis ended the run: GDP fell in 2009 and again in 2011–2013."),
+      list(country = "Greece",     years = "1998–2004",
+           note = "Good central results alongside fiscal deficits of 4–9% of GDP and trade deficits of 9–11% of GDP every year: the imbalances behind the 2010 debt crisis."),
+      list(country = "South Korea",years = "2013–2019",
+           note = "Good central results with fiscal and trade surpluses in every year. The run ended with the 2020 pandemic, not with a domestic imbalance.")
     ),
     pedagogical_note = paste0(
-      "This challenge highlights that sustained good macroeconomic performance is rare ",
-      "and temporary. Students should notice what eventually disrupted the run (commodity ",
-      "price shock, financial crisis, domestic policy shift). This reinforces the idea that ",
-      "macroeconomic stability is not a steady state but requires continuous management ",
-      "under changing conditions."
+      "Good results today are not enough to judge an economy: it can grow, create jobs and ",
+      "keep inflation low while building up imbalances that make those results hard to ",
+      "sustain. Deficits are not automatically a problem; what matters is whether they can ",
+      "be financed over time. Note that the app shows the trade balance, not the full balance ",
+      "of payments, and has no public-debt series, so students should say what extra ",
+      "information they would need to reach a firm conclusion."
     ),
     discussion_questions = c(
-      "What made Australia's long expansion possible?",
-      "What finally ended the 'golden run' you found?",
-      "Is it possible to permanently achieve all macroeconomic objectives at once?"
+      "Which of your cases looked sustainable, and which did not? What evidence did you use?",
+      "What finally ended the good run you found?",
+      "What other information (public debt, how the deficits were financed) would you need to be sure?"
     )
   ),
 
@@ -177,11 +184,11 @@ CHALLENGES <- list(
     ),
     variables    = c("trade_balance"),
     solution_countries = list(
-      list(country = "Germany",    years = "1993–present",
+      list(country = "Germany",    years = "1993–2023",
            note = "Among the world's largest trade surpluses as % of GDP."),
-      list(country = "South Korea",years = "1998–present",
-           note = "Became a persistent surplus country after the 1997 crisis."),
-      list(country = "China",      years = "1994–present",
+      list(country = "South Korea",years = "1998–2007, 2009–2023",
+           note = "Became a persistent surplus country after the 1997 crisis, with a single deficit year in 2008."),
+      list(country = "China",      years = "1994–2023",
            note = "Large and growing trade surpluses, source of global trade tensions.")
     ),
     pedagogical_note = paste0(
@@ -253,12 +260,12 @@ CHALLENGES <- list(
     ),
     variables    = c("gdp_growth", "inflation"),
     solution_countries = list(
-      list(country = "Argentina", years = "2014–2016, 2018–2019",
-           note = "Multiple stagflationary episodes driven by monetary and confidence crises."),
-      list(country = "Turkey",    years = "2018–2019",
-           note = "Currency crisis produced inflation above 20% alongside slowing growth."),
-      list(country = "South Africa", years = "2008–2009",
-           note = "Food and energy shocks raised inflation while the GFC hit growth.")
+      list(country = "Argentina", years = "2014, 2016, 2018–2019",
+           note = "GDP fell in each of these years while inflation ran between 34% and 54%."),
+      list(country = "Turkey",    years = "2019",
+           note = "After a currency crisis, inflation stayed above 15% while growth slowed to 1.3%."),
+      list(country = "Nigeria",   years = "2016",
+           note = "The oil price collapse pushed GDP down 1.6% while inflation rose from 9% to 16%.")
     ),
     pedagogical_note = paste0(
       "Stagflation challenges the view that a simple trade-off exists between inflation and output. ",
