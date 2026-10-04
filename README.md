@@ -77,6 +77,7 @@ R/
   mod_compare_countries.R     # Tab 2: Multi-country comparison
   mod_global_explorer.R       # Tab 3: Gapminder scatter
   mod_country_profile.R       # Tab 4: Radar chart
+  mod_diagnosis.R             # Diagnosis tab: the notes' integrative case
   mod_historical_events.R     # Tab 5: Events overlay
   mod_challenges.R            # Tab 6: Discovery challenges
   mod_correlation.R           # Tab 7: Correlation explorer

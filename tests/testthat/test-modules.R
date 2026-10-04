@@ -4,7 +4,7 @@ data_r <- reactive(macro_df)
 
 test_that("every module UI builds", {
   for (ui_fn in list(explore_country_ui, compare_countries_ui, global_explorer_ui,
-                     country_profile_ui, historical_events_ui, challenges_ui,
+                     country_profile_ui, diagnosis_ui, historical_events_ui, challenges_ui,
                      correlation_ui)) {
     expect_no_error(htmltools::renderTags(ui_fn("m")))
   }

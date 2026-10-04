@@ -31,6 +31,7 @@ source("R/mod_explore_country.R")
 source("R/mod_compare_countries.R")
 source("R/mod_global_explorer.R")
 source("R/mod_country_profile.R")
+source("R/mod_diagnosis.R")
 source("R/mod_historical_events.R")
 source("R/mod_challenges.R")
 source("R/mod_correlation.R")
@@ -106,6 +107,7 @@ welcome_modal <- function() {
       tab_card("⚖️ Comparar países",           "Compará las trayectorias de varios países"),
       tab_card("🌍 Explorador global",         "Gráfico de burbujas animado con todos los países"),
       tab_card("🕸️ Perfil del país",           "Objetivos centrales y sostenibilidad en un año"),
+      tab_card("🩺 Diagnóstico",               "¿Cómo está esta economía? Evaluá un país en un año"),
       tab_card("📅 Acontecimientos históricos","Relacioná los datos con la historia económica"),
       tab_card("🎯 Desafíos",                  "Consignas para investigar con los datos"),
       tab_card("📊 Correlaciones",             "Analizá si dos indicadores se mueven juntos")
@@ -195,6 +197,7 @@ ui <- tagList(
     nav_panel("⚖️ Comparar países",            compare_countries_ui("mod_compare")),
     nav_panel("🌍 Explorador global",          global_explorer_ui("mod_global")),
     nav_panel("🕸️ Perfil del país",            country_profile_ui("mod_profile")),
+    nav_panel("🩺 Diagnóstico",                diagnosis_ui("mod_diagnosis")),
     nav_panel("📅 Acontecimientos históricos", historical_events_ui("mod_events")),
     nav_panel("🎯 Desafíos",                   challenges_ui("mod_challenges")),
     nav_panel("📊 Correlaciones",              correlation_ui("mod_correlation")),
@@ -251,6 +254,7 @@ server <- function(input, output, session) {
   compare_countries_server("mod_compare", macro_data)
   global_explorer_server("mod_global",    macro_data)
   country_profile_server("mod_profile",   macro_data)
+  diagnosis_server("mod_diagnosis",       macro_data)
   historical_events_server("mod_events",  macro_data)
   challenges_server("mod_challenges",     macro_data)
   correlation_server("mod_correlation",   macro_data)

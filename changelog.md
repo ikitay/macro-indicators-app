@@ -53,6 +53,13 @@ macroeconómica: objetivos e indicadores*.
 - The glossary failed to open when the shinyWidgets package was not installed.
 
 ### Added
+- **New tab "🩺 Diagnóstico" (¿Cómo está esta economía?)**: the course notes'
+  integrative case with real data. Students pick a country and a year, read each
+  objective's indicator (sustainability rows also show the value five years
+  earlier), write what each one shows, assess a claim built from that case
+  ("La economía de … está bien porque el PBI creció…"), list the information
+  they would still need, and download their answers as a text file. An optional
+  guided reading describes the numbers without judging them.
 - Automated tests (`Rscript tests/testthat.R`).
 
 ## 2026-10-01

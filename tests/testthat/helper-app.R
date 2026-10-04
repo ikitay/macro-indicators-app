@@ -24,7 +24,7 @@ local({
               "R/data_utils.R", "R/glossary.R", "R/events_data.R",
               "R/challenges_data.R", "R/mod_explore_country.R",
               "R/mod_compare_countries.R", "R/mod_global_explorer.R",
-              "R/mod_country_profile.R", "R/mod_historical_events.R",
+              "R/mod_country_profile.R", "R/mod_diagnosis.R", "R/mod_historical_events.R",
               "R/mod_challenges.R", "R/mod_correlation.R")) {
     sys.source(f, envir = globalenv())
   }
