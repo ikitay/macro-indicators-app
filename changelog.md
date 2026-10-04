@@ -60,6 +60,10 @@ macroeconómica: objetivos e indicadores*.
   ("La economía de … está bien porque el PBI creció…"), list the information
   they would still need, and download their answers as a text file. An optional
   guided reading describes the numbers without judging them.
+- **Snapshot build collects the series the notes rely on** (not yet shown in the
+  tabs): unemployment rate, public debt (IMF), current account, FDI inflows,
+  CPI index, and nominal and real GDP levels. Rebuild the snapshot with
+  `Rscript scripts/prepare_wdi_snapshot.R` to include them; see `data/README.md`.
 - Automated tests (`Rscript tests/testthat.R`).
 
 ## 2026-10-01

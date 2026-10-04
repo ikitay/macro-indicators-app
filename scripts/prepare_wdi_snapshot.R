@@ -21,6 +21,7 @@ suppressPackageStartupMessages({
 })
 
 source("R/constants.R")
+source("R/country_names_es.R")
 source("R/data_utils.R")
 source("scripts/supplementary_sources.R")
 
@@ -101,8 +102,9 @@ if (length(year_cols) == 0) {
   stop("No year columns found between ", YEAR_MIN, " and ", YEAR_MAX)
 }
 
-indicator_codes <- unname(ALL_CODES)
-code_to_var     <- setNames(names(ALL_CODES), ALL_CODES)
+indicator_codes <- unname(c(ALL_CODES, EXTRA_WDI_CODES))
+code_to_var     <- setNames(c(names(ALL_CODES), names(EXTRA_WDI_CODES)),
+                            c(ALL_CODES, EXTRA_WDI_CODES))
 
 country_meta <- country_raw %>%
   transmute(
@@ -115,13 +117,24 @@ country_meta <- country_raw %>%
          !is.na(region), region != "", region != "Aggregates",
          !is.na(income), income != "")
 
-missing_codes <- setdiff(indicator_codes, unique(wdi_raw[[indicator_col]]))
+available_codes <- unique(wdi_raw[[indicator_col]])
+missing_codes <- setdiff(unname(ALL_CODES), available_codes)
 if (length(missing_codes)) {
   stop(
     "Indicator code(s) not found in the WDI bulk file: ",
     paste0(missing_codes, " (", code_to_var[missing_codes], ")", collapse = ", "),
     "\nThe World Bank may have retired them; update VARS in R/data_utils.R."
   )
+}
+# The extra series are not used by the tabs yet: build without a missing one
+missing_extra <- setdiff(unname(EXTRA_WDI_CODES), available_codes)
+if (length(missing_extra)) {
+  warning(
+    "Extra series not found in the WDI bulk file, left out of the snapshot: ",
+    paste0(missing_extra, " (", code_to_var[missing_extra], ")", collapse = ", "),
+    "\nUpdate EXTRA_SERIES in R/data_utils.R.", call. = FALSE
+  )
+  indicator_codes <- setdiff(indicator_codes, missing_extra)
 }
 
 message("Filtering ", length(indicator_codes), " indicators, ",
@@ -156,7 +169,8 @@ supplement_log <- attr(snapshot, "supplement_log")
 
 snapshot <- snapshot %>%
   select(country, iso2c, year, region, income, any_of(names(VARS)),
-         any_of(paste0(names(VARS), "_source"))) %>%
+         any_of(paste0(names(VARS), "_source")), any_of(names(EXTRA_SERIES)),
+         any_of(paste0(names(EXTRA_SERIES), "_source"))) %>%
   arrange(country, year)
 
 if (!is_valid_macro_df(snapshot)) {

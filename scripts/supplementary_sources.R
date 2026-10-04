@@ -9,6 +9,8 @@
 #                   covers; WDI is kept only for countries the IMF lacks, so
 #                   no single country mixes the two definitions.
 #   inflation       WDI, with missing years filled from IMF WEO (PCPIPCH).
+#   public_debt     IMF World Economic Outlook, general government gross debt
+#                   (GGXWDG_NGDP), for every country the IMF covers.
 #   Argentina       Inflation 1990–2016 rebuilt from official Argentine CPIs
 #                   published on datos.gob.ar: INDEC's CPI through 2006, then
 #                   the median of independent provincial CPIs for 2007–2016,
@@ -94,7 +96,7 @@ fetch_argentina_inflation <- function() {
 # Run a fetch, returning NULL with a warning if the source is unreachable
 try_fetch <- function(label, expr) {
   tryCatch(expr, error = function(e) {
-    warning(label, " unavailable (", conditionMessage(e), "); keeping WDI values.",
+    warning(label, " unavailable (", conditionMessage(e), "); continuing without it.",
             call. = FALSE)
     NULL
   })
@@ -145,6 +147,17 @@ apply_supplements <- function(snapshot) {
       )
     log <- c(log, paste0("inflation: ", sum(snapshot$fill), " gaps filled from IMF WEO"))
     snapshot <- select(snapshot, -imf_inf, -fill)
+  }
+
+  # ── Public debt: IMF only (WDI's central-government debt is too sparse) ──
+  message("Fetching IMF public debt (GGXWDG_NGDP)…")
+  imf_debt <- try_fetch("IMF public debt", fetch_imf_indicator("GGXWDG_NGDP"))
+  if (!is.null(imf_debt)) {
+    snapshot <- snapshot %>%
+      left_join(rename(imf_debt, public_debt = value), by = c("imf_iso3", "year")) %>%
+      mutate(public_debt_source = ifelse(is.na(public_debt), NA_character_, SRC_IMF))
+    log <- c(log, paste0("public_debt: IMF WEO, ",
+                         sum(!is.na(snapshot$public_debt)), " country-years"))
   }
 
   # ── Argentina: official and provincial CPIs override 1990–2016 ────────────

@@ -98,6 +98,57 @@ VARS <- list(
   )
 )
 
+# ---------------------------------------------------------------------------
+# EXTRA SERIES
+# Included in the snapshot by scripts/prepare_wdi_snapshot.R for the indicators
+# the course notes rely on but the tabs do not use yet: the unemployment rate,
+# public debt, the external accounts, and price and GDP levels.
+# `source` is "wdi" (World Bank bulk file) or "imf" (IMF DataMapper).
+# ---------------------------------------------------------------------------
+EXTRA_SERIES <- list(
+  unemployment = list(
+    source = "wdi", code = "SL.UEM.TOTL.ZS",
+    label  = "Tasa de desempleo (%)", unit = "%",
+    description = "Porcentaje de la población económicamente activa que busca trabajo y no lo encuentra (estimación de la OIT)."
+  ),
+  public_debt = list(
+    source = "imf", code = "GGXWDG_NGDP",
+    label  = "Deuda pública bruta (% del PBI)", unit = "% del PBI",
+    description = "Deuda bruta del gobierno general, en porcentaje del PBI (FMI, World Economic Outlook)."
+  ),
+  current_account = list(
+    source = "wdi", code = "BN.CAB.XOKA.GD.ZS",
+    label  = "Cuenta corriente (% del PBI)", unit = "% del PBI",
+    description = "Saldo de la cuenta corriente de la balanza de pagos: comercio de bienes y servicios, ingresos y transferencias con el resto del mundo."
+  ),
+  fdi_inflows = list(
+    source = "wdi", code = "BX.KLT.DINV.WD.GD.ZS",
+    label  = "Inversión extranjera directa, entrada neta (% del PBI)", unit = "% del PBI",
+    description = "Ingreso neto de inversión extranjera directa: una de las formas de financiar un déficit externo."
+  ),
+  cpi_index = list(
+    source = "wdi", code = "FP.CPI.TOTL",
+    label  = "IPC (índice, 2010 = 100)", unit = "",
+    description = "Índice de Precios al Consumidor. La inflación es su variación porcentual."
+  ),
+  gdp_nominal_lcu = list(
+    source = "wdi", code = "NY.GDP.MKTP.CN",
+    label  = "PBI nominal (moneda local corriente)", unit = "",
+    description = "PBI valuado a los precios de cada año."
+  ),
+  gdp_real_lcu = list(
+    source = "wdi", code = "NY.GDP.MKTP.KN",
+    label  = "PBI real (moneda local constante)", unit = "",
+    description = "PBI valuado a precios de un año base: descuenta el efecto de los cambios de precios."
+  )
+)
+
+# World Bank codes of the extra series, named by column
+EXTRA_WDI_CODES <- local({
+  wdi <- Filter(function(s) s$source == "wdi", EXTRA_SERIES)
+  setNames(sapply(wdi, `[[`, "code"), names(wdi))
+})
+
 # Named vector of indicator codes for WDI download
 ALL_CODES <- setNames(
   sapply(VARS, `[[`, "code"),
@@ -179,9 +230,11 @@ clean_wdi_dataframe <- function(df_raw, start_year = YEAR_MIN, end_year = YEAR_M
     select(
       country, iso2c, year, region, income,
       any_of(names(VARS)),
-      any_of(paste0(names(VARS), "_source"))
+      any_of(paste0(names(VARS), "_source")),
+      any_of(names(EXTRA_SERIES)),
+      any_of(paste0(names(EXTRA_SERIES), "_source"))
     ) %>%
-    mutate(across(any_of(CORE_VARS), as.numeric),
+    mutate(across(any_of(c(CORE_VARS, names(EXTRA_SERIES))), as.numeric),
            across(any_of("population"), as.numeric)) %>%
     filter(nchar(iso2c) == 2) %>%
     translate_country_fields() %>%
