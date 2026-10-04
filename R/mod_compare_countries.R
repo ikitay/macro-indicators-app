@@ -18,21 +18,21 @@ compare_countries_ui <- function(id) {
         class = "sidebar-intro",
         tags$p(
           style = "font-size:0.83rem; color:#555; line-height:1.5; margin-bottom:12px;",
-          "Select up to 6 countries and one indicator. Switch between raw values ",
-          "and the change since a base year to compare trajectories."
+          "Elegí hasta 6 países y un indicador. Podés ver los valores originales ",
+          "o el cambio desde un año base para comparar trayectorias."
         )
       ),
 
       # ── Country selection ─────────────────────────────────────────────────
       selectizeInput(
         ns("countries"),
-        label   = "🌍 Countries (up to 6)",
+        label   = "🌍 Países (hasta 6)",
         choices = NULL,
         selected = c("US", "DE", "CN", "AR", "KR", "ZA"),
         multiple = TRUE,
         options  = list(
           maxItems    = 6,
-          placeholder = "Type to search…",
+          placeholder = "Escribí para buscar…",
           maxOptions  = 300
         )
       ),
@@ -40,7 +40,7 @@ compare_countries_ui <- function(id) {
       # ── Variable ─────────────────────────────────────────────────────────
       selectInput(
         ns("variable"),
-        label    = "📊 Indicator",
+        label    = "📊 Indicador",
         choices  = core_var_choices(),
         selected = "gdp_growth"
       ),
@@ -48,7 +48,7 @@ compare_countries_ui <- function(id) {
       # ── Year range ───────────────────────────────────────────────────────
       sliderInput(
         ns("year_range"),
-        label = "📅 Year range",
+        label = "📅 Período",
         min   = YEAR_MIN,
         max   = YEAR_MAX,
         value = c(2000, YEAR_MAX),
@@ -61,10 +61,10 @@ compare_countries_ui <- function(id) {
       # ── Display mode ──────────────────────────────────────────────────────
       radioButtons(
         ns("display_mode"),
-        label    = "Display mode",
+        label    = "Modo de visualización",
         choices  = c(
-          "Raw values"           = "raw",
-          "Change since base year" = "indexed"
+          "Valores originales"     = "raw",
+          "Cambio desde el año base" = "indexed"
         ),
         selected = "raw"
       ),
@@ -73,7 +73,7 @@ compare_countries_ui <- function(id) {
         condition = paste0("input['", ns("display_mode"), "'] == 'indexed'"),
         sliderInput(
           ns("base_year"),
-          label = "📌 Base year",
+          label = "📌 Año base",
           min   = YEAR_MIN,
           max   = YEAR_MAX,
           value = 2000,
@@ -82,21 +82,22 @@ compare_countries_ui <- function(id) {
         ),
         tags$small(
           style = "color:#64748b; font-size:0.78rem;",
-          "GDP growth becomes a real GDP index (base year = 100). The other indicators ",
-          "are already rates or ratios, so they show the change in percentage points."
+          "El crecimiento del PBI se convierte en un índice del PBI real (año base = 100). ",
+          "Los demás indicadores ya son tasas o proporciones, así que se muestra su cambio ",
+          "en puntos porcentuales."
         )
       ),
 
       hr(),
 
       # ── Options ────────────────────────────────────────────────────────────
-      checkboxInput(ns("show_crisis"),  "Mark crisis years (2009, 2020)", value = TRUE),
-      checkboxInput(ns("smooth_lines"), "Smooth lines", value = FALSE),
+      checkboxInput(ns("show_crisis"),  "Marcar años de crisis (2009, 2020)", value = TRUE),
+      checkboxInput(ns("smooth_lines"), "Suavizar las líneas", value = FALSE),
 
       hr(),
 
       # ── Data table toggle ─────────────────────────────────────────────────
-      checkboxInput(ns("show_table"), "Show data table", value = FALSE)
+      checkboxInput(ns("show_table"), "Mostrar tabla de datos", value = FALSE)
     ),
 
     # ── Main content ──────────────────────────────────────────────────────────
@@ -108,7 +109,7 @@ compare_countries_ui <- function(id) {
           uiOutput(ns("chart_title")),
           tags$div(
             style = "font-size:0.78rem; color:#64748b;",
-            "Hover for details | Click legend to show/hide countries"
+            "Pasá el mouse para ver detalles | Clic en la leyenda para mostrar u ocultar países"
           )
         ),
         card_body(
@@ -126,7 +127,7 @@ compare_countries_ui <- function(id) {
         condition = paste0("input['", ns("show_table"), "']"),
         card(
           class     = "mt-2",
-          card_header("📋 Data Table"),
+          card_header("📋 Tabla de datos"),
           card_body(
             tableOutput(ns("data_table"))
           )
@@ -156,8 +157,8 @@ compare_countries_server <- function(id, data) {
     plot_data <- reactive({
       req(data(), input$countries, input$variable, input$year_range)
       validate(
-        need(length(input$countries) >= 1, "Please select at least one country."),
-        need(input$variable %in% CORE_VARS, "Please select a valid indicator.")
+        need(length(input$countries) >= 1, "Elegí al menos un país."),
+        need(input$variable %in% CORE_VARS, "Elegí un indicador válido.")
       )
 
       df <- data() %>%
@@ -188,20 +189,20 @@ compare_countries_server <- function(id, data) {
         tags$span("📌 "),
         if (input$variable == "gdp_growth") {
           tagList(
-            tags$b("Real GDP index: "),
-            "the growth rates are chained into the level of real GDP, set to 100 in the base ",
-            "year. A value of 110 means the economy produces 10% more than in the base year. ",
-            "Growth is the change in real GDP: a country whose growth rises from 2% to 4% ",
-            "doubles its growth rate, but its real GDP is only about 6% higher after those ",
-            "two years."
+            tags$b("Índice del PBI real: "),
+            "las tasas de crecimiento se encadenan para obtener el nivel del PBI real, igual a ",
+            "100 en el año base. Un valor de 110 significa que la economía produce un 10% más ",
+            "que en el año base. El crecimiento es la variación del PBI real: si un país pasa ",
+            "de crecer un 2% a crecer un 4%, duplica su tasa de crecimiento, pero después de ",
+            "esos dos años su PBI real es apenas un 6% mayor."
           )
         } else {
           tagList(
-            tags$b("Change in percentage points: "),
-            var_short(input$variable), " is already a rate or a ratio, so dividing it by its ",
-            "base-year value would be meaningless (a rate that goes from 2% to 4% is not ",
-            "\"twice as much economy\"). The chart shows how many percentage points it moved ",
-            "since the base year: +2 means 2 points higher than in the base year."
+            tags$b("Cambio en puntos porcentuales: "),
+            var_short(input$variable), " ya es una tasa o una proporción, así que dividirlo por ",
+            "su valor del año base no tendría sentido (una tasa que pasa del 2% al 4% no es ",
+            "\"el doble de economía\"). El gráfico muestra cuántos puntos porcentuales se movió ",
+            "desde el año base: +2 significa 2 puntos más que en el año base."
           )
         }
       )
@@ -249,9 +250,9 @@ compare_countries_server <- function(id, data) {
         unit_lbl <- if (input$display_mode == "raw") {
           paste0(" ", var_unit(var_sel))
         } else if (var_sel == "gdp_growth") {
-          " (index)"
+          " (índice)"
         } else {
-          " pp"
+          " p.p."
         }
 
         p <- p %>% add_trace(
@@ -265,8 +266,8 @@ compare_countries_server <- function(id, data) {
           marker     = list(color = col_c, size = 5),
           text       = paste0(
             "<b>", cname, "</b><br>",
-            "Year: ", df_c$year, "<br>",
-            round(df_c$val, 2), unit_lbl,
+            "Año: ", df_c$year, "<br>",
+            num_es(df_c$val, 2), unit_lbl,
             source_hover(df_c$src)
           ),
           hoverinfo  = "text"
@@ -278,7 +279,7 @@ compare_countries_server <- function(id, data) {
       annotations <- list()
       if (isTRUE(input$show_crisis)) {
         crisis_years <- c(2009, 2020)
-        crisis_labels <- c("GFC", "COVID-19")
+        crisis_labels <- c("Crisis financiera", "COVID-19")
         for (k in seq_along(crisis_years)) {
           yr <- crisis_years[k]
           if (yr >= input$year_range[1] && yr <= input$year_range[2]) {
@@ -316,7 +317,7 @@ compare_countries_server <- function(id, data) {
       p %>%
         layout(
           xaxis = list(
-            title    = "Year",
+            title    = "Año",
             tickfont = list(size = 11),
             gridcolor = "#f1f5f9"
           ),
@@ -340,10 +341,10 @@ compare_countries_server <- function(id, data) {
           plot_bgcolor  = "#ffffff"
         ) %>%
         config(
-          displaylogo    = FALSE,
+          displaylogo = FALSE, locale = "es",
           responsive     = TRUE,
           modeBarButtons = list(list("toImage", "zoom2d", "pan2d", "resetScale2d")),
-          toImageButtonOptions = list(format = "png", filename = "country_comparison",
+          toImageButtonOptions = list(format = "png", filename = "comparacion_paises",
                                      width = 1200, height = 600)
         )
     })
@@ -352,12 +353,11 @@ compare_countries_server <- function(id, data) {
     output$data_table <- renderTable({
       req(plot_data())
       plot_data() %>%
-        select(-any_of("src")) %>%
-        pivot_wider(names_from = iso2c, values_from = val) %>%
-        rename(Year = year) %>%
-        select(-country) %>%
-        mutate(across(-Year, ~ round(.x, 2)))
-    }, striped = TRUE, hover = TRUE, bordered = TRUE, digits = 2)
+        select(Año = year, country, val) %>%
+        pivot_wider(names_from = country, values_from = val) %>%
+        arrange(Año) %>%
+        mutate(Año = as.character(Año), across(-Año, ~ num_es(.x, 2)))
+    }, striped = TRUE, hover = TRUE, bordered = TRUE, align = "r")
   })
 }
 
@@ -387,8 +387,8 @@ change_since_base <- function(val, year, base_year, chain_growth) {
 
 change_label <- function(v, base_year) {
   if (v == "gdp_growth") {
-    paste0("Real GDP index (", base_year, " = 100)")
+    paste0("Índice del PBI real (", base_year, " = 100)")
   } else {
-    paste0(var_short(v), " — change since ", base_year, " (percentage points)")
+    paste0(var_short(v), ": cambio desde ", base_year, " (puntos porcentuales)")
   }
 }

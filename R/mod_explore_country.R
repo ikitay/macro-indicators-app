@@ -18,19 +18,19 @@ explore_country_ui <- function(id) {
         class = "sidebar-intro",
         tags$p(
           style = "font-size:0.83rem; color:#555; line-height:1.5; margin-bottom:12px;",
-          "Select a country and time window to explore how its five macroeconomic ",
-          "indicators evolved over time. Look for patterns, crises, and recovery periods."
+          "Elegí un país y un período para ver cómo evolucionaron sus indicadores ",
+          "macroeconómicos. Buscá patrones, crisis y períodos de recuperación."
         )
       ),
 
       # ── Country selector ─────────────────────────────────────────────────
       selectizeInput(
         ns("country"),
-        label   = tags$span("🌍 Country", info_icon("GDP Growth")),
+        label   = tags$span("🌍 País", info_icon("Crecimiento del PBI")),
         choices = NULL,       # Populated server-side
         selected = "US",
         options = list(
-          placeholder = "Type to search…",
+          placeholder = "Escribí para buscar…",
           maxOptions  = 300
         )
       ),
@@ -38,7 +38,7 @@ explore_country_ui <- function(id) {
       # ── Year range ───────────────────────────────────────────────────────
       sliderInput(
         ns("year_range"),
-        label = "📅 Year range",
+        label = "📅 Período",
         min   = YEAR_MIN,
         max   = YEAR_MAX,
         value = c(1995, YEAR_MAX),
@@ -66,13 +66,13 @@ explore_country_ui <- function(id) {
       hr(),
 
       # ── Display options ──────────────────────────────────────────────────
-      checkboxInput(ns("show_trend"),     "Show trend line",         value = FALSE),
-      checkboxInput(ns("show_recession"), "Shade negative GDP years", value = TRUE),
+      checkboxInput(ns("show_trend"),     "Mostrar línea de tendencia",        value = FALSE),
+      checkboxInput(ns("show_recession"), "Sombrear los años con caída del PBI", value = TRUE),
 
       hr(),
 
       # ── Quick stat summary ───────────────────────────────────────────────
-      tags$p(tags$b("Period summary"), style = "font-size:0.85rem; margin-bottom:4px;"),
+      tags$p(tags$b("Resumen del período"), style = "font-size:0.85rem; margin-bottom:4px;"),
       uiOutput(ns("summary_cards"))
     ),
 
@@ -84,7 +84,7 @@ explore_country_ui <- function(id) {
         uiOutput(ns("chart_title")),
         tags$div(
           style = "font-size:0.78rem; color:#64748b;",
-          "Source: World Bank WDI | Hover for values | Drag to zoom | Double-click to reset"
+          "Fuentes: Banco Mundial y FMI | Pasá el mouse para ver valores | Arrastrá para hacer zoom | Doble clic para volver"
         )
       ),
       card_body(
@@ -131,7 +131,7 @@ explore_country_server <- function(id, data) {
         pull(country) %>% unique()
       tags$span(
         style = "font-weight:700; color:#1e3a5f; font-size:1.05rem;",
-        paste("Macroeconomic Overview:", country_name[1])
+        paste("Panorama macroeconómico:", country_name[1])
       )
     })
 
@@ -166,11 +166,11 @@ explore_country_server <- function(id, data) {
               style = "display:flex; justify-content:space-between; font-size:0.82rem;",
               tags$span(
                 style = "color:#334155;",
-                paste0("Avg: ", format_stat(avg_val, v))
+                paste0("Promedio: ", format_stat(avg_val, v))
               ),
               tags$span(
                 style = "color:#334155;",
-                paste0("Latest: ", format_stat(last_val, v))
+                paste0("Último: ", format_stat(last_val, v))
               )
             )
           )
@@ -202,8 +202,8 @@ explore_country_server <- function(id, data) {
             marker     = list(color = col, size = 5, opacity = 0.8),
             text       = paste0(
               "<b>", var_label(v), "</b><br>",
-              "Year: ", df$year, "<br>",
-              "Value: ", round(vals, 2), " ", var_unit(v),
+              "Año: ", df$year, "<br>",
+              "Valor: ", num_es(vals, 2), " ", var_unit(v),
               source_hover(var_source(df, v))
             ),
             hoverinfo  = "text",
@@ -261,7 +261,7 @@ explore_country_server <- function(id, data) {
       n <- length(plot_list)
       h_per <- 1 / n
 
-      do.call(
+      fig <- do.call(
         subplot,
         c(plot_list, list(
           nrows        = n,
@@ -269,15 +269,22 @@ explore_country_server <- function(id, data) {
           titleY       = TRUE,
           heights      = rep(h_per, n)
         ))
-      ) %>%
+      )
+      # Add to the panels' zero lines rather than replacing them
+      if (isTRUE(input$show_recession)) {
+        fig$x$layout$shapes <- c(fig$x$layout$shapes, negative_growth_shapes(df))
+      }
+
+      fig %>%
         layout(
           hovermode = "x unified",
+          xaxis     = list(title = "Año"),
           margin    = list(l = 70, r = 30, t = 20, b = 50),
           paper_bgcolor = "#ffffff",
           plot_bgcolor  = "#ffffff"
         ) %>%
         config(
-          displaylogo    = FALSE,
+          displaylogo = FALSE, locale = "es",
           modeBarButtons = list(list("toImage", "zoom2d", "pan2d", "resetScale2d")),
           toImageButtonOptions = list(
             format   = "png",
@@ -293,11 +300,21 @@ explore_country_server <- function(id, data) {
 
 # Helper: format a statistic value for display
 format_stat <- function(x, var_name = NULL) {
-  if (is.na(x)) return("N/A")
+  if (is.na(x)) return("s/d")
   if (!is.null(var_name) && var_name == "population") {
-    if (x >= 1e9) return(paste0(round(x / 1e9, 1), "B"))
-    if (x >= 1e6) return(paste0(round(x / 1e6, 1), "M"))
-    return(format(round(x), big.mark = ","))
+    if (x >= 1e9) return(paste0(num_es(x / 1e9), " mil millones"))
+    if (x >= 1e6) return(paste0(num_es(x / 1e6), " millones"))
+    return(num_es(x, 0))
   }
-  paste0(round(x, 1), "%")
+  paste0(num_es(x), "%")
+}
+
+# Grey bands behind every panel for the years in which real GDP fell
+negative_growth_shapes <- function(df) {
+  yrs <- df$year[!is.na(df$gdp_growth) & df$gdp_growth < 0]
+  lapply(yrs, function(y) list(
+    type = "rect", xref = "x", yref = "paper",
+    x0 = y - 0.5, x1 = y + 0.5, y0 = 0, y1 = 1,
+    fillcolor = "rgba(148,163,184,0.18)", line = list(width = 0), layer = "below"
+  ))
 }

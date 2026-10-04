@@ -35,10 +35,10 @@ test_that("Country Profile shows unscored sustainability information with its 5-
   testServer(country_profile_server, args = list(data = reactive(macro_df)), {
     session$setInputs(countries = c("GR", "ES"), year = 2007, fill_area = TRUE)
     sd <- sustainability_data()
-    expect_equal(sd$fiscal_balance[sd$country == "Greece"], snap("Greece", 2007, "fiscal_balance"))
-    expect_equal(sd$trade_balance_past[sd$country == "Spain"], snap("Spain", 2002, "trade_balance"))
+    expect_equal(sd$fiscal_balance[sd$country == "Grecia"], snap("Grecia", 2007, "fiscal_balance"))
+    expect_equal(sd$trade_balance_past[sd$country == "España"], snap("España", 2002, "trade_balance"))
     html <- as.character(output$sustainability_table$html)
-    expect_match(html, "not scored")
+    expect_match(html, "sin puntaje")
     expect_match(html, "2002:")
     expect_false(any(grepl("balance_score", names(profile_data()))))
   })
@@ -49,7 +49,7 @@ test_that("Country Profile handles a country-year with missing data", {
     # Afghanistan 1990 has no growth, employment or inflation data
     session$setInputs(countries = c("AF", "US"), year = 1990, fill_area = FALSE)
     expect_true(is.na(profile_data()$gdp_growth_score[profile_data()$iso2c == "AF"]))
-    expect_match(as.character(output$score_table$html), "no data")
+    expect_match(as.character(output$score_table$html), "sin datos")
     expect_no_error(output$radar_plot)
   })
 })

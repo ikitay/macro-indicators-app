@@ -39,11 +39,23 @@ test_that("real GDP index on real data: Argentina's 2001-02 collapse", {
     g <- sapply(1999:2002, function(y) snap("Argentina", y, "gdp_growth"))
     expect_equal(df$val[df$year == 2002], 100 * prod(1 + g / 100))
     expect_lt(df$val[df$year == 2002], 85)
-    expect_match(as.character(output$change_note$html), "Real GDP index")
+    expect_match(as.character(output$change_note$html), "Índice del PBI real")
 
     session$setInputs(variable = "inflation")
-    expect_match(as.character(output$change_note$html), "percentage points")
+    expect_match(as.character(output$change_note$html), "puntos porcentuales")
     expect_equal(plot_data()$val[plot_data()$year == 2002],
                  snap("Argentina", 2002, "inflation") - snap("Argentina", 1998, "inflation"))
+  })
+})
+
+test_that("the data table has one row per year and one column per country", {
+  testServer(compare_countries_server, args = list(data = reactive(macro_df)), {
+    session$setInputs(countries = c("AR", "BR"), variable = "inflation",
+                      year_range = c(2000, 2004), display_mode = "raw", base_year = 2000,
+                      show_crisis = FALSE, smooth_lines = FALSE, show_table = TRUE)
+    html <- as.character(output$data_table)
+    expect_equal(lengths(regmatches(html, gregexpr("<tr", html))), 1 + 5)  # header + 5 years
+    expect_match(html, "Argentina")
+    expect_match(html, "Brasil")
   })
 })

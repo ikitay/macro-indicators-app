@@ -13,35 +13,35 @@ correlation_ui <- function(id) {
       width = 290, open = "open",
       tags$div(class="sidebar-intro",
         tags$p(style="font-size:0.83rem; color:#555; line-height:1.5; margin-bottom:12px;",
-          "Explore whether two indicators move together for a selected country and period. ",
-          "Each dot is one year. The line shows the statistical trend."
+          "Explorá si dos indicadores se mueven juntos en un país y un período. ",
+          "Cada punto es un año. La línea muestra la tendencia estadística."
         )
       ),
 
-      selectizeInput(ns("country"), "🌍 Country",
+      selectizeInput(ns("country"), "🌍 País",
         choices=NULL, selected="US",
-        options=list(placeholder="Type to search…", maxOptions=300)
+        options=list(placeholder="Escribí para buscar…", maxOptions=300)
       ),
-      selectInput(ns("x_var"), "↔ X-axis variable",
+      selectInput(ns("x_var"), "↔ Variable del eje X",
         choices=core_var_choices(), selected="gdp_growth"),
-      selectInput(ns("y_var"), "↕ Y-axis variable",
+      selectInput(ns("y_var"), "↕ Variable del eje Y",
         choices=core_var_choices(), selected="employment"),
-      sliderInput(ns("year_range"), "📅 Year range",
+      sliderInput(ns("year_range"), "📅 Período",
         min=YEAR_MIN, max=YEAR_MAX, value=c(1995,YEAR_MAX), step=1, sep=""
       ),
       hr(),
-      checkboxInput(ns("show_trend"),  "Show trend line",    value=TRUE),
-      checkboxInput(ns("show_labels"), "Label year points",  value=TRUE),
-      checkboxInput(ns("multi_country"), "Compare across countries", value=FALSE),
+      checkboxInput(ns("show_trend"),  "Mostrar línea de tendencia", value=TRUE),
+      checkboxInput(ns("show_labels"), "Rotular los años",           value=TRUE),
+      checkboxInput(ns("multi_country"), "Comparar entre países",    value=FALSE),
       conditionalPanel(
         condition=paste0("input['",ns("multi_country"),"']"),
-        selectizeInput(ns("extra_countries"), "Additional countries",
+        selectizeInput(ns("extra_countries"), "Otros países",
           choices=NULL, selected=c("DE","KR","AR"),
           multiple=TRUE,
-          options=list(maxItems=5, placeholder="Type to search…", maxOptions=300)
+          options=list(maxItems=5, placeholder="Escribí para buscar…", maxOptions=300)
         ),
         tags$small(style="color:#64748b; font-size:0.78rem;",
-          "Each country gets its own colour. Compare whether the relationship holds universally.")
+          "Cada país tiene su propio color. Compará si la relación se cumple en todos.")
       )
     ),
 
@@ -51,12 +51,12 @@ correlation_ui <- function(id) {
         style="background:#fff7ed; border:1px solid #fed7aa; border-radius:8px;
                padding:12px 16px; margin-bottom:12px;",
         tags$span(style="font-size:1.1rem;","⚠️ "),
-        tags$span(style="font-weight:700; color:#c2410c;","Correlation ≠ Causation: "),
+        tags$span(style="font-weight:700; color:#c2410c;","Correlación ≠ causalidad: "),
         tags$span(style="color:#7c2d12; font-size:0.87rem;",
-          "A statistical correlation tells you two variables tend to move together — ",
-          "it does NOT tell you one causes the other. There may be a third variable ",
-          "driving both, the relationship may be coincidental, or causation may run ",
-          "in the opposite direction from what you expect."
+          "Una correlación estadística indica que dos variables tienden a moverse juntas, ",
+          "pero NO que una cause la otra. Puede haber una tercera variable que mueva a ",
+          "ambas, la relación puede ser casual, o la causalidad puede ir en el sentido ",
+          "contrario al que esperás."
         )
       ),
 
@@ -95,7 +95,7 @@ correlation_server <- function(id, data) {
 
     plot_data <- reactive({
       req(data(), all_countries(), input$x_var, input$y_var, input$year_range)
-      validate(need(input$x_var != input$y_var, "Please choose different variables for X and Y axes."))
+      validate(need(input$x_var != input$y_var, "Elegí variables distintas para los ejes X e Y."))
 
       data() %>%
         filter(iso2c %in% all_countries(),
@@ -127,7 +127,7 @@ correlation_server <- function(id, data) {
     output$chart_title <- renderUI({
       req(input$x_var, input$y_var)
       tags$span(style="font-weight:700; color:#1e3a5f;",
-        paste(var_short(input$y_var), "vs", var_short(input$x_var)))
+        paste(var_short(input$y_var), "vs.", var_short(input$x_var)))
     })
 
     output$stats_summary <- renderUI({
@@ -139,9 +139,9 @@ correlation_server <- function(id, data) {
         lapply(stats, function(s) {
           if (is.na(s$r)) return(NULL)
           r_abs   <- abs(s$r)
-          strength <- if (r_abs >= 0.7) "Strong" else if (r_abs >= 0.4) "Moderate" else "Weak"
-          direction <- if (s$r > 0) "positive ↗" else "negative ↘"
-          sig_text  <- if (!is.na(s$p) && s$p < 0.05) "significant" else "not significant"
+          strength <- if (r_abs >= 0.7) "Fuerte" else if (r_abs >= 0.4) "Moderada" else "Débil"
+          direction <- if (s$r > 0) "positiva ↗" else "negativa ↘"
+          sig_text  <- if (!is.na(s$p) && s$p < 0.05) "significativa" else "no significativa"
           stat_col  <- if (r_abs >= 0.7) "#1e3a5f" else if (r_abs >= 0.4) "#d97706" else "#64748b"
 
           tags$div(
@@ -151,12 +151,12 @@ correlation_server <- function(id, data) {
                      s$country),
             tags$div(style="margin-top:4px; font-size:0.85rem; color:#334155;",
               tags$span(style=paste0("font-weight:700; font-size:1.1rem; color:",stat_col,";"),
-                        paste0("r = ", s$r)),
+                        paste0("r = ", num_es(s$r, 3))),
               tags$span(style="margin-left:8px; color:#64748b;",
                         paste0(strength, " ", direction))
             ),
             tags$div(style="font-size:0.78rem; color:#94a3b8; margin-top:2px;",
-              paste0("n = ", s$n, " years | p ", if(!is.na(s$p)) paste0("= ",s$p) else "= N/A",
+              paste0("n = ", s$n, " años | p ", if(!is.na(s$p)) paste0("= ", num_es(s$p, 4)) else "= s/d",
                      " (", sig_text, ")")
             )
           )
@@ -167,7 +167,7 @@ correlation_server <- function(id, data) {
     output$scatter_plot <- renderPlotly({
       req(plot_data())
       df <- plot_data()
-      validate(need(nrow(df) >= 3, "Need at least 3 data points to display."))
+      validate(need(nrow(df) >= 3, "Se necesitan al menos 3 años con datos."))
 
       palette <- c("#2563eb","#dc2626","#16a34a","#d97706","#7c3aed","#0891b2")
       ctries  <- unique(df$iso2c)
@@ -187,8 +187,8 @@ correlation_server <- function(id, data) {
           marker=list(color=col_c, size=9, opacity=0.78,
                       line=list(width=1, color="white")),
           text=paste0("<b>",cname,"</b> — ",df_c$year,"<br>",
-                      var_label(input$x_var),": ",round(df_c$x_val,2)," ",var_unit(input$x_var),"<br>",
-                      var_label(input$y_var),": ",round(df_c$y_val,2)," ",var_unit(input$y_var)),
+                      var_label(input$x_var),": ",num_es(df_c$x_val,2)," ",var_unit(input$x_var),"<br>",
+                      var_label(input$y_var),": ",num_es(df_c$y_val,2)," ",var_unit(input$y_var)),
           hoverinfo="text"
         )
 
@@ -213,7 +213,7 @@ correlation_server <- function(id, data) {
             p <- p %>% add_trace(
               x=x_seq, y=y_pred,
               type="scatter", mode="lines",
-              name=paste("Trend:", cname),
+              name=paste("Tendencia:", cname),
               line=list(color=plotly::toRGB(col_c, alpha = 0.65), dash="dash", width=2),
               showlegend=FALSE, hoverinfo="none"
             )
@@ -239,9 +239,9 @@ correlation_server <- function(id, data) {
           margin=list(l=70,r=30,t=20,b=80),
           paper_bgcolor="#ffffff", plot_bgcolor="#ffffff"
         ) %>%
-        config(displaylogo=FALSE, responsive=TRUE,
+        config(displaylogo = FALSE, locale = "es", responsive=TRUE,
                modeBarButtons=list(list("toImage","zoom2d","pan2d","resetScale2d")),
-               toImageButtonOptions=list(format="png",filename="correlation",width=1000,height=600))
+               toImageButtonOptions=list(format="png",filename="correlacion",width=1000,height=600))
     })
 
     output$interpretation_guide <- renderUI({
@@ -251,18 +251,18 @@ correlation_server <- function(id, data) {
 
       r_abs <- abs(stats$r)
       guide_text <- if (r_abs >= 0.7) {
-        paste0("The correlation is <b>strong (r = ", stats$r, ")</b>. ",
-               "The two variables tend to move closely together for this country in this period. ",
-               "But remember: this does not mean one causes the other.")
+        paste0("La correlación es <b>fuerte (r = ", num_es(stats$r, 3), ")</b>. ",
+               "Las dos variables tienden a moverse muy juntas en este país y este período. ",
+               "Pero recordá: eso no significa que una cause la otra.")
       } else if (r_abs >= 0.4) {
-        paste0("The correlation is <b>moderate (r = ", stats$r, ")</b>. ",
-               "There is a noticeable tendency for the variables to move together, ",
-               "but with considerable variation. Many other factors are at play.")
+        paste0("La correlación es <b>moderada (r = ", num_es(stats$r, 3), ")</b>. ",
+               "Hay una tendencia visible a que las variables se muevan juntas, ",
+               "pero con bastante variación. Influyen muchos otros factores.")
       } else {
-        paste0("The correlation is <b>weak (r = ", stats$r, ")</b>. ",
-               "These variables do not appear to move systematically together for this ",
-               "country in this period. Try changing the country or time period — ",
-               "the relationship may differ elsewhere.")
+        paste0("La correlación es <b>débil (r = ", num_es(stats$r, 3), ")</b>. ",
+               "Estas variables no parecen moverse juntas de manera sistemática en este ",
+               "país y este período. Probá con otro país u otro período: ",
+               "la relación puede ser distinta.")
       }
 
       tags$div(
@@ -271,7 +271,7 @@ correlation_server <- function(id, data) {
         HTML(guide_text),
         tags$span(style="color:#94a3b8; font-size:0.78rem; margin-left:8px;",
           if (!is.na(stats$p) && stats$p >= 0.05)
-            "(Note: p ≥ 0.05 — this correlation may not be statistically significant.)")
+            "(Nota: p ≥ 0,05, así que esta correlación puede no ser estadísticamente significativa.)")
       )
     })
   })

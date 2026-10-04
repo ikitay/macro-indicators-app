@@ -12,32 +12,32 @@ global_explorer_ui <- function(id) {
       width = 280, open = "open",
       tags$div(class = "sidebar-intro",
         tags$p(style = "font-size:0.83rem; color:#555; line-height:1.5; margin-bottom:12px;",
-          "Each bubble is a country. Use the year slider to explore patterns, ",
-          "or press the animate button to watch them evolve over time."
+          "Cada burbuja es un país. Mové el selector de año para explorar patrones, ",
+          "o tocá el botón de reproducción para verlos cambiar en el tiempo."
         )
       ),
-      selectInput(ns("x_var"), "↔ X-axis",    choices = core_var_choices(), selected = "gdp_growth"),
-      selectInput(ns("y_var"), "↕ Y-axis",    choices = core_var_choices(), selected = "inflation"),
-      selectInput(ns("size_var"), "⬤ Bubble size",
-        choices  = c(list("Other" = c("Equal size" = "equal", "Population" = "population")),
+      selectInput(ns("x_var"), "↔ Eje X",    choices = core_var_choices(), selected = "gdp_growth"),
+      selectInput(ns("y_var"), "↕ Eje Y",    choices = core_var_choices(), selected = "inflation"),
+      selectInput(ns("size_var"), "⬤ Tamaño de las burbujas",
+        choices  = c(list("Otros" = c("Todas iguales" = "equal", "Población" = "population")),
                      core_var_choices()),
         selected = "population"
       ),
       hr(),
-      checkboxGroupInput(ns("regions"), "🌐 Regions",
+      checkboxGroupInput(ns("regions"), "🌐 Regiones",
         choices  = names(REGION_COLORS),
         selected = names(REGION_COLORS)
       ),
       hr(),
-      sliderInput(ns("static_year"), "📅 Year",
+      sliderInput(ns("static_year"), "📅 Año",
         min = YEAR_MIN, max = YEAR_MAX, value = 2019, step = 1, sep = "",
         animate = animationOptions(interval = 900, loop = FALSE)
       ),
       hr(),
-      checkboxInput(ns("log_size"),    "Log-scale bubble size",  value = TRUE),
-      checkboxInput(ns("show_labels"), "Label largest countries", value = TRUE),
+      checkboxInput(ns("log_size"),    "Tamaño en escala logarítmica", value = TRUE),
+      checkboxInput(ns("show_labels"), "Rotular los países más grandes", value = TRUE),
       tags$small(style = "color:#64748b; font-size:0.78rem;",
-        "Countries missing data for both axes are hidden.")
+        "No se muestran los países sin datos para alguno de los dos ejes.")
     ),
     card(
       full_screen = TRUE,
@@ -45,14 +45,15 @@ global_explorer_ui <- function(id) {
         class = "d-flex justify-content-between align-items-center",
         uiOutput(ns("chart_title")),
         tags$div(style = "font-size:0.78rem; color:#64748b;",
-          "Hover for details | Use year slider to animate")
+          "Pasá el mouse para ver detalles | Usá el selector de año para animar")
       ),
       card_body(padding = "0", plotlyOutput(ns("scatter_plot"), height = "520px")),
       card_footer(
         tags$div(class = "info-box",
-          tags$span("🔍 "), tags$b("Questions: "),
-          "Do wealthier countries always have lower inflation? Does high GDP growth ",
-          "always accompany high employment? Outliers often tell the most interesting story."
+          tags$span("🔍 "), tags$b("Preguntas: "),
+          "¿Los países con más inflación crecen menos? ¿Un crecimiento alto viene siempre ",
+          "con una tasa de empleo alta? ¿Los países con déficit fiscal tienen también déficit ",
+          "comercial? Los casos que se apartan del patrón suelen contar la historia más interesante."
         )
       )
     )
@@ -64,7 +65,7 @@ global_explorer_server <- function(id, data) {
 
     plot_data <- reactive({
       req(data(), input$x_var, input$y_var, input$static_year, input$regions)
-      validate(need(input$x_var != input$y_var, "Please choose different variables for X and Y axes."))
+      validate(need(input$x_var != input$y_var, "Elegí variables distintas para los ejes X e Y."))
 
       df <- data() %>%
         filter(year == input$static_year, region %in% input$regions) %>%
@@ -96,9 +97,9 @@ global_explorer_server <- function(id, data) {
 
       df$hover_text <- paste0(
         "<b>", df$country, "</b> (", df$year, ")<br>",
-        var_label(input$x_var), ": <b>", round(df$x_val, 2), " ", var_unit(input$x_var), "</b><br>",
-        var_label(input$y_var), ": <b>", round(df$y_val, 2), " ", var_unit(input$y_var), "</b><br>",
-        "Region: ", df$region
+        var_label(input$x_var), ": <b>", num_es(df$x_val, 2), " ", var_unit(input$x_var), "</b><br>",
+        var_label(input$y_var), ": <b>", num_es(df$y_val, 2), " ", var_unit(input$y_var), "</b><br>",
+        "Región: ", df$region
       )
       df
     })
@@ -106,13 +107,13 @@ global_explorer_server <- function(id, data) {
     output$chart_title <- renderUI({
       req(input$x_var, input$y_var, input$static_year)
       tags$span(style = "font-weight:700; color:#1e3a5f;",
-        paste0(var_short(input$y_var), " vs ", var_short(input$x_var), " — ", input$static_year))
+        paste0(var_short(input$y_var), " vs. ", var_short(input$x_var), " (", input$static_year, ")"))
     })
 
     output$scatter_plot <- renderPlotly({
       req(plot_data())
       df <- plot_data()
-      validate(need(nrow(df) > 0, "No data available for this selection."))
+      validate(need(nrow(df) > 0, "No hay datos para esta selección."))
 
       regions_present <- unique(df$region)
       r_cols <- REGION_COLORS[names(REGION_COLORS) %in% regions_present]
@@ -145,25 +146,25 @@ global_explorer_server <- function(id, data) {
           xref="paper",yref="y", line=list(color="#94a3b8",dash="dot",width=1))))
 
       size_note <- switch(input$size_var,
-        "equal"      = "Equal-sized bubbles",
-        "population" = "Bubble size = Population",
-        paste0("Bubble size = ", var_short(input$size_var)))
+        "equal"      = "Burbujas del mismo tamaño",
+        "population" = "Tamaño de la burbuja = población",
+        paste0("Tamaño de la burbuja = ", var_short(input$size_var)))
 
       p %>%
         layout(
           xaxis  = list(title=var_label(input$x_var), tickfont=list(size=11), gridcolor="#f1f5f9"),
           yaxis  = list(title=var_label(input$y_var), tickfont=list(size=11), gridcolor="#f1f5f9"),
           legend = list(orientation="v", x=1.01, y=0.99,
-                        font=list(size=10), title=list(text="<b>Region</b>")),
+                        font=list(size=10), title=list(text="<b>Región</b>")),
           annotations = list(list(x=0.01,y=0.01,xref="paper",yref="paper",
             text=size_note, showarrow=FALSE, font=list(size=9,color="#94a3b8"), xanchor="left")),
           shapes = shapes,
           margin = list(l=70,r=165,t=20,b=70),
           paper_bgcolor="#ffffff", plot_bgcolor="#ffffff"
         ) %>%
-        config(displaylogo=FALSE, responsive=TRUE,
+        config(displaylogo = FALSE, locale = "es", responsive=TRUE,
                modeBarButtons=list(list("toImage","zoom2d","pan2d","resetScale2d")),
-               toImageButtonOptions=list(format="png",filename="global_explorer",width=1400,height=700))
+               toImageButtonOptions=list(format="png",filename="explorador_global",width=1400,height=700))
     })
   })
 }

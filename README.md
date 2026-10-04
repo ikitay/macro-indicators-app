@@ -1,6 +1,8 @@
 # Exploring Macroeconomics Through Data
 
 An interactive R Shiny educational application for undergraduate economics students.
+The app's interface is in Spanish (rioplatense) and follows the course notes
+*La mirada macroeconómica: objetivos e indicadores*.
 
 ## Quick Start
 
@@ -66,6 +68,7 @@ data/
   wdi_download_tmp/             # Raw WDI bulk download (git-ignored, ~540 MB)
 R/
   constants.R                   # Shared constants (CORE_VARS, year range, …)
+  country_names_es.R            # Spanish country, region and income-group names
   data_utils.R                  # Data loading, caching, variable metadata
   glossary.R                  # Term definitions and modal
   events_data.R               # Historical events

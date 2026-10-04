@@ -20,7 +20,7 @@ app_root <- normalizePath(file.path(testthat::test_path(), "..", ".."))
 local({
   old <- setwd(app_root)
   on.exit(setwd(old))
-  for (f in c("R/wdi_shim.R", "R/widgets_shim.R", "R/constants.R",
+  for (f in c("R/wdi_shim.R", "R/widgets_shim.R", "R/constants.R", "R/country_names_es.R",
               "R/data_utils.R", "R/glossary.R", "R/events_data.R",
               "R/challenges_data.R", "R/mod_explore_country.R",
               "R/mod_compare_countries.R", "R/mod_global_explorer.R",

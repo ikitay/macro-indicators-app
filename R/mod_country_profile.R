@@ -8,15 +8,15 @@
 PROFILE_PALETTE <- c("#2563eb", "#dc2626", "#16a34a", "#d97706")
 
 PROFILE_AXES <- c(
-  gdp_growth = "Economic growth\n(GDP growth)",
-  employment = "Employment\n(employment rate)",
-  inflation  = "Price stability\n(inflation near 2%)"
+  gdp_growth = "Crecimiento económico\n(crecimiento del PBI)",
+  employment = "Pleno empleo\n(tasa de empleo)",
+  inflation  = "Estabilidad de precios\n(inflación cerca del 2%)"
 )
 
 PROFILE_SCORE_LABELS <- c(
-  gdp_growth = "Economic growth",
-  employment = "Employment",
-  inflation  = "Price stability"
+  gdp_growth = "Crecimiento",
+  employment = "Empleo",
+  inflation  = "Precios"
 )
 
 country_profile_ui <- function(id) {
@@ -27,31 +27,32 @@ country_profile_ui <- function(id) {
       width = 280, open = "open",
       tags$div(class = "sidebar-intro",
         tags$p(style = "font-size:0.83rem; color:#555; line-height:1.5; margin-bottom:12px;",
-          "Compare how countries did on the three central objectives in one year, ",
-          "then check whether their fiscal and external situation could sustain it."
+          "Compará cómo les fue a los países en los tres objetivos centrales en un año, ",
+          "y después fijate si su situación fiscal y externa permitía sostenerlo."
         )
       ),
-      selectizeInput(ns("countries"), "🌍 Countries (up to 4)",
+      selectizeInput(ns("countries"), "🌍 Países (hasta 4)",
         choices  = NULL,
         selected = c("US", "DE", "KR", "AR"),
         multiple = TRUE,
-        options  = list(maxItems=4, placeholder="Type to search…", maxOptions=300)
+        options  = list(maxItems=4, placeholder="Escribí para buscar…", maxOptions=300)
       ),
-      sliderInput(ns("year"), "📅 Reference year",
+      sliderInput(ns("year"), "📅 Año de referencia",
         min=YEAR_MIN, max=YEAR_MAX, value=2019, step=1, sep=""
       ),
       hr(),
-      checkboxInput(ns("fill_area"), "Fill radar area", value = TRUE),
+      checkboxInput(ns("fill_area"), "Rellenar el área", value = TRUE),
       hr(),
       tags$div(
         style = "background:#fff8e1; border:1px solid #fde68a; border-radius:6px; padding:10px;",
         tags$p(style="font-size:0.8rem; color:#78350f; margin:0;",
-          tags$b("📏 How scores work: "),
-          "Each score (0–100) compares this country-year with ",
-          tags$b("all countries from 1990–2023."),
-          " A score of 70 means better than 70% of all those observations. ",
-          tags$b("Price stability"), " rewards inflation close to 2%: both high inflation ",
-          "and deflation score lower. Missing data is left blank, not scored as zero."
+          tags$b("📏 Cómo se calculan los puntajes: "),
+          "cada puntaje (0 a 100) compara este país y año con ",
+          tags$b("todos los países entre 1990 y 2023."),
+          " Un puntaje de 70 significa que le fue mejor que en el 70% de esas observaciones. ",
+          tags$b("Estabilidad de precios"), " premia una inflación cercana al 2%: tanto la ",
+          "inflación alta como la deflación puntúan más bajo. Si falta un dato, queda en blanco ",
+          "en lugar de contar como cero."
         )
       )
     ),
@@ -71,11 +72,11 @@ country_profile_ui <- function(id) {
       ),
       card_footer(
         tags$div(class="info-box",
-          tags$span("🕸️ "), tags$b("How to read this chart: "),
-          "A larger area means better results on the three central objectives in that year. ",
-          "It does not tell you whether those results can last: an economy can grow, create ",
-          "jobs and keep inflation low while building up fiscal or external imbalances. ",
-          "That is why the fiscal and trade balances are shown separately, and not scored."
+          tags$span("🕸️ "), tags$b("Cómo leer este gráfico: "),
+          "un área más grande indica mejores resultados en los tres objetivos centrales ese año. ",
+          "No dice si esos resultados pueden sostenerse: una economía puede crecer, crear empleo ",
+          "y mantener la inflación baja mientras acumula desequilibrios fiscales o externos. ",
+          "Por eso el resultado fiscal y el saldo comercial se muestran aparte, sin puntaje."
         )
       )
     )
@@ -121,13 +122,13 @@ country_profile_server <- function(id, data) {
     output$chart_title <- renderUI({
       req(input$year)
       tags$span(style="font-weight:700; color:#1e3a5f;",
-        paste("Central objectives and sustainability —", input$year))
+        paste0("Objetivos centrales y sostenibilidad (", input$year, ")"))
     })
 
     output$radar_plot <- renderPlotly({
       req(profile_data())
       df <- profile_data()
-      validate(need(nrow(df) > 0, "No data available for selected countries and year."))
+      validate(need(nrow(df) > 0, "No hay datos para los países y el año elegidos."))
 
       axis_labels <- unname(PROFILE_AXES[CENTRAL_VARS])
       score_cols  <- paste0(CENTRAL_VARS, "_score")
@@ -140,7 +141,7 @@ country_profile_server <- function(id, data) {
         closed_r     <- c(vals, vals[1])
         closed_theta <- c(axis_labels, axis_labels[1])
         hover <- paste0(gsub("\n", " ", closed_theta), ": ",
-                        ifelse(is.na(closed_r), "no data", paste0(round(closed_r), "/100")))
+                        ifelse(is.na(closed_r), "sin datos", paste0(round(closed_r), "/100")))
 
         p <- p %>% add_trace(
           r     = closed_r,
@@ -168,7 +169,8 @@ country_profile_server <- function(id, data) {
               tickfont = list(size=9),
               gridcolor = "#e2e8f0"
             ),
-            angularaxis = list(tickfont=list(size=11.5))
+            # Growth at the top, so no long label sits at the left or right edge
+            angularaxis = list(tickfont=list(size=11.5), rotation=90, direction="clockwise")
           ),
           legend = list(
             orientation="h", x=0.5, y=-0.12, xanchor="center",
@@ -177,9 +179,9 @@ country_profile_server <- function(id, data) {
           margin = list(l=110,r=110,t=50,b=80),
           paper_bgcolor="#ffffff"
         ) %>%
-        config(displaylogo=FALSE, responsive=TRUE,
+        config(displaylogo = FALSE, locale = "es", responsive=TRUE,
                modeBarButtons=list(list("toImage")),
-               toImageButtonOptions=list(format="png",filename="country_profile",width=900,height=700))
+               toImageButtonOptions=list(format="png",filename="perfil_pais",width=900,height=700))
     })
 
     output$score_table <- renderUI({
@@ -188,7 +190,7 @@ country_profile_server <- function(id, data) {
       validate(need(nrow(df) > 0, ""))
 
       score_cell <- function(x) {
-        if (is.na(x)) return(tags$td(style = "text-align:right; color:#94a3b8;", "no data"))
+        if (is.na(x)) return(tags$td(style = "text-align:right; color:#94a3b8;", "sin datos"))
         v   <- round(x)
         col <- if (v >= 60) "#16a34a" else if (v >= 35) "#d97706" else "#dc2626"
         tags$td(style = "text-align:right;",
@@ -200,7 +202,7 @@ country_profile_server <- function(id, data) {
       tags$div(
         style = "padding:10px 10px 0;",
         tags$p(style="font-size:0.8rem; font-weight:700; color:#1e3a5f; margin-bottom:4px;",
-               "Central objectives — scores (0–100)"),
+               "Objetivos centrales: puntajes (0 a 100)"),
         tags$table(
           class = "table table-sm",
           style = "font-size:0.78rem; margin-bottom:10px;",
@@ -227,7 +229,7 @@ country_profile_server <- function(id, data) {
       df    <- df[order[!is.na(order)], , drop = FALSE]
       validate(need(nrow(df) > 0, ""))
 
-      fmt <- function(x) if (is.na(x)) "no data" else sprintf("%+.1f%%", x)
+      fmt <- function(x) if (is.na(x)) "sin datos" else paste0(if (x > 0) "+", num_es(x), "%")
       cell <- function(now, past) {
         tags$td(style = "text-align:right;",
           tags$span(style = "font-weight:600; color:#334155;", fmt(now)),
@@ -241,13 +243,13 @@ country_profile_server <- function(id, data) {
       tags$div(
         style = "padding:4px 10px 10px;",
         tags$p(style="font-size:0.8rem; font-weight:700; color:#1e3a5f; margin-bottom:4px;",
-               "Sustainability information — % of GDP, not scored"),
+               "Información de sostenibilidad: % del PBI, sin puntaje"),
         tags$table(
           class = "table table-sm",
           style = "font-size:0.78rem; margin-bottom:6px;",
           tags$thead(tags$tr(
-            tags$th(""), tags$th(style = "text-align:right;", "Fiscal balance"),
-            tags$th(style = "text-align:right;", "Trade balance")
+            tags$th(""), tags$th(style = "text-align:right;", "Resultado fiscal"),
+            tags$th(style = "text-align:right;", "Saldo comercial")
           )),
           tags$tbody(lapply(seq_len(nrow(df)), function(i) {
             col <- PROFILE_PALETTE[match(df$iso2c[i], profile_data()$iso2c)]
@@ -259,10 +261,10 @@ country_profile_server <- function(id, data) {
           }))
         ),
         tags$p(style = "font-size:0.74rem; color:#64748b; margin:0; line-height:1.4;",
-          "A deficit (negative value) is not automatically a problem. Fiscal sustainability ",
-          "depends on the path of public debt; external sustainability depends on how a ",
-          "deficit is financed (the balance of payments). Compare with five years earlier: ",
-          "is the imbalance growing or shrinking?"
+          "Un déficit (valor negativo) no es automáticamente un problema. La sostenibilidad ",
+          "fiscal depende de la trayectoria de la deuda pública; la externa, de cómo se ",
+          "financia el déficit (la balanza de pagos). Compará con cinco años antes: ",
+          "¿el desequilibrio crece o se achica?"
         )
       )
     })

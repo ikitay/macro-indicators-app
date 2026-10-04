@@ -28,7 +28,23 @@ macroeconómica: objetivos e indicadores*.
   "a deficit is not necessarily a problem"). New entries: Balance of Payments,
   Fiscal Sustainability, Nominal GDP.
 
+- **The app is now in Spanish**, using the course's terms (PBI, IPC, resultado
+  fiscal, pleno empleo, balanza de pagos). Country, region and income-group
+  names are in Spanish too, so students can search "Alemania" or "Corea del Sur".
+  Numbers in text use a decimal comma (2,5%).
+- Indicators are grouped into central objectives ("¿qué está ocurriendo?") and
+  sustainability objectives ("¿puede sostenerse?") in every tab, and labelled
+  "Objetivo: indicador". The About window explains the difference between an
+  objective and its indicator.
+- New glossary entries from the course notes: Pleno empleo, Población
+  económicamente activa, Tasa de desempleo, IPC, Deflación, Deuda pública,
+  Sostenibilidad externa, Objetivo e indicador, Sostenibilidad.
+
 ### Fixed
+- **Explore Country:** "Shade negative GDP years" did nothing; the years in
+  which GDP fell are now shaded.
+- **Compare Countries:** the data table had one row per country and year, mostly
+  empty; it now has one row per year and one column per country.
 - Challenge solutions that the app's own data contradicted (for example,
   Russia 1999–2008 as "growth without jobs", when its employment rate rose).
   Every quoted solution is now checked against the data by the tests.

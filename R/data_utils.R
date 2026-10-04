@@ -9,101 +9,92 @@
 # ---------------------------------------------------------------------------
 VARS <- list(
   gdp_growth = list(
-    objective       = "Economic growth",
+    objective       = "Crecimiento económico",
     group           = "central",
-    dimension       = "Production",
+    dimension       = "Producción",
     code            = "NY.GDP.MKTP.KD.ZG",
-    label           = "GDP Growth (%)",
-    short           = "GDP Growth",
+    label           = "Crecimiento del PBI real (%)",
+    short           = "Crecimiento del PBI",
     color           = "#2563eb",
     unit            = "%",
-    higher_is_better = TRUE,
     zero_line       = TRUE,
     description     = paste0(
-      "Annual percentage change in Gross Domestic Product at constant prices. ",
-      "Positive values indicate economic expansion; negative values indicate contraction. ",
-      "It is the main indicator of the economic growth objective."
+      "Variación porcentual anual del PBI a precios constantes (PBI real). ",
+      "Los valores positivos indican que la producción aumentó; los negativos, que cayó. ",
+      "Es el principal indicador del objetivo de crecimiento económico."
     )
   ),
   employment = list(
-    objective       = "Full employment",
+    objective       = "Pleno empleo",
     group           = "central",
-    dimension       = "Employment",
+    dimension       = "Empleo",
     code            = "SL.EMP.TOTL.SP.ZS",
-    label           = "Employment Rate (%)",
-    short           = "Employment",
+    label           = "Tasa de empleo (%)",
+    short           = "Tasa de empleo",
     color           = "#16a34a",
     unit            = "%",
-    higher_is_better = TRUE,
     zero_line       = FALSE,
     description     = paste0(
-      "Percentage of the working-age population (15+) that is employed. ",
-      "Also called the employment-to-population ratio. Higher values indicate ",
-      "a greater share of the population participating in productive work."
+      "Porcentaje de la población de 15 años o más que tiene empleo. ",
+      "No es la tasa de desempleo, que mide qué parte de la población económicamente ",
+      "activa busca trabajo y no lo encuentra."
     )
   ),
   inflation = list(
-    objective       = "Price stability",
+    objective       = "Estabilidad de precios",
     group           = "central",
-    dimension       = "Prices",
+    dimension       = "Precios",
     code            = "FP.CPI.TOTL.ZG",
-    label           = "Inflation (%)",
-    short           = "Inflation",
+    label           = "Inflación (%)",
+    short           = "Inflación",
     color           = "#dc2626",
     unit            = "%",
-    higher_is_better = FALSE,
     zero_line       = TRUE,
     description     = paste0(
-      "Annual percentage change in consumer prices (CPI). ",
-      "Moderate inflation (1–3%) is considered healthy in most economies. ",
-      "Very high inflation (hyperinflation) or deflation (negative inflation) ",
-      "can cause serious economic disruption."
+      "Variación porcentual anual del Índice de Precios al Consumidor (IPC). ",
+      "Lo que se busca evitar es una inflación elevada o inestable; la deflación ",
+      "(caída sostenida del nivel general de precios) tampoco es deseable."
     )
   ),
   fiscal_balance = list(
-    objective       = "Fiscal sustainability",
+    objective       = "Sostenibilidad fiscal",
     group           = "sustainability",
-    dimension       = "Public finances",
+    dimension       = "Situación fiscal",
     code            = "GC.NLD.TOTL.GD.ZS",
-    label           = "Fiscal Balance (% of GDP)",
-    short           = "Fiscal Balance",
+    label           = "Resultado fiscal (% del PBI)",
+    short           = "Resultado fiscal",
     color           = "#7c3aed",
-    unit            = "% of GDP",
-    higher_is_better = TRUE,
+    unit            = "% del PBI",
     zero_line       = TRUE,
     description     = paste0(
-      "General government net lending (+) / net borrowing (–): revenues minus expenditures ",
-      "(including net investment), as a percentage of GDP. ",
-      "A positive value is a budget surplus (government earns more than it spends). ",
-      "A negative value is a deficit (government borrows to cover expenditures)."
+      "Ingresos menos gastos del gobierno general, en porcentaje del PBI. ",
+      "Un valor positivo es un superávit fiscal; uno negativo, un déficit fiscal."
     )
   ),
   trade_balance = list(
-    objective       = "External sustainability",
+    objective       = "Sostenibilidad externa",
     group           = "sustainability",
-    dimension       = "External sector",
+    dimension       = "Sector externo",
     code            = "NE.RSB.GNFS.ZS",
-    label           = "Trade Balance (% of GDP)",
-    short           = "Trade Balance",
+    label           = "Saldo comercial de bienes y servicios (% del PBI)",
+    short           = "Saldo comercial",
     color           = "#d97706",
-    unit            = "% of GDP",
-    higher_is_better = TRUE,
+    unit            = "% del PBI",
     zero_line       = TRUE,
     description     = paste0(
-      "Exports minus imports of goods and services, as a percentage of GDP. ",
-      "A positive value is a trade surplus (more exports than imports). ",
-      "A negative value is a trade deficit."
+      "Exportaciones menos importaciones de bienes y servicios, en porcentaje del PBI. ",
+      "Un valor positivo es un superávit comercial; uno negativo, un déficit comercial. ",
+      "Es más acotado que la balanza de pagos."
     )
   ),
   population = list(
     code            = "SP.POP.TOTL",
-    label           = "Population",
-    short           = "Population",
+    label           = "Población",
+    short           = "Población",
     color           = "#64748b",
-    unit            = "people",
-    higher_is_better = NA,
+    unit            = "personas",
     zero_line       = FALSE,
-    description     = "Total population of the country."
+    description     = "Población total del país."
   )
 )
 
@@ -193,6 +184,7 @@ clean_wdi_dataframe <- function(df_raw, start_year = YEAR_MIN, end_year = YEAR_M
     mutate(across(any_of(CORE_VARS), as.numeric),
            across(any_of("population"), as.numeric)) %>%
     filter(nchar(iso2c) == 2) %>%
+    translate_country_fields() %>%
     arrange(country, year)
 }
 
@@ -264,8 +256,8 @@ fetch_wdi_from_api <- function(cache, cache_key, demo_key,
 get_macro_data <- function(start_year = YEAR_MIN, end_year = YEAR_MAX) {
 
   cache      <- setup_cache()
-  cache_key  <- paste0("wdi_macro_", start_year, "_", end_year, "_v5")
-  demo_key   <- paste0("demo_macro_", start_year, "_", end_year, "_v1")
+  cache_key  <- paste0("wdi_macro_", start_year, "_", end_year, "_v6")
+  demo_key   <- paste0("demo_macro_", start_year, "_", end_year, "_v2")
 
   # ── Bundled CSV snapshot (primary offline source) ───────────────────────────
   bundled <- load_bundled_snapshot(start_year, end_year)
@@ -378,12 +370,27 @@ var_source <- function(df, v) {
   if (col %in% names(df)) df[[col]] else rep(NA_character_, nrow(df))
 }
 
+# Spanish names of the data sources recorded in the snapshot's *_source columns
+SOURCE_NAMES_ES <- c(
+  "World Bank WDI"             = "Banco Mundial (WDI)",
+  "IMF World Economic Outlook" = "FMI, World Economic Outlook",
+  "INDEC official CPI"         = "IPC oficial del INDEC",
+  "Median of provincial CPIs"  = "Mediana de IPC provinciales"
+)
+
 # Tooltip line naming the data source ("" when unknown)
 source_hover <- function(src) {
-  ifelse(is.na(src) | src == "", "", paste0("<br><i>Source: ", src, "</i>"))
+  ifelse(is.na(src) | src == "", "",
+         paste0("<br><i>Fuente: ", translate_values(src, SOURCE_NAMES_ES), "</i>"))
 }
 
-# Choices list for variable selectors (core 5 only)
+# Number with a decimal comma, as written in Argentina: num_es(2.5) -> "2,5"
+num_es <- function(x, digits = 1) {
+  ifelse(is.na(x), "s/d",
+         formatC(round(x, digits), format = "f", digits = digits,
+                 decimal.mark = ",", big.mark = "."))
+}
+
 # Indicators grouped by the kind of objective they observe, labelled
 # "Objective: indicator", for selectInput (the names become option groups)
 core_var_choices <- function() {
@@ -495,5 +502,5 @@ generate_fallback_data <- function() {
     )
   })
 
-  dplyr::bind_rows(result_list)
+  translate_country_fields(dplyr::bind_rows(result_list))
 }

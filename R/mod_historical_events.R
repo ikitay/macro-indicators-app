@@ -12,30 +12,30 @@ historical_events_ui <- function(id) {
       width = 300, open = "open",
       tags$div(class="sidebar-intro",
         tags$p(style="font-size:0.83rem; color:#555; line-height:1.5; margin-bottom:12px;",
-          "Select one or more historical events to see vertical markers on the chart. ",
-          "Compare how different countries were affected by the same global shock."
+          "Elegí uno o más acontecimientos históricos para marcarlos en el gráfico. ",
+          "Compará cómo un mismo shock afectó a distintos países."
         )
       ),
-      checkboxGroupInput(ns("events"), "📅 Historical events",
+      checkboxGroupInput(ns("events"), "📅 Acontecimientos históricos",
         choices  = EVENT_CHOICES,
         selected = "gfc"
       ),
       hr(),
-      selectizeInput(ns("countries"), "🌍 Countries to compare",
+      selectizeInput(ns("countries"), "🌍 Países a comparar",
         choices  = NULL,
         selected = c("US","DE","AR","KR"),
         multiple = TRUE,
-        options  = list(maxItems=6, placeholder="Type to search…", maxOptions=300)
+        options  = list(maxItems=6, placeholder="Escribí para buscar…", maxOptions=300)
       ),
-      selectInput(ns("variable"), "📊 Indicator",
+      selectInput(ns("variable"), "📊 Indicador",
         choices=core_var_choices(), selected="gdp_growth"
       ),
-      sliderInput(ns("year_range"), "📅 Year range",
+      sliderInput(ns("year_range"), "📅 Período",
         min=YEAR_MIN, max=YEAR_MAX, value=c(1995, YEAR_MAX), step=1, sep=""
       ),
       hr(),
-      checkboxInput(ns("shade_periods"), "Shade affected periods", value=TRUE),
-      checkboxInput(ns("show_annotations"), "Show event labels",   value=TRUE)
+      checkboxInput(ns("shade_periods"), "Sombrear los períodos afectados", value=TRUE),
+      checkboxInput(ns("show_annotations"), "Mostrar los nombres de los acontecimientos", value=TRUE)
     ),
 
     tags$div(
@@ -95,7 +95,7 @@ historical_events_server <- function(id, data) {
             tags$p(style="font-size:0.82rem; color:#334155; margin:6px 0 4px;", ev$description),
             tags$div(
               style="background:#f8fafc; border-radius:5px; padding:6px 10px; font-size:0.8rem;",
-              tags$span(style="font-weight:600; color:#1e3a5f;", "Economic impact: "),
+              tags$span(style="font-weight:600; color:#1e3a5f;", "Impacto económico: "),
               tags$span(style="color:#475569;", ev$macro_impact)
             )
           )
@@ -106,12 +106,12 @@ historical_events_server <- function(id, data) {
     output$chart_title <- renderUI({
       req(input$variable)
       tags$span(style="font-weight:700; color:#1e3a5f;",
-        paste(var_label(input$variable), "— With Historical Event Markers"))
+        paste(var_label(input$variable), "y acontecimientos históricos"))
     })
 
     output$event_plot <- renderPlotly({
       req(data(), input$countries, input$variable, input$year_range)
-      validate(need(length(input$countries) >= 1, "Select at least one country."))
+      validate(need(length(input$countries) >= 1, "Elegí al menos un país."))
 
       df <- data() %>%
         filter(iso2c %in% input$countries,
@@ -134,8 +134,8 @@ historical_events_server <- function(id, data) {
           type="scatter", mode="lines+markers", name=cname,
           line=list(color=col_c, width=2.5),
           marker=list(color=col_c, size=5),
-          text=paste0("<b>",cname,"</b><br>Year: ",df_c$year,"<br>",
-                      round(df_c$val,2)," ",var_unit(input$variable),
+          text=paste0("<b>",cname,"</b><br>Año: ",df_c$year,"<br>",
+                      num_es(df_c$val,2)," ",var_unit(input$variable),
                       source_hover(df_c$src)),
           hoverinfo="text"
         )
@@ -195,7 +195,7 @@ historical_events_server <- function(id, data) {
 
       p %>%
         layout(
-          xaxis = list(title="Year", tickfont=list(size=11), gridcolor="#f1f5f9"),
+          xaxis = list(title="Año", tickfont=list(size=11), gridcolor="#f1f5f9"),
           yaxis = list(title=var_label(input$variable), tickfont=list(size=11),
                        gridcolor="#f1f5f9", zerolinecolor="#94a3b8"),
           legend = list(orientation="h", x=0, y=-0.18, font=list(size=11)),
@@ -205,9 +205,9 @@ historical_events_server <- function(id, data) {
           margin = list(l=70,r=30,t=20,b=80),
           paper_bgcolor="#ffffff", plot_bgcolor="#ffffff"
         ) %>%
-        config(displaylogo=FALSE, responsive=TRUE,
+        config(displaylogo = FALSE, locale = "es", responsive=TRUE,
                modeBarButtons=list(list("toImage","zoom2d","pan2d","resetScale2d")),
-               toImageButtonOptions=list(format="png",filename="historical_events",width=1200,height=600))
+               toImageButtonOptions=list(format="png",filename="acontecimientos_historicos",width=1200,height=600))
     })
 
     output$lesson_box <- renderUI({
@@ -221,7 +221,7 @@ historical_events_server <- function(id, data) {
           tags$div(
             style=paste0("background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; ",
                          "padding:10px 14px; margin-bottom:6px;"),
-            tags$span(style=paste0("font-weight:700; color:",ev$color,";"), ev$icon, " Key lesson: "),
+            tags$span(style=paste0("font-weight:700; color:",ev$color,";"), ev$icon, " Lección clave: "),
             tags$span(style="font-size:0.85rem; color:#166534;", ev$key_lesson)
           )
         })

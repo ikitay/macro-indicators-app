@@ -14,10 +14,10 @@ challenges_ui <- function(id) {
       tags$div(
         style = "background:linear-gradient(135deg,#1e3a5f,#2563eb); border-radius:10px;
                  padding:22px 28px; margin-bottom:20px; color:white;",
-        tags$h4(style="margin:0 0 6px; font-weight:700;", "🎯 Discovery Challenges"),
+        tags$h4(style="margin:0 0 6px; font-weight:700;", "🎯 Desafíos"),
         tags$p(style="margin:0; opacity:0.88; font-size:0.93rem;",
-          "These tasks are designed to help you discover macroeconomic patterns through exploration. ",
-          "Use the other tabs to investigate — then return here to compare your findings."
+          "Estos desafíos te proponen descubrir patrones macroeconómicos explorando los datos. ",
+          "Investigá con las otras pestañas y volvé acá para comparar lo que encontraste."
         )
       ),
 
@@ -27,7 +27,7 @@ challenges_ui <- function(id) {
         card(
           card_body(padding="10px",
             # Attach the dropdown to <body> so the card's overflow doesn't clip it
-            selectizeInput(ns("challenge_select"), "Choose a challenge:",
+            selectizeInput(ns("challenge_select"), "Elegí un desafío:",
               choices  = CHALLENGE_CHOICES,
               selected = 1,
               width    = "100%",
@@ -38,17 +38,17 @@ challenges_ui <- function(id) {
         card(
           card_body(padding="10px",
             tags$div(style="padding-top:4px;",
-              actionButton(ns("random_challenge"), "🎲 Random Challenge",
+              actionButton(ns("random_challenge"), "🎲 Desafío al azar",
                            class="btn btn-outline-primary btn-sm w-100 mb-2"),
-              checkboxInput(ns("instructor_mode"), "🎓 Instructor mode", value=FALSE)
+              checkboxInput(ns("instructor_mode"), "🎓 Modo docente", value=FALSE)
             )
           )
         ),
         card(
           card_body(padding="10px",
             tags$div(style="padding-top:4px;",
-              actionButton(ns("show_hint"),    "💡 Show Hint",    class="btn btn-outline-warning btn-sm w-100 mb-2"),
-              actionButton(ns("show_solution"),"✅ Reveal Solution", class="btn btn-outline-success btn-sm w-100")
+              actionButton(ns("show_hint"),    "💡 Ver pista",    class="btn btn-outline-warning btn-sm w-100 mb-2"),
+              actionButton(ns("show_solution"),"✅ Ver solución", class="btn btn-outline-success btn-sm w-100")
             )
           )
         )
@@ -130,7 +130,7 @@ challenges_server <- function(id, data) {
         # Relevant indicators
         tags$div(
           style="margin-bottom:16px;",
-          tags$span(style="font-weight:600; color:#475569; font-size:0.85rem;", "Key indicators to explore: "),
+          tags$span(style="font-weight:600; color:#475569; font-size:0.85rem;", "Indicadores para explorar: "),
           tags$div(
             style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;",
             lapply(ch$variables, function(v) {
@@ -147,15 +147,15 @@ challenges_server <- function(id, data) {
         # Navigation suggestion
         tags$div(
           style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px;",
-          tags$span(style="color:#1d4ed8; font-weight:600; font-size:0.85rem;", "🗺️ Where to explore: "),
+          tags$span(style="color:#1d4ed8; font-weight:600; font-size:0.85rem;", "🗺️ Dónde explorar: "),
           tags$span(style="color:#1e40af; font-size:0.85rem;",
             if (length(ch$variables) == 1)
-              paste0("Use the '⚖️ Compare Countries' tab and select '", var_label(ch$variables[1]), "'.")
+              paste0("Usá la pestaña '⚖️ Comparar países' y elegí '", var_label(ch$variables[1]), "'.")
             else if (length(ch$variables) == 2)
-              paste0("Try the '📊 Correlation Explorer' tab with ",
-                     var_label(ch$variables[1]), " and ", var_label(ch$variables[2]), ".")
+              paste0("Probá la pestaña '📊 Correlaciones' con ",
+                     var_label(ch$variables[1]), " y ", var_label(ch$variables[2]), ".")
             else
-              "Use '🔍 Explore Country' for one country or '⚖️ Compare Countries' for multiple."
+              "Usá '🔍 Explorar un país' para un país, o '⚖️ Comparar países' para varios."
           )
         )
       )
@@ -168,7 +168,7 @@ challenges_server <- function(id, data) {
       tags$div(
         style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px;
                padding:14px 18px; margin-top:12px;",
-        tags$span(style="font-weight:700; color:#92400e; font-size:0.9rem;", "💡 Hint"),
+        tags$span(style="font-weight:700; color:#92400e; font-size:0.9rem;", "💡 Pista"),
         tags$p(style="margin:6px 0 0; color:#78350f; font-size:0.87rem; line-height:1.6;",
                ch$hint)
       )
@@ -182,7 +182,7 @@ challenges_server <- function(id, data) {
         style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px;
                padding:14px 18px; margin-top:12px;",
         tags$div(style="font-weight:700; color:#166534; font-size:0.9rem; margin-bottom:10px;",
-                 "✅ Suggested Countries to Examine"),
+                 "✅ Casos sugeridos para analizar"),
         lapply(ch$solution_countries, function(s) {
           tags$div(
             style="background:white; border-radius:6px; padding:10px 12px; margin-bottom:8px;
@@ -197,8 +197,8 @@ challenges_server <- function(id, data) {
         tags$div(
           style="background:#dcfce7; border-radius:6px; padding:8px 12px; margin-top:8px;",
           tags$small(style="color:#166534;",
-            "⚠️ These are examples — you may find other valid answers. ",
-            "The goal is to explore and justify your findings.")
+            "⚠️ Son ejemplos: podés encontrar otras respuestas válidas. ",
+            "Lo importante es explorar y fundamentar lo que encontrás.")
         )
       )
     })
@@ -211,15 +211,15 @@ challenges_server <- function(id, data) {
         style="background:#f5f3ff; border:1px solid #ddd6fe; border-radius:8px;
                padding:16px 18px; margin-top:12px;",
         tags$div(style="font-weight:700; color:#4c1d95; font-size:0.9rem; margin-bottom:10px;",
-                 "🎓 Instructor Notes"),
+                 "🎓 Notas para docentes"),
         tags$div(
           style="margin-bottom:12px;",
-          tags$span(style="font-weight:600; color:#5b21b6; font-size:0.85rem;", "Pedagogical context: "),
+          tags$span(style="font-weight:600; color:#5b21b6; font-size:0.85rem;", "Contexto pedagógico: "),
           tags$p(style="color:#3b0764; font-size:0.85rem; margin:4px 0 0; line-height:1.6;",
                  ch$pedagogical_note)
         ),
         tags$div(
-          tags$span(style="font-weight:600; color:#5b21b6; font-size:0.85rem;", "Discussion questions: "),
+          tags$span(style="font-weight:600; color:#5b21b6; font-size:0.85rem;", "Preguntas para el debate: "),
           tags$ol(style="color:#3b0764; font-size:0.85rem; margin:6px 0 0; line-height:1.8;",
             lapply(ch$discussion_questions, tags$li)
           )

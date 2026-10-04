@@ -1,289 +1,375 @@
 # =============================================================================
 # GLOSSARY
-# Macroeconomic term definitions for undergraduate students
+# Macroeconomic term definitions for undergraduate students, following the
+# course notes "La mirada macroeconómica: objetivos e indicadores"
 # =============================================================================
 
 GLOSSARY_TERMS <- list(
 
   list(
-    term       = "GDP Growth",
-    category   = "Output",
+    term       = "Crecimiento del PBI",
+    category   = "Producción",
     definition = paste0(
-      "The annual percentage change in a country's real Gross Domestic Product (GDP), ",
-      "measured at constant prices. GDP is the value of the final goods and services ",
-      "produced in an economy during a period. Nominal GDP uses each year's prices, so it ",
-      "can rise only because prices rose; real GDP removes that effect and shows whether ",
-      "the economy actually produced more. Economic growth is the objective; the change ",
-      "in real GDP is the indicator we use to observe it."
+      "Variación porcentual anual del Producto Bruto Interno (PBI) real, es decir, medido a ",
+      "precios constantes. El PBI es el valor de los bienes y servicios finales producidos ",
+      "dentro de una economía durante un período. El PBI nominal usa los precios de cada año, ",
+      "así que puede aumentar solo porque subieron los precios; el PBI real descuenta ese ",
+      "efecto y muestra si la economía produjo más. El crecimiento económico es el objetivo; ",
+      "la variación del PBI real es el indicador que usamos para observarlo."
     ),
-    example    = "If GDP grows by 3%, the economy produced 3% more goods and services than the previous year.",
-    related    = "Recession, Business Cycle, Nominal GDP"
+    example    = "Si el PBI real crece un 3%, la economía produjo un 3% más de bienes y servicios que el año anterior.",
+    related    = "Recesión, Ciclo económico, PBI nominal"
   ),
 
   list(
-    term       = "Recession",
-    category   = "Output",
+    term       = "PBI nominal",
+    category   = "Producción",
     definition = paste0(
-      "A period of sustained decline in production, income and employment. With quarterly ",
-      "data, a common rule of thumb is two consecutive quarters of falling real GDP. This ",
-      "app uses annual data, so a year of negative GDP growth is a signal of recession, not ",
-      "a definition. Recessions are typically accompanied by rising unemployment, falling ",
-      "investment and reduced consumer spending. The global financial crisis of 2008–09 ",
-      "caused simultaneous recessions in many countries."
+      "PBI valuado a los precios de cada período (precios corrientes). Puede aumentar solo ",
+      "porque suben los precios, sin que la economía produzca más. Para saber si aumentó la ",
+      "producción hay que mirar el PBI real, que descuenta el efecto de los cambios de precios."
     ),
-    example    = "During 2020, many countries experienced their deepest recessions in decades due to COVID-19.",
-    related    = "GDP Growth, Business Cycle, Unemployment"
+    example    = "Si una economía produce exactamente lo mismo que el año pasado pero todos los precios suben un 20%, el PBI nominal aumenta un 20% y el PBI real no cambia.",
+    related    = "Crecimiento del PBI, Inflación"
   ),
 
   list(
-    term       = "Employment Rate",
-    category   = "Labour",
+    term       = "Recesión",
+    category   = "Producción",
     definition = paste0(
-      "The percentage of the working-age population (15+) that is currently employed. ",
-      "Also called the employment-to-population ratio. Different from the unemployment rate, ",
-      "which measures only those actively seeking work. The employment rate can fall even ",
-      "if unemployment stays constant (if people leave the labour force)."
+      "Período de caída sostenida de la producción, los ingresos y el empleo. Con datos ",
+      "trimestrales, una regla práctica habitual es dos trimestres seguidos de caída del PBI ",
+      "real. Esta app usa datos anuales, así que un año con caída del PBI es una señal de ",
+      "recesión, no una definición. Las recesiones suelen venir con más desempleo, menos ",
+      "inversión y menos consumo. La crisis financiera global de 2008–09 provocó recesiones ",
+      "simultáneas en muchos países."
     ),
-    example    = "An employment rate of 60% means 60 out of every 100 working-age people have jobs.",
-    related    = "Unemployment Rate, Labour Force, Participation Rate"
+    example    = "En 2020 muchos países tuvieron su recesión más profunda en décadas por la pandemia de COVID-19.",
+    related    = "Crecimiento del PBI, Ciclo económico, Tasa de desempleo"
   ),
 
   list(
-    term       = "Unemployment Rate",
-    category   = "Labour",
+    term       = "Pleno empleo",
+    category   = "Empleo",
     definition = paste0(
-      "The percentage of the labour force (employed + actively job-seeking) that is ",
-      "unemployed. This app uses the employment rate instead because it captures ",
-      "structural differences in labour force participation across countries more reliably."
+      "Situación en la que no existe un nivel elevado y persistente de desempleo involuntario. ",
+      "No significa desempleo cero: en cualquier economía hay personas que están cambiando de ",
+      "trabajo o que acaban de empezar a buscar. Su indicador principal es la tasa de desempleo."
     ),
-    example    = "If 5 out of 100 active workers are unemployed, the unemployment rate is 5%.",
-    related    = "Employment Rate, Labour Force, Natural Rate of Unemployment"
+    example    = "Una persona que renunció a su trabajo y tarda algunas semanas en conseguir otro figura como desempleada, aunque la economía ofrezca muchas oportunidades laborales.",
+    related    = "Tasa de desempleo, Población económicamente activa"
   ),
 
   list(
-    term       = "Inflation",
-    category   = "Prices",
+    term       = "Población económicamente activa",
+    category   = "Empleo",
     definition = paste0(
-      "A sustained, generalised increase in the general price level. It is measured as the ",
-      "percentage change of a price index such as the Consumer Price Index (CPI). The CPI ",
-      "is not inflation: it is an index of the cost of a representative household basket; ",
-      "inflation is its rate of change. Price stability does not mean no price ever rises: ",
-      "the aim is to avoid high or unstable inflation. Low, stable inflation (typically 2%) ",
-      "is the target of most central banks. Very high inflation erodes purchasing power; ",
-      "deflation (a sustained fall in the price level) is not desirable either, especially ",
-      "when it reflects weak economic activity."
+      "Conjunto de personas que trabajan o que buscan trabajo activamente. Es la base sobre la ",
+      "que se calcula la tasa de desempleo."
     ),
-    example    = "If the CPI goes from 100 to 110 in a year, the basket costs 10% more: inflation for that year is 10%. Saying \"the CPI was 110\" does not tell you how much inflation there was.",
-    related    = "Hyperinflation, Deflation, Central Bank, Monetary Policy"
+    example    = "Si en una economía 100 personas trabajan o buscan trabajo, la población económicamente activa es de 100 personas.",
+    related    = "Tasa de desempleo, Pleno empleo"
   ),
 
   list(
-    term       = "Hyperinflation",
-    category   = "Prices",
+    term       = "Tasa de desempleo",
+    category   = "Empleo",
     definition = paste0(
-      "Extremely rapid inflation, often defined as exceeding 50% per month. ",
-      "It destroys the value of savings, causes economic chaos, and typically results ",
-      "from excessive money creation. Argentina (1989–90), Venezuela (2017–19) and ",
-      "Zimbabwe (2007–08) have experienced hyperinflation in recent decades."
+      "Porcentaje de la población económicamente activa que busca trabajo y no lo encuentra. ",
+      "Una persona está desempleada cuando no tiene trabajo, quiere trabajar y lo busca ",
+      "activamente. Es el principal indicador del pleno empleo. Por ahora la app muestra la ",
+      "tasa de empleo, que es un indicador distinto."
     ),
-    example    = "Argentina's annual inflation reached 2,314% in 1990, at the end of its 1989–90 hyperinflation (see Explore Country). High inflation is not always hyperinflation: Argentina's 133% in 2023 was very high, but far below 50% a month.",
-    related    = "Inflation, Monetary Policy, Currency Crisis"
+    example    = "Si de 100 personas que trabajan o buscan trabajo, 8 buscan y no encuentran, la tasa de desempleo es del 8%.",
+    related    = "Tasa de empleo, Población económicamente activa, Pleno empleo"
   ),
 
   list(
-    term       = "Fiscal Balance",
-    category   = "Government",
+    term       = "Tasa de empleo",
+    category   = "Empleo",
     definition = paste0(
-      "The difference between government revenues (taxes, fees) and expenditures ",
-      "(spending, transfers), expressed as a percentage of GDP. A surplus means the ",
-      "government earns more than it spends; a deficit means it must borrow, which adds ",
-      "to public debt. A deficit is not necessarily a problem: in a recession tax revenue ",
-      "falls while some spending rises, and a temporary deficit can be compatible with ",
-      "sound public finances. Fiscal sustainability depends on the path of public debt ",
-      "relative to the size of the economy, not on one year's result."
+      "Porcentaje de la población de 15 años o más que tiene empleo. No es lo mismo que la tasa ",
+      "de desempleo: la tasa de empleo puede bajar aunque el desempleo no cambie, por ejemplo ",
+      "si más personas estudian durante más años o si la población envejece."
     ),
-    example    = "A fiscal balance of –3% of GDP means the government spends 3% of GDP more than it collects.",
-    related    = "Fiscal Sustainability, Public Debt, Austerity, Fiscal Policy"
+    example    = "Una tasa de empleo del 60% significa que 60 de cada 100 personas de 15 años o más tienen trabajo.",
+    related    = "Tasa de desempleo, Población económicamente activa"
   ),
 
   list(
-    term       = "Trade Balance",
-    category   = "External Sector",
+    term       = "Inflación",
+    category   = "Precios",
     definition = paste0(
-      "Exports minus imports of goods and services, as a percentage of GDP. A trade ",
-      "surplus (positive) means a country exports more than it imports. A trade deficit ",
-      "(negative) means it imports more. It is narrower than the balance of payments, ",
-      "which also records investment, loans and income flows with the rest of the world. ",
-      "A trade deficit is not necessarily unsustainable: what matters is how it is ",
-      "financed and whether it can be maintained over time."
+      "Aumento sostenido y generalizado del nivel general de precios. Se mide como la variación ",
+      "porcentual de un índice de precios como el IPC. El IPC no es la inflación: es un índice ",
+      "del costo de una canasta representativa de los hogares; la inflación es su variación. ",
+      "La estabilidad de precios no significa que ningún precio pueda subir: lo que se busca ",
+      "evitar es una inflación elevada o inestable. La mayoría de los bancos centrales apunta ",
+      "a una inflación baja y estable (en general, alrededor del 2%). La inflación reduce el ",
+      "poder adquisitivo del dinero."
     ),
-    example    = "Germany typically runs a large trade surplus because its exports greatly exceed its imports.",
-    related    = "Current Account, Exchange Rate, Trade Policy, Balance of Payments"
+    example    = "Si el IPC pasa de 100 a 110 en un año, la canasta cuesta un 10% más: la inflación de ese año fue del 10%. Decir que \"el IPC fue de 110\" no dice cuánta inflación hubo.",
+    related    = "IPC, Deflación, Hiperinflación, Política monetaria"
   ),
 
   list(
-    term       = "Balance of Payments",
-    category   = "External Sector",
+    term       = "IPC (Índice de Precios al Consumidor)",
+    category   = "Precios",
     definition = paste0(
-      "The record of all economic transactions between a country and the rest of the ",
-      "world during a period: trade in goods and services, but also income, transfers, ",
-      "investment and loans. It is the main tool for analysing external sustainability: ",
-      "whether a country can keep up its economic relations with the rest of the world ",
-      "without building up growing vulnerability."
+      "Índice que mide la evolución del costo de una canasta de bienes y servicios ",
+      "representativa del consumo de los hogares. Es el principal indicador para observar la ",
+      "estabilidad de precios: la inflación se calcula a partir de su variación."
     ),
-    example    = "A foreign company building a factory in the country does not appear in the trade balance, but it does appear in the balance of payments.",
-    related    = "Trade Balance, External Sustainability, Exchange Rate"
+    example    = "Si el IPC pasa de 200 a 230, el costo de la canasta aumentó un 15%.",
+    related    = "Inflación, Deflación"
   ),
 
   list(
-    term       = "Fiscal Sustainability",
-    category   = "Government",
+    term       = "Deflación",
+    category   = "Precios",
     definition = paste0(
-      "The government's capacity to meet its current and future commitments without ",
-      "building up fiscal and debt imbalances that become hard to finance. It is analysed ",
-      "with the fiscal balance together with the path of public debt over time, ",
-      "relative to the size of the economy."
+      "Caída sostenida y generalizada del nivel general de precios. Tampoco es necesariamente ",
+      "deseable, sobre todo cuando refleja una fuerte debilidad de la actividad económica: ",
+      "puede llevar a postergar compras y deprimir todavía más la economía."
     ),
-    example    = "Two countries run the same deficit this year. In one, public debt stays stable relative to GDP; in the other it grows year after year and becomes harder to finance. Same fiscal balance, different sustainability.",
-    related    = "Fiscal Balance, Public Debt, Recession"
+    example    = "Japón tuvo varios años de deflación leve entre fines de los noventa y la década de 2010.",
+    related    = "Inflación, IPC, Recesión"
   ),
 
   list(
-    term       = "Nominal GDP",
-    category   = "Output",
+    term       = "Hiperinflación",
+    category   = "Precios",
     definition = paste0(
-      "GDP valued at each period's own (current) prices. It can rise simply because ",
-      "prices rose, without the economy producing more. To know whether production ",
-      "grew, look at real GDP, which removes the effect of price changes."
+      "Inflación extremadamente rápida, que suele definirse como más del 50% mensual. Destruye ",
+      "el valor de los ahorros y desorganiza la economía; en general se origina en una emisión ",
+      "monetaria excesiva. La Argentina (1989–90), Venezuela (2017–19) y Zimbabue (2007–08) ",
+      "tuvieron hiperinflación en las últimas décadas."
     ),
-    example    = "If an economy produces exactly the same as last year but all prices rise 20%, nominal GDP rises 20% and real GDP does not change.",
-    related    = "GDP Growth, Inflation"
+    example    = "La inflación anual de la Argentina llegó al 2.314% en 1990, al final de la hiperinflación de 1989–90 (ver Explorar un país). No toda inflación alta es hiperinflación: el 133% de 2023 fue muy alto, pero muy lejos del 50% mensual.",
+    related    = "Inflación, Política monetaria"
   ),
 
   list(
-    term       = "Objective vs Indicator",
-    category   = "Concepts",
+    term       = "Resultado fiscal",
+    category   = "Sector público",
     definition = paste0(
-      "A macroeconomic objective is a result an economy seeks to achieve or preserve: ",
-      "economic growth, full employment, price stability, fiscal and external ",
-      "sustainability. An indicator is a variable we observe to follow that objective: ",
-      "real GDP for growth, the unemployment rate for full employment, the CPI and ",
-      "inflation for price stability. An objective is not the same as its indicator."
+      "Diferencia entre los ingresos del Estado (impuestos, tasas) y sus gastos (salarios, ",
+      "transferencias, servicios públicos, inversión) durante un período, en porcentaje del PBI. ",
+      "Si los ingresos superan a los gastos hay superávit fiscal; si los gastos superan a los ",
+      "ingresos hay déficit fiscal, que se financia, por ejemplo, tomando deuda. Un déficit no ",
+      "es necesariamente un problema: en una recesión cae la recaudación mientras aumentan ",
+      "algunos gastos, y un déficit transitorio puede ser compatible con cuentas públicas ",
+      "sostenibles. La sostenibilidad fiscal depende de la trayectoria de la deuda pública en ",
+      "relación con el tamaño de la economía, no del resultado de un solo año."
     ),
-    example    = "A thermometer tells you whether someone has a fever, but the goal is for the person to be healthy, not to change the number on the thermometer.",
-    related    = "GDP Growth, Inflation, Sustainability"
+    example    = "Un resultado fiscal de –3% del PBI significa que el Estado gastó un 3% del PBI más de lo que recaudó.",
+    related    = "Sostenibilidad fiscal, Deuda pública, Política fiscal"
   ),
 
   list(
-    term       = "Sustainability",
-    category   = "Concepts",
+    term       = "Deuda pública",
+    category   = "Sector público",
     definition = paste0(
-      "The capacity to maintain an economic situation over time without building up ",
-      "imbalances that end up making it impossible to sustain. Central objectives ask ",
-      "'what is happening?'; sustainability objectives (fiscal and external) ask 'can ",
-      "it last?'. A complete assessment looks at both."
+      "Conjunto de obligaciones financieras que el Estado acumula, por ejemplo, al endeudarse ",
+      "para financiar sus déficits. Para evaluar la sostenibilidad fiscal importa su ",
+      "trayectoria: si crece, se mantiene o baja en relación con el tamaño de la economía, y en ",
+      "qué condiciones puede financiarse el Estado."
     ),
-    example    = "An economy can grow, create jobs and keep inflation low while running ever larger fiscal or external deficits that will be hard to finance.",
-    related    = "Fiscal Sustainability, Balance of Payments, Objective vs Indicator"
+    example    = "Dos países con el mismo déficit pueden estar en situaciones muy distintas si en uno la deuda se mantiene estable en relación con el PBI y en el otro crece año tras año.",
+    related    = "Resultado fiscal, Sostenibilidad fiscal"
   ),
 
   list(
-    term       = "Trade-off",
-    category   = "Concepts",
+    term       = "Sostenibilidad fiscal",
+    category   = "Sector público",
     definition = paste0(
-      "In macroeconomics, a trade-off is a situation where improving one objective ",
-      "makes it harder to achieve another. The famous Phillips Curve suggests a ",
-      "trade-off between inflation and unemployment: reducing unemployment may raise ",
-      "inflation, and vice versa. However, this relationship is not stable across all ",
-      "countries and time periods."
+      "Capacidad del Estado para sostener sus compromisos actuales y futuros sin acumular ",
+      "desequilibrios fiscales y de deuda que resulten difíciles de financiar. Se analiza con el ",
+      "resultado fiscal junto con la trayectoria de la deuda pública en relación con el tamaño ",
+      "de la economía."
     ),
-    example    = "A government may stimulate the economy to reduce unemployment, but risk higher inflation.",
-    related    = "Phillips Curve, Macroeconomic Objectives, Monetary Policy"
+    example    = "Dos países tienen el mismo déficit este año. En el primero, la deuda pública se mantiene estable en relación con el PBI; en el segundo, crece año tras año y cada vez es más difícil financiarla. El resultado fiscal es el mismo; la sostenibilidad fiscal, no.",
+    related    = "Resultado fiscal, Deuda pública, Recesión"
   ),
 
   list(
-    term       = "Correlation",
-    category   = "Statistics",
+    term       = "Saldo comercial",
+    category   = "Sector externo",
     definition = paste0(
-      "A statistical measure of how strongly two variables move together. A correlation ",
-      "of +1 means they move in perfect lockstep; –1 means they move in exact opposite ",
-      "directions; 0 means no linear relationship. Crucially, correlation does not prove ",
-      "that one variable causes the other."
+      "Exportaciones menos importaciones, en porcentaje del PBI. Un saldo positivo es un ",
+      "superávit comercial; uno negativo, un déficit comercial. La balanza comercial, en sentido ",
+      "estricto, registra solo bienes; el indicador de esta app incluye también servicios. ",
+      "En ambos casos es más acotado que la balanza de pagos, que registra además inversiones, ",
+      "préstamos e ingresos con el resto del mundo. Un déficit comercial no es necesariamente ",
+      "insostenible: importa cómo se financia y si puede mantenerse en el tiempo."
     ),
-    example    = "GDP growth and employment rates often correlate positively, but the strength varies by country.",
-    related    = "Causation, Regression, Phillips Curve"
+    example    = "Alemania suele tener un gran superávit comercial porque sus exportaciones superan ampliamente a sus importaciones.",
+    related    = "Balanza de pagos, Sostenibilidad externa"
   ),
 
   list(
-    term       = "Causation",
-    category   = "Statistics",
+    term       = "Balanza de pagos",
+    category   = "Sector externo",
     definition = paste0(
-      "A causal relationship means that changing one variable directly produces a change ",
-      "in another. This is much harder to establish than correlation. Two variables can ",
-      "be correlated because: (A) causes (B), (B) causes (A), a third variable (C) ",
-      "causes both, or it is pure coincidence."
+      "Registro de todas las transacciones económicas entre un país y el resto del mundo durante ",
+      "un período: el comercio de bienes y servicios, pero también ingresos, transferencias, ",
+      "inversiones y préstamos. Es la herramienta principal para analizar la sostenibilidad ",
+      "externa: si un país puede sostener sus relaciones económicas con el resto del mundo sin ",
+      "acumular una vulnerabilidad creciente."
     ),
-    example    = "Ice cream sales and drownings are correlated (both increase in summer) but neither causes the other.",
-    related    = "Correlation, Endogeneity, Omitted Variable Bias"
+    example    = "Una empresa extranjera que instala una fábrica en el país no aparece en la balanza comercial, pero sí en la balanza de pagos.",
+    related    = "Saldo comercial, Sostenibilidad externa"
   ),
 
   list(
-    term       = "Business Cycle",
-    category   = "Concepts",
+    term       = "Sostenibilidad externa",
+    category   = "Sector externo",
     definition = paste0(
-      "The recurring pattern of economic expansion (boom) and contraction (recession) ",
-      "around a long-run growth trend. Cycles vary in length and severity. Understanding ",
-      "business cycles helps explain why GDP growth, employment, and fiscal balances all ",
-      "tend to worsen simultaneously during downturns."
+      "Capacidad de una economía para mantener sus relaciones y compromisos económicos con el ",
+      "exterior sin generar una vulnerabilidad creciente. Se analiza con la balanza de pagos y ",
+      "otros indicadores externos: un déficit externo tiene que financiarse, por ejemplo, con ",
+      "inversiones o préstamos del exterior."
     ),
-    example    = "The 2008–09 global financial crisis triggered a deep cyclical downturn in most economies.",
-    related    = "GDP Growth, Recession, Fiscal Policy, Monetary Policy"
+    example    = "Un país que importa maquinaria para ampliar su capacidad productiva puede tener un déficit comercial durante algunos años y, gracias a esa inversión, producir y exportar más en el futuro.",
+    related    = "Balanza de pagos, Saldo comercial"
   ),
 
   list(
-    term       = "Monetary Policy",
-    category   = "Policy",
+    term       = "Objetivo e indicador",
+    category   = "Conceptos",
     definition = paste0(
-      "Actions by a country's central bank to influence the money supply and interest ",
-      "rates, primarily to control inflation and support economic activity. When inflation ",
-      "is high, central banks typically raise interest rates (tighten); when recession ",
-      "threatens, they lower rates (loosen)."
+      "Un objetivo macroeconómico es un resultado que se busca alcanzar o preservar: ",
+      "crecimiento económico, pleno empleo, estabilidad de precios, sostenibilidad fiscal y ",
+      "externa. Un indicador es una variable que observamos para seguir ese objetivo: el PBI ",
+      "real para el crecimiento, la tasa de desempleo para el pleno empleo, el IPC y la ",
+      "inflación para la estabilidad de precios. Un objetivo no es lo mismo que su indicador."
     ),
-    example    = "The US Federal Reserve raised interest rates sharply in 2022–23 to combat high inflation.",
-    related    = "Inflation, Interest Rate, Central Bank, Fiscal Policy"
+    example    = "Un termómetro permite saber si una persona tiene fiebre, pero el objetivo no es cambiar el número del termómetro, sino que la persona esté sana.",
+    related    = "Crecimiento del PBI, Inflación, Sostenibilidad"
   ),
 
   list(
-    term       = "Fiscal Policy",
-    category   = "Policy",
+    term       = "Sostenibilidad",
+    category   = "Conceptos",
     definition = paste0(
-      "Government decisions about spending and taxation designed to influence the economy. ",
-      "Expansionary fiscal policy (more spending or lower taxes) can boost growth but may ",
-      "increase deficits. Contractionary policy (austerity) reduces deficits but can slow ",
-      "growth and raise unemployment."
+      "Capacidad de mantener una situación económica en el tiempo sin acumular desequilibrios ",
+      "que terminen haciendo imposible sostenerla. Los objetivos centrales preguntan qué está ",
+      "ocurriendo; los de sostenibilidad (fiscal y externa) preguntan si puede sostenerse. ",
+      "Una evaluación completa mira los dos grupos."
     ),
-    example    = "COVID-19 stimulus packages were expansionary fiscal policy that led to large fiscal deficits.",
-    related    = "Fiscal Balance, Monetary Policy, Multiplier Effect, Austerity"
+    example    = "Una economía puede crecer, crear empleo y mantener la inflación baja mientras acumula déficits fiscales o externos cada vez más difíciles de financiar.",
+    related    = "Sostenibilidad fiscal, Sostenibilidad externa, Objetivo e indicador"
+  ),
+
+  list(
+    term       = "Disyuntiva (trade-off)",
+    category   = "Conceptos",
+    definition = paste0(
+      "Situación en la que mejorar un objetivo hace más difícil alcanzar otro. La curva de ",
+      "Phillips plantea una disyuntiva entre inflación y desempleo: bajar el desempleo podría ",
+      "subir la inflación, y viceversa. Pero esa relación no es estable en todos los países ",
+      "ni en todos los períodos."
+    ),
+    example    = "Un gobierno puede estimular la economía para bajar el desempleo, con el riesgo de que suba la inflación.",
+    related    = "Política monetaria, Objetivo e indicador"
+  ),
+
+  list(
+    term       = "Ciclo económico",
+    category   = "Conceptos",
+    definition = paste0(
+      "Alternancia de fases de expansión y de contracción (recesión) alrededor de la tendencia ",
+      "de crecimiento de largo plazo. Los ciclos varían en duración e intensidad. Ayudan a ",
+      "entender por qué en las recesiones suelen empeorar a la vez el crecimiento, el empleo y ",
+      "el resultado fiscal."
+    ),
+    example    = "La crisis financiera global de 2008–09 provocó una fuerte contracción cíclica en la mayoría de las economías.",
+    related    = "Crecimiento del PBI, Recesión, Política fiscal"
+  ),
+
+  list(
+    term       = "Correlación",
+    category   = "Estadística",
+    definition = paste0(
+      "Medida estadística de cuánto se mueven juntas dos variables. Una correlación de +1 ",
+      "significa que se mueven exactamente juntas; –1, que se mueven en sentidos exactamente ",
+      "opuestos; 0, que no hay relación lineal. Una correlación no prueba que una variable ",
+      "cause la otra."
+    ),
+    example    = "El crecimiento del PBI y la tasa de empleo suelen tener correlación positiva, pero su intensidad varía según el país.",
+    related    = "Causalidad"
+  ),
+
+  list(
+    term       = "Causalidad",
+    category   = "Estadística",
+    definition = paste0(
+      "Una relación causal significa que cambiar una variable produce directamente un cambio ",
+      "en otra. Es mucho más difícil de demostrar que una correlación. Dos variables pueden ",
+      "estar correlacionadas porque A causa B, porque B causa A, porque una tercera variable C ",
+      "causa ambas, o por pura casualidad."
+    ),
+    example    = "Las ventas de helado y los ahogamientos están correlacionados (ambos aumentan en verano), pero ninguno causa el otro.",
+    related    = "Correlación"
+  ),
+
+  list(
+    term       = "Política monetaria",
+    category   = "Políticas",
+    definition = paste0(
+      "Acciones del banco central para influir sobre la cantidad de dinero y las tasas de ",
+      "interés, principalmente para controlar la inflación y sostener la actividad. Cuando la ",
+      "inflación es alta, los bancos centrales suelen subir la tasa de interés (política ",
+      "contractiva); cuando amenaza una recesión, la bajan (política expansiva)."
+    ),
+    example    = "La Reserva Federal de Estados Unidos subió fuertemente las tasas de interés en 2022–23 para combatir la inflación.",
+    related    = "Inflación, Política fiscal"
+  ),
+
+  list(
+    term       = "Política fiscal",
+    category   = "Políticas",
+    definition = paste0(
+      "Decisiones del gobierno sobre el gasto público y los impuestos para influir sobre la ",
+      "economía. Una política fiscal expansiva (más gasto o menos impuestos) puede impulsar el ",
+      "crecimiento, pero puede aumentar el déficit. Una política contractiva (ajuste) reduce el ",
+      "déficit, pero puede frenar el crecimiento y aumentar el desempleo."
+    ),
+    example    = "Los paquetes de estímulo durante la pandemia de COVID-19 fueron política fiscal expansiva y generaron grandes déficits fiscales.",
+    related    = "Resultado fiscal, Política monetaria"
   )
 )
 
-# Sort alphabetically
-GLOSSARY_TERMS <- GLOSSARY_TERMS[order(sapply(GLOSSARY_TERMS, `[[`, "term"))]
+# Sort alphabetically, ignoring accents ("Índice" goes with "I")
+GLOSSARY_TERMS <- GLOSSARY_TERMS[order(tolower(iconv(sapply(GLOSSARY_TERMS, `[[`, "term"),
+                                                     to = "ASCII//TRANSLIT")))]
+
+# Categories in display order, with their colours
+GLOSSARY_CATEGORY_COLORS <- c(
+  "Producción"     = "#2563eb",
+  "Empleo"         = "#16a34a",
+  "Precios"        = "#dc2626",
+  "Sector público" = "#7c3aed",
+  "Sector externo" = "#d97706",
+  "Políticas"      = "#0891b2",
+  "Conceptos"      = "#db2777",
+  "Estadística"    = "#475569"
+)
 
 # =============================================================================
 # GLOSSARY MODAL UI
 # =============================================================================
 glossary_modal <- function() {
   modalDialog(
-    title = tags$span("📖 Macroeconomics Glossary"),
+    title = tags$span("📖 Glosario de macroeconomía"),
     size  = "xl",
     easyClose = TRUE,
     tags$div(
       style = "margin-bottom:14px;",
       tags$p(
         style = "color:#555; margin:0;",
-        "Hover over any ", tags$code("📖"), " icon in the application to see quick definitions.",
-        " This glossary provides full explanations with examples."
+        "Pasá el mouse sobre los íconos ", tags$code("📖"), " de la aplicación para ver definiciones breves.",
+        " Este glosario tiene las explicaciones completas, con ejemplos."
       )
     ),
     # Filter by category
@@ -292,22 +378,21 @@ glossary_modal <- function() {
       radioGroupButtons(
         inputId  = "glossary_filter",
         label    = NULL,
-        choices  = c("All", "Output", "Labour", "Prices", "Government",
-                     "External Sector", "Policy", "Concepts", "Statistics"),
-        selected = "All",
+        choices  = c("Todos", names(GLOSSARY_CATEGORY_COLORS)),
+        selected = "Todos",
         size     = "sm",
         status   = "outline-primary"
       )
     ),
     # Glossary entries
     uiOutput("glossary_content"),
-    footer = modalButton("Close")
+    footer = modalButton("Cerrar")
   )
 }
 
 #' Render glossary entries (called from server)
-render_glossary <- function(filter_cat = "All") {
-  terms <- if (filter_cat == "All") {
+render_glossary <- function(filter_cat = "Todos") {
+  terms <- if (filter_cat == "Todos") {
     GLOSSARY_TERMS
   } else {
     Filter(function(t) t$category == filter_cat, GLOSSARY_TERMS)
@@ -334,13 +419,13 @@ render_glossary <- function(filter_cat = "All") {
                t$definition),
         tags$div(
           style = "background:#f0f9ff; border-radius:5px; padding:6px 10px; font-size:0.83rem;",
-          tags$span(style = "font-weight:600; color:#0369a1;", "Example: "),
+          tags$span(style = "font-weight:600; color:#0369a1;", "Ejemplo: "),
           tags$span(style = "color:#334155;", t$example)
         ),
         if (!is.null(t$related)) {
           tags$div(
             style = "margin-top:6px; font-size:0.78rem; color:#64748b;",
-            tags$span(style = "font-weight:600;", "Related: "),
+            tags$span(style = "font-weight:600;", "Relacionado: "),
             t$related
           )
         }
@@ -350,17 +435,7 @@ render_glossary <- function(filter_cat = "All") {
 }
 
 category_color <- function(cat) {
-  cols <- c(
-    "Output"          = "#2563eb",
-    "Labour"          = "#16a34a",
-    "Prices"          = "#dc2626",
-    "Government"      = "#7c3aed",
-    "External Sector" = "#d97706",
-    "Policy"          = "#0891b2",
-    "Concepts"        = "#db2777",
-    "Statistics"      = "#475569"
-  )
-  unname(cols[cat])
+  unname(GLOSSARY_CATEGORY_COLORS[cat])
 }
 
 # Helper: inline info icon with tooltip
@@ -382,7 +457,7 @@ info_icon <- function(term_key) {
 # =============================================================================
 glossary_server_outputs <- function(input, output, session) {
   output$glossary_content <- renderUI({
-    filter_val <- if (!is.null(input$glossary_filter)) input$glossary_filter else "All"
+    filter_val <- if (!is.null(input$glossary_filter)) input$glossary_filter else "Todos"
     render_glossary(filter_val)
   })
 }

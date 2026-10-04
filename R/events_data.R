@@ -7,100 +7,102 @@ HISTORICAL_EVENTS <- list(
 
   asian_crisis = list(
     id          = "asian_crisis",
-    name        = "Asian Financial Crisis",
-    short_name  = "Asian Crisis",
+    name        = "Crisis financiera asiática",
+    short_name  = "Crisis asiática",
     year_start  = 1997,
     year_end    = 1999,
     peak_year   = 1998,
     color       = "#e74c3c",
     icon        = "⚡",
     description = paste0(
-      "A financial crisis that spread across East and Southeast Asia beginning in ",
-      "Thailand in July 1997. Rapid currency depreciations, stock market crashes, ",
-      "and banking collapses triggered severe recessions. The IMF provided bailout ",
-      "packages to Thailand, Indonesia, and South Korea, attached to controversial ",
-      "austerity conditions."
+      "Crisis financiera que se extendió por el este y el sudeste de Asia a partir de ",
+      "Tailandia, en julio de 1997. Devaluaciones bruscas, derrumbes bursátiles y quiebras ",
+      "bancarias provocaron recesiones profundas. El FMI otorgó paquetes de rescate a ",
+      "Tailandia, Indonesia y Corea del Sur, con condiciones de ajuste muy discutidas."
     ),
     macro_impact = paste0(
-      "GDP growth collapsed sharply in affected economies. Indonesia's GDP contracted ",
-      "by ~13% in 1998. South Korea and Thailand also saw deep recessions. Unemployment ",
-      "spiked. Inflation rose in countries with sharp currency depreciations. Fiscal ",
-      "balances deteriorated as governments spent on bank bailouts."
+      "El crecimiento del PBI se desplomó en las economías afectadas: el PBI de Indonesia ",
+      "cayó cerca de un 13% en 1998, y Corea del Sur y Tailandia también tuvieron recesiones ",
+      "profundas. El desempleo subió. La inflación aumentó en los países con fuertes ",
+      "devaluaciones. El resultado fiscal empeoró por el costo de rescatar a los bancos."
     ),
     key_lesson   = paste0(
-      "Shows how financial crises can spread rapidly between countries and how the ",
-      "same shock can affect different economies in different ways."
+      "Muestra cómo una crisis financiera puede contagiarse rápido entre países y cómo un ",
+      "mismo shock afecta de manera distinta a distintas economías."
     ),
     affected_iso2c   = c("KR", "TH", "ID", "MY", "PH"),
-    affected_regions = c("East Asia & Pacific"),
+    affected_regions = c("Asia oriental y Pacífico"),
     key_variables    = c("gdp_growth", "employment", "inflation")
   ),
 
   argentina_crisis = list(
     id          = "argentina_crisis",
-    name        = "Argentine Economic Crisis",
-    short_name  = "Argentine Crisis",
+    name        = "Crisis argentina de 2001–2002",
+    short_name  = "Crisis argentina",
     year_start  = 1999,
     year_end    = 2003,
     peak_year   = 2002,
     color       = "#f39c12",
     icon        = "💥",
     description = paste0(
-      "Argentina's severe economic collapse involved a banking freeze (corralito), ",
-      "default on $100 billion in sovereign debt, and the abandonment of the peso-dollar ",
-      "peg (convertibility) in January 2002. The peso lost ~70% of its value. GDP fell ",
-      "~20% from peak to trough. Unemployment exceeded 20% and poverty soared."
+      "El colapso económico argentino incluyó el congelamiento de los depósitos ",
+      "(el corralito), la cesación de pagos de unos 100.000 millones de dólares de deuda ",
+      "soberana y el abandono de la Convertibilidad en enero de 2002. El peso perdió cerca ",
+      "del 70% de su valor y el PBI cayó alrededor de un 20% desde su pico. El desempleo ",
+      "superó el 20% y la pobreza se disparó."
     ),
     macro_impact = paste0(
-      "GDP growth turned sharply negative (~–11% in 2002). Unemployment rose above 20%. ",
-      "Inflation surged after devaluation. The fiscal balance deteriorated sharply. ",
-      "The trade balance improved as devaluation made exports competitive."
+      "El PBI cayó fuertemente (alrededor de –11% en 2002). El desempleo superó el 20%. ",
+      "La inflación saltó después de la devaluación. El resultado fiscal empeoró mucho. ",
+      "El saldo comercial mejoró porque la devaluación abarató las exportaciones y ",
+      "encareció las importaciones."
     ),
     key_lesson   = paste0(
-      "A dramatic example of all five indicators deteriorating simultaneously. Also shows ",
-      "how a trade balance can improve even during a severe economic crisis (via devaluation)."
+      "Un ejemplo de crisis que golpea a la vez la producción, el empleo, los precios y las ",
+      "cuentas públicas. También muestra que el saldo comercial puede mejorar en plena ",
+      "crisis (por la devaluación y la caída de las importaciones)."
     ),
     affected_iso2c   = c("AR"),
-    affected_regions = c("Latin America & Caribbean"),
+    affected_regions = c("América Latina y el Caribe"),
     key_variables    = c("gdp_growth", "employment", "inflation", "fiscal_balance", "trade_balance")
   ),
 
   gfc = list(
     id          = "gfc",
-    name        = "Global Financial Crisis",
-    short_name  = "Global Crisis (2008)",
+    name        = "Crisis financiera global",
+    short_name  = "Crisis global (2008)",
     year_start  = 2008,
     year_end    = 2010,
     peak_year   = 2009,
     color       = "#8e44ad",
     icon        = "🏦",
     description = paste0(
-      "Triggered by the collapse of the US subprime mortgage market and the failure of ",
-      "major financial institutions (Lehman Brothers, September 2008). The crisis rapidly ",
-      "spread worldwide through financial linkages, causing the worst global recession ",
-      "since the Great Depression. Governments launched massive stimulus programs and ",
-      "bank bailouts."
+      "Comenzó con el derrumbe del mercado de hipotecas de alto riesgo (subprime) de ",
+      "Estados Unidos y la quiebra de grandes entidades financieras (Lehman Brothers, en ",
+      "septiembre de 2008). Se extendió rápido por todo el mundo a través de los vínculos ",
+      "financieros y causó la peor recesión global desde la Gran Depresión. Los gobiernos ",
+      "lanzaron enormes programas de estímulo y rescates bancarios."
     ),
     macro_impact = paste0(
-      "Global GDP growth collapsed. Most advanced economies saw GDP contract in 2009. ",
-      "Unemployment rose sharply and stayed elevated for years (especially in Southern Europe). ",
-      "Inflation initially fell, then reflected policy responses. Fiscal balances deteriorated ",
-      "massively as automatic stabilizers and stimulus packages took effect."
+      "El crecimiento mundial se desplomó: la mayoría de las economías avanzadas tuvo ",
+      "caídas del PBI en 2009. El desempleo subió mucho y siguió alto durante años ",
+      "(sobre todo en el sur de Europa). La inflación primero bajó. Los resultados fiscales ",
+      "empeoraron fuertemente por los estabilizadores automáticos y los paquetes de estímulo."
     ),
     key_lesson   = paste0(
-      "Illustrates synchronised global recessions: virtually all indicators worsened ",
-      "simultaneously in most countries. Also shows divergence in recovery speeds — ",
-      "some countries recovered quickly (Germany, South Korea); others struggled for years ",
-      "(Greece, Spain)."
+      "Ilustra una recesión global sincronizada: casi todos los indicadores empeoraron a ",
+      "la vez en la mayoría de los países. También muestra velocidades de recuperación muy ",
+      "distintas: algunos países se recuperaron rápido (Alemania, Corea del Sur) y otros ",
+      "tardaron años (Grecia, España)."
     ),
     affected_iso2c   = c("US", "GB", "DE", "FR", "ES", "GR", "JP", "KR", "AU"),
-    affected_regions = c("Europe & Central Asia", "North America", "East Asia & Pacific"),
+    affected_regions = c("Europa y Asia central", "América del Norte", "Asia oriental y Pacífico"),
     key_variables    = c("gdp_growth", "employment", "fiscal_balance")
   ),
 
   covid = list(
     id          = "covid",
-    name        = "COVID-19 Pandemic",
+    name        = "Pandemia de COVID-19",
     short_name  = "COVID-19 (2020)",
     year_start  = 2020,
     year_end    = 2022,
@@ -108,59 +110,59 @@ HISTORICAL_EVENTS <- list(
     color       = "#16a085",
     icon        = "🦠",
     description = paste0(
-      "The COVID-19 pandemic caused the sharpest global economic contraction since ",
-      "World War II. Lockdowns, supply chain disruptions, and demand collapses hit most ",
-      "economies simultaneously in 2020. Unprecedented fiscal stimulus and monetary easing ",
-      "cushioned the blow in many countries. Recovery was uneven and rapid inflation ",
-      "followed in 2021–22."
+      "La pandemia de COVID-19 provocó la contracción económica mundial más brusca desde ",
+      "la Segunda Guerra Mundial. Los confinamientos, los problemas en las cadenas de ",
+      "suministro y el derrumbe de la demanda golpearon a casi todas las economías a la vez ",
+      "en 2020. Estímulos fiscales y monetarios sin precedentes amortiguaron el golpe en ",
+      "muchos países. La recuperación fue desigual y en 2021–22 llegó una suba rápida de la inflación."
     ),
     macro_impact = paste0(
-      "Global GDP contracted ~3.1% in 2020 — the worst peacetime contraction on record. ",
-      "Employment fell sharply. Fiscal deficits exploded as governments spent on support ",
-      "programs. Inflation was initially subdued (2020) then surged (2021–22). ",
-      "Trade balances changed due to shifting goods vs. services patterns."
+      "El PBI mundial cayó alrededor de un 3,1% en 2020, la peor contracción en tiempos de ",
+      "paz registrada. El empleo cayó fuertemente. Los déficits fiscales se dispararon por ",
+      "los programas de asistencia. La inflación fue baja en 2020 y se aceleró en 2021–22. ",
+      "Los saldos comerciales cambiaron por el desplazamiento del consumo de servicios a bienes."
     ),
     key_lesson   = paste0(
-      "The most synchronised global shock in modern history. Compare the depth of ",
-      "contraction across countries and the speed of recovery. Also useful for observing ",
-      "the inflation surge that followed the recovery."
+      "El shock global más sincronizado de la historia reciente. Compará la profundidad de ",
+      "la caída entre países y la velocidad de la recuperación. También sirve para observar ",
+      "la suba de la inflación que siguió a la recuperación."
     ),
     affected_iso2c   = c("US", "GB", "DE", "FR", "ES", "IT", "JP", "CN", "BR", "IN",
                          "MX", "ZA", "AU", "KR", "TR"),
-    affected_regions = c("East Asia & Pacific", "Europe & Central Asia",
-                         "Latin America & Caribbean", "North America",
-                         "South Asia", "Sub-Saharan Africa"),
+    affected_regions = c("Asia oriental y Pacífico", "Europa y Asia central",
+                         "América Latina y el Caribe", "América del Norte",
+                         "Asia meridional", "África subsahariana"),
     key_variables    = c("gdp_growth", "employment", "fiscal_balance", "trade_balance")
   ),
 
   energy_crisis = list(
     id          = "energy_crisis",
-    name        = "European Energy Crisis",
-    short_name  = "Energy Crisis (2022)",
+    name        = "Crisis energética europea",
+    short_name  = "Crisis energética (2022)",
     year_start  = 2021,
     year_end    = 2023,
     peak_year   = 2022,
     color       = "#e67e22",
     icon        = "⚡",
     description = paste0(
-      "Russia's invasion of Ukraine in February 2022 dramatically worsened an already ",
-      "tight global energy market, causing natural gas and electricity prices in Europe ",
-      "to reach historic highs. Combined with post-COVID supply chain disruptions, this ",
-      "drove the highest inflation in Europe for 40 years."
+      "La invasión rusa de Ucrania, en febrero de 2022, agravó un mercado energético ya ",
+      "ajustado y llevó los precios del gas y de la electricidad en Europa a máximos ",
+      "históricos. Junto con los problemas de suministro posteriores a la pandemia, provocó ",
+      "la inflación más alta en Europa en 40 años."
     ),
     macro_impact = paste0(
-      "Inflation reached 10%+ in many European countries in 2022. GDP growth slowed ",
-      "but most European economies avoided recession. Fiscal balances deteriorated as ",
-      "governments subsidised energy costs. Countries with energy independence ",
-      "(Norway, some Gulf states) benefited from high energy prices."
+      "La inflación superó el 10% en muchos países europeos en 2022. El crecimiento se ",
+      "desaceleró, aunque la mayoría de las economías europeas evitó la recesión. Los ",
+      "resultados fiscales empeoraron por los subsidios a la energía. Los países ",
+      "exportadores de energía (Noruega, algunos países del Golfo) se beneficiaron de los precios altos."
     ),
     key_lesson   = paste0(
-      "Demonstrates an external supply shock causing inflation without being a demand ",
-      "stimulus. Also shows how the same global shock can benefit some economies ",
-      "(energy exporters) while harming others (energy importers)."
+      "Muestra un shock externo de oferta que genera inflación sin que haya un exceso de ",
+      "demanda. También muestra que un mismo shock global puede beneficiar a algunas ",
+      "economías (las exportadoras de energía) y perjudicar a otras (las importadoras)."
     ),
     affected_iso2c   = c("DE", "FR", "GB", "ES", "IT", "PL", "TR"),
-    affected_regions = c("Europe & Central Asia"),
+    affected_regions = c("Europa y Asia central"),
     key_variables    = c("inflation", "gdp_growth", "fiscal_balance")
   )
 )

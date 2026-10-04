@@ -1,5 +1,5 @@
 # =============================================================================
-# EXPLORING MACROECONOMICS THROUGH DATA
+# LA MACROECONOMÍA A TRAVÉS DE LOS DATOS (Exploring Macroeconomics Through Data)
 # An Interactive Educational R Shiny Application
 # =============================================================================
 
@@ -22,6 +22,7 @@ if (requireNamespace("shinyWidgets", quietly = TRUE)) library(shinyWidgets)
 
 # Source all utilities and modules
 source("R/constants.R")
+source("R/country_names_es.R")
 source("R/data_utils.R")
 source("R/glossary.R")
 source("R/events_data.R")
@@ -66,50 +67,52 @@ welcome_modal <- function() {
       style = "text-align:center; padding:10px 0 6px;",
       tags$div(style = "font-size:2.8rem;", "📊"),
       tags$h3(style = "color:#1e3a5f; font-weight:700; margin:8px 0 4px;",
-              "Exploring Macroeconomics Through Data"),
+              "La macroeconomía a través de los datos"),
       tags$p(style = "color:#555; font-size:1rem;",
-             "An inquiry-based learning environment for economics students")
+             "Un entorno para aprender macroeconomía explorando datos reales")
     ),
     tags$hr(),
     tags$div(
       style = "background:#eaf4fb; border-left:4px solid #2e86c1; padding:12px 16px;
                border-radius:0 6px 6px 0; margin-bottom:16px;",
       tags$p(style = "margin:0; font-style:italic; color:#1a3a5c; font-size:0.97rem;",
-        "\"Macroeconomic objectives often involve trade-offs. Relationships between ",
-        "variables are not fixed — they vary across countries, periods, and historical contexts.\""
+        "\"Una lectura macroeconómica no consiste en mirar un único número. Consiste en ",
+        "seleccionar indicadores, relacionarlos con objetivos y analizar si los resultados ",
+        "pueden sostenerse en el tiempo.\""
       )
     ),
-    tags$h5("🎯 Two kinds of objectives", style = "color:#1e3a5f;"),
+    tags$h5("🎯 Dos grupos de objetivos", style = "color:#1e3a5f;"),
     tags$div(
       style = "display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px;",
-      tab_card("Central objectives — what is happening?",
-               "Economic growth, full employment and price stability"),
-      tab_card("Sustainability — can it last?",
-               "Fiscal sustainability and external sustainability")
+      tab_card(OBJECTIVE_GROUPS[["central"]],
+               "Crecimiento económico, pleno empleo y estabilidad de precios"),
+      tab_card(OBJECTIVE_GROUPS[["sustainability"]],
+               "Sostenibilidad fiscal y sostenibilidad externa")
     ),
-    tags$h5("🧭 Questions to explore:", style = "color:#1e3a5f;"),
+    tags$h5("🧭 Preguntas para explorar:", style = "color:#1e3a5f;"),
     tags$ul(
       style = "color:#333; line-height:1.9;",
-      tags$li("Can a country grow without creating employment?"),
-      tags$li("Can inflation fall while unemployment rises?"),
-      tags$li("Are there countries that perform well on all macroeconomic objectives?"),
-      tags$li("How do global crises affect different countries differently?")
+      tags$li("¿Puede un país crecer sin crear empleo?"),
+      tags$li("¿Puede bajar la inflación mientras sube el desempleo?"),
+      tags$li("¿Alcanza con que una economía muestre buenos resultados hoy para afirmar que su situación es buena?"),
+      tags$li("¿Pueden mejorar todos los objetivos macroeconómicos al mismo tiempo?"),
+      tags$li("¿Cómo afecta una misma crisis global a distintos países?")
     ),
     tags$hr(),
-    tags$h5("📂 Application tabs:", style = "color:#1e3a5f;"),
+    tags$h5("📂 Pestañas de la aplicación:", style = "color:#1e3a5f;"),
     tags$div(
       style = "display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;",
-      tab_card("🔍 Explore Country",     "Track one country's indicators over time"),
-      tab_card("⚖️ Compare Countries",   "Compare national economic trajectories"),
-      tab_card("🌍 Global Explorer",     "Animated Gapminder-style scatter plot"),
-      tab_card("🕸️ Country Profile",     "Radar chart of overall performance"),
-      tab_card("📅 Historical Events",   "Connect economic data to world history"),
-      tab_card("🎯 Discovery Challenges","Guided inquiry learning tasks"),
-      tab_card("📊 Correlation Explorer","Test statistical relationships")
+      tab_card("🔍 Explorar un país",          "Seguí los indicadores de un país a lo largo del tiempo"),
+      tab_card("⚖️ Comparar países",           "Compará las trayectorias de varios países"),
+      tab_card("🌍 Explorador global",         "Gráfico de burbujas animado con todos los países"),
+      tab_card("🕸️ Perfil del país",           "Objetivos centrales y sostenibilidad en un año"),
+      tab_card("📅 Acontecimientos históricos","Relacioná los datos con la historia económica"),
+      tab_card("🎯 Desafíos",                  "Consignas para investigar con los datos"),
+      tab_card("📊 Correlaciones",             "Analizá si dos indicadores se mueven juntos")
     ),
     footer = tags$div(
       style = "text-align:center;",
-      actionButton("dismiss_welcome", "🚀 Start Exploring",
+      actionButton("dismiss_welcome", "🚀 Empezar a explorar",
                    class = "btn btn-primary btn-lg", style = "min-width:180px;")
     ),
     size = "l", easyClose = FALSE
@@ -118,50 +121,52 @@ welcome_modal <- function() {
 
 about_modal <- function() {
   modalDialog(
-    title = tags$span("ℹ️ About This Application"),
-    tags$p("Pedagogical tool for undergraduate economics students using real World Bank and IMF data."),
-    tags$h6("Objectives and indicators", style="color:#1e3a5f; font-weight:700; margin-top:14px;"),
+    title = tags$span("ℹ️ Acerca de esta aplicación"),
+    tags$p("Herramienta didáctica para estudiantes de economía, con datos reales del Banco Mundial y del FMI."),
+    tags$h6("Objetivos e indicadores", style="color:#1e3a5f; font-weight:700; margin-top:14px;"),
     tags$p(style="font-size:0.85rem;",
-      "An objective is what an economy seeks to achieve; an indicator is the variable we ",
-      "observe to follow it. Real GDP is not the objective: growth is. A thermometer tells ",
-      "you whether someone has a fever, but the goal is for the person to be healthy, not ",
-      "to change the number on the thermometer."),
+      "Un objetivo es lo que una economía busca alcanzar; un indicador es la variable que ",
+      "observamos para seguirlo. El PBI real no es el objetivo: el objetivo es el crecimiento. ",
+      "Un termómetro permite saber si una persona tiene fiebre, pero el objetivo no es cambiar ",
+      "el número del termómetro, sino que la persona esté sana."),
     tags$table(
       class = "table table-sm table-bordered",
       style = "font-size:0.85rem;",
       tags$thead(class="table-light",
-        tags$tr(tags$th("Objective"), tags$th("Indicator in this app"), tags$th("Source"))),
+        tags$tr(tags$th("Objetivo"), tags$th("Indicador en esta app"), tags$th("Fuente"))),
       tags$tbody(
         tags$tr(tags$td(colspan = 3, class = "table-light", tags$b(OBJECTIVE_GROUPS[["central"]]))),
-        tags$tr(tags$td("Economic growth"), tags$td("GDP growth (%), change in real GDP"),
-                tags$td("World Bank ", tags$code("NY.GDP.MKTP.KD.ZG"))),
-        tags$tr(tags$td("Full employment"),
-                tags$td("Employment rate (%)", tags$br(),
+        tags$tr(tags$td("Crecimiento económico"), tags$td("Crecimiento del PBI real (%)"),
+                tags$td("Banco Mundial ", tags$code("NY.GDP.MKTP.KD.ZG"))),
+        tags$tr(tags$td("Pleno empleo"),
+                tags$td("Tasa de empleo (%)", tags$br(),
                         tags$small(style = "color:#64748b;",
-                                   "The course's main indicator is the unemployment rate.")),
-                tags$td("World Bank ", tags$code("SL.EMP.TOTL.SP.ZS"))),
-        tags$tr(tags$td("Price stability"), tags$td("Inflation (%), change in the CPI"),
-                tags$td("World Bank ", tags$code("FP.CPI.TOTL.ZG"),
-                        "; gaps filled from IMF WEO ", tags$code("PCPIPCH"))),
+                                   "El indicador principal del curso es la tasa de desempleo.")),
+                tags$td("Banco Mundial ", tags$code("SL.EMP.TOTL.SP.ZS"))),
+        tags$tr(tags$td("Estabilidad de precios"), tags$td("Inflación (%): variación del IPC"),
+                tags$td("Banco Mundial ", tags$code("FP.CPI.TOTL.ZG"),
+                        "; años faltantes completados con FMI WEO ", tags$code("PCPIPCH"))),
         tags$tr(tags$td(colspan = 3, class = "table-light", tags$b(OBJECTIVE_GROUPS[["sustainability"]]))),
-        tags$tr(tags$td("Fiscal sustainability"), tags$td("Fiscal balance (% of GDP)"),
-                tags$td("IMF WEO ", tags$code("GGXCNL_NGDP"),
-                        " (general government net lending/borrowing)")),
-        tags$tr(tags$td("External sustainability"), tags$td("Trade balance (% of GDP), goods and services"),
-                tags$td("World Bank ", tags$code("NE.RSB.GNFS.ZS")))
+        tags$tr(tags$td("Sostenibilidad fiscal"), tags$td("Resultado fiscal (% del PBI)"),
+                tags$td("FMI WEO ", tags$code("GGXCNL_NGDP"),
+                        " (préstamo neto / endeudamiento neto del gobierno general)")),
+        tags$tr(tags$td("Sostenibilidad externa"),
+                tags$td("Saldo comercial de bienes y servicios (% del PBI)"),
+                tags$td("Banco Mundial ", tags$code("NE.RSB.GNFS.ZS")))
       )
     ),
     tags$p(style="font-size:0.8rem; color:#64748b;",
-      "Sustainability needs more than one year's balance: the path of public debt and how ",
-      "external deficits are financed (the balance of payments)."),
-    tags$h6("Argentina's inflation", style="color:#1e3a5f; font-weight:700; margin-top:14px;"),
+      "Para evaluar la sostenibilidad no alcanza con el resultado de un año: también importan ",
+      "la trayectoria de la deuda pública y cómo se financian los déficits externos (la ",
+      "balanza de pagos)."),
+    tags$h6("La inflación de la Argentina", style="color:#1e3a5f; font-weight:700; margin-top:14px;"),
     tags$p(style="font-size:0.85rem;",
-      "INDEC's official CPI is used through 2006. From 2007 to 2016 the official index was ",
-      "discredited and later suspended, so the app uses the median of independent provincial CPIs ",
-      "(San Luis, Neuquén, Chaco and, from 2014, the City of Buenos Aires), published on datos.gob.ar. ",
-      "Hover over a point to see which source it comes from."),
-    tags$small(style="color:#888;", "Data: World Bank WDI, IMF WEO, datos.gob.ar | Coverage: ~215 countries, 1990–2023"),
-    footer = modalButton("Close"),
+      "Hasta 2006 se usa el IPC oficial del INDEC. Entre 2007 y 2016 el índice oficial perdió ",
+      "credibilidad y después se suspendió, así que la app usa la mediana de IPC provinciales ",
+      "independientes (San Luis, Neuquén, Chaco y, desde 2014, la Ciudad de Buenos Aires), ",
+      "publicados en datos.gob.ar. Pasá el mouse sobre un punto para ver de qué fuente viene."),
+    tags$small(style="color:#888;", "Datos: Banco Mundial (WDI), FMI (WEO), datos.gob.ar | Cobertura: ~215 países, 1990–2023"),
+    footer = modalButton("Cerrar"),
     size = "m", easyClose = TRUE
   )
 }
@@ -177,28 +182,28 @@ ui <- tagList(
   page_navbar(
     title = tags$span(
       style = "font-weight:700; letter-spacing:0.3px; font-size:1.1rem;",
-      "📊 Exploring Macroeconomics"
+      "📊 La macroeconomía en datos"
     ),
     theme          = app_theme,
-    window_title   = "Exploring Macroeconomics Through Data",
+    window_title   = "La macroeconomía a través de los datos",
     navbar_options = navbar_options(
       theme = "dark"
     ),
     fillable       = TRUE,
 
-    nav_panel("🔍 Explore Country",      explore_country_ui("mod_explore")),
-    nav_panel("⚖️ Compare Countries",    compare_countries_ui("mod_compare")),
-    nav_panel("🌍 Global Explorer",      global_explorer_ui("mod_global")),
-    nav_panel("🕸️ Country Profile",      country_profile_ui("mod_profile")),
-    nav_panel("📅 Historical Events",    historical_events_ui("mod_events")),
-    nav_panel("🎯 Discovery Challenges", challenges_ui("mod_challenges")),
-    nav_panel("📊 Correlation Explorer", correlation_ui("mod_correlation")),
+    nav_panel("🔍 Explorar un país",           explore_country_ui("mod_explore")),
+    nav_panel("⚖️ Comparar países",            compare_countries_ui("mod_compare")),
+    nav_panel("🌍 Explorador global",          global_explorer_ui("mod_global")),
+    nav_panel("🕸️ Perfil del país",            country_profile_ui("mod_profile")),
+    nav_panel("📅 Acontecimientos históricos", historical_events_ui("mod_events")),
+    nav_panel("🎯 Desafíos",                   challenges_ui("mod_challenges")),
+    nav_panel("📊 Correlaciones",              correlation_ui("mod_correlation")),
 
     nav_spacer(),
     nav_item(tags$div(
       style = "display:flex; gap:6px; align-items:center; padding:2px 4px;",
-      actionButton("show_glossary", "📖 Glossary", class="btn btn-sm btn-outline-light"),
-      actionButton("show_about",    "ℹ️ About",    class="btn btn-sm btn-outline-light")
+      actionButton("show_glossary", "📖 Glosario", class="btn btn-sm btn-outline-light"),
+      actionButton("show_about",    "ℹ️ Acerca de", class="btn btn-sm btn-outline-light")
     ))
   )
 )
@@ -213,12 +218,12 @@ server <- function(input, output, session) {
   # Data loading — shared reactive across all modules
   macro_data <- reactive({
     withProgress(
-      message = "Loading macroeconomic data…",
-      detail  = "Uses bundled CSV if available; otherwise cache or API.",
+      message = "Cargando los datos macroeconómicos…",
+      detail  = "Se usa el archivo incluido en la app; si falta, la caché o la API.",
       value   = 0.2, {
-        incProgress(0.4, detail = "Fetching indicators…")
+        incProgress(0.4, detail = "Leyendo los indicadores…")
         df <- get_macro_data()
-        incProgress(0.4, detail = "Ready!")
+        incProgress(0.4, detail = "¡Listo!")
         df
       }
     )
@@ -230,9 +235,9 @@ server <- function(input, output, session) {
       demo_notice_shown(TRUE)
       showNotification(
         ui = tagList(
-          tags$b("Demo data mode"),
+          tags$b("Modo de datos de demostración"),
           tags$br(),
-          "World Bank data could not be downloaded. Showing synthetic data for 25 countries."
+          "No se pudieron descargar los datos del Banco Mundial. Se muestran datos simulados de 25 países."
         ),
         type = "warning",
         duration = 12,

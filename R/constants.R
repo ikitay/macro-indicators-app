@@ -8,8 +8,8 @@ CORE_VARS <- c("gdp_growth", "employment", "inflation", "fiscal_balance", "trade
 
 # The two kinds of macroeconomic objectives, each with the question it answers
 OBJECTIVE_GROUPS <- c(
-  central        = "Central objectives — what is happening?",
-  sustainability = "Sustainability — can it last?"
+  central        = "Objetivos centrales: ¿qué está ocurriendo?",
+  sustainability = "Objetivos de sostenibilidad: ¿puede sostenerse?"
 )
 
 # Default year range
@@ -20,15 +20,16 @@ YEAR_MAX <- 2023
 DEFAULT_COUNTRIES <- c("US", "DE", "CN", "AR", "KR", "ZA")
 
 # World Bank regions (used for color coding)
+# (names match the Spanish region names in R/country_names_es.R)
 REGION_COLORS <- c(
-  "East Asia & Pacific"         = "#e74c3c",
-  "Europe & Central Asia"       = "#3498db",
-  "Latin America & Caribbean"   = "#f39c12",
-  "Middle East & North Africa"  = "#27ae60",
-  "North America"               = "#8e44ad",
-  "South Asia"                  = "#e67e22",
-  "Sub-Saharan Africa"          = "#16a085",
-  "Other"                       = "#95a5a6"
+  "Asia oriental y Pacífico"        = "#e74c3c",
+  "Europa y Asia central"           = "#3498db",
+  "América Latina y el Caribe"      = "#f39c12",
+  "Medio Oriente y Norte de África" = "#27ae60",
+  "América del Norte"               = "#8e44ad",
+  "Asia meridional"                 = "#e67e22",
+  "África subsahariana"             = "#16a085",
+  "Otras"                           = "#95a5a6"
 )
 
 # Bundled offline WDI snapshot (see scripts/prepare_wdi_snapshot.R)

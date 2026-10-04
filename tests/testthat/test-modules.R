@@ -18,7 +18,7 @@ test_that("Explore Country renders", {
                       show_sustainability = group_vars("sustainability"),
                       show_trend = TRUE, show_recession = TRUE)
     render_all_outputs(output, c("chart_title", "summary_cards", "main_plot"))
-    expect_match(as.character(output$summary_cards$html), "Price stability · Inflation")
+    expect_match(as.character(output$summary_cards$html), "Estabilidad de precios · Inflación")
     # Only the central objectives
     session$setInputs(show_sustainability = character(0))
     expect_equal(shown_vars(), c("gdp_growth", "employment", "inflation"))
@@ -95,8 +95,9 @@ test_that("Correlation Explorer renders", {
 
 test_that("glossary has the terms the course notes rely on", {
   terms <- sapply(GLOSSARY_TERMS, `[[`, "term")
-  for (t in c("Balance of Payments", "Fiscal Sustainability", "Nominal GDP",
-              "Inflation", "Recession", "Trade Balance")) {
+  for (t in c("Balanza de pagos", "Sostenibilidad fiscal", "PBI nominal", "Inflación",
+              "Recesión", "Saldo comercial", "Tasa de desempleo", "Pleno empleo",
+              "IPC (Índice de Precios al Consumidor)", "Objetivo e indicador")) {
     expect_true(t %in% terms, label = t)
   }
   for (cat in sapply(GLOSSARY_TERMS, `[[`, "category")) expect_false(is.na(category_color(cat)))
@@ -112,5 +113,22 @@ test_that("indicators are grouped into central and sustainability objectives", {
   expect_equal(unname(ch[[2]]), c("fiscal_balance", "trade_balance"))
   expect_equal(sort(unlist(ch, use.names = FALSE)), sort(CORE_VARS))
   for (v in CORE_VARS) expect_false(is.null(VARS[[v]]$objective), label = v)
-  expect_equal(var_objective_label("inflation"), "Price stability: Inflation (%)")
+  expect_equal(var_objective_label("inflation"), "Estabilidad de precios: Inflación (%)")
+})
+
+test_that("Explore Country shades the years in which GDP fell, keeping the zero lines", {
+  testServer(explore_country_server, args = list(data = data_r), {
+    session$setInputs(country = "AR", year_range = c(1995, 2005),
+                      show_central = group_vars("central"),
+                      show_sustainability = character(0),
+                      show_trend = FALSE, show_recession = TRUE)
+    built <- jsonlite::fromJSON(output$main_plot, simplifyVector = FALSE)$x$layout$shapes
+    rects <- Filter(function(s) identical(s$type, "rect"), built)
+    falls <- sum(sapply(1995:2005, function(y) snap("Argentina", y, "gdp_growth")) < 0)
+    expect_equal(length(rects), falls)
+    expect_gt(length(built), length(rects))  # zero lines are still there
+    session$setInputs(show_recession = FALSE)
+    built <- jsonlite::fromJSON(output$main_plot, simplifyVector = FALSE)$x$layout$shapes
+    expect_length(Filter(function(s) identical(s$type, "rect"), built), 0)
+  })
 })
