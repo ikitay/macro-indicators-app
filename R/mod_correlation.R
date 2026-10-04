@@ -19,7 +19,7 @@ correlation_ui <- function(id) {
       ),
 
       selectizeInput(ns("country"), "🌍 País",
-        choices=NULL, selected="US",
+        choices=NULL, selected=DEFAULT_COUNTRY,
         options=list(placeholder="Escribí para buscar…", maxOptions=300)
       ),
       selectInput(ns("x_var"), "↔ Variable del eje X",
@@ -36,7 +36,7 @@ correlation_ui <- function(id) {
       conditionalPanel(
         condition=paste0("input['",ns("multi_country"),"']"),
         selectizeInput(ns("extra_countries"), "Otros países",
-          choices=NULL, selected=c("DE","KR","AR"),
+          choices=NULL, selected=setdiff(DEFAULT_PEERS, DEFAULT_COUNTRY),
           multiple=TRUE,
           options=list(maxItems=5, placeholder="Escribí para buscar…", maxOptions=300)
         ),
@@ -81,8 +81,8 @@ correlation_server <- function(id, data) {
     observe({
       req(data())
       ch <- get_country_choices(data())
-      updateSelectizeInput(session,"country",choices=ch,selected="US",server=FALSE)
-      updateSelectizeInput(session,"extra_countries",choices=ch,selected=c("DE","KR","AR"),server=FALSE)
+      updateSelectizeInput(session,"country",choices=ch,selected=DEFAULT_COUNTRY,server=FALSE)
+      updateSelectizeInput(session,"extra_countries",choices=ch,selected=setdiff(DEFAULT_PEERS, DEFAULT_COUNTRY),server=FALSE)
     })
 
     all_countries <- reactive({

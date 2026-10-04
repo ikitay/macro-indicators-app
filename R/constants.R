@@ -20,8 +20,11 @@ OBJECTIVE_GROUPS <- c(
 YEAR_MIN <- 1990
 YEAR_MAX <- 2023
 
-# Default featured countries (interesting for comparisons)
-DEFAULT_COUNTRIES <- c("US", "DE", "CN", "AR", "KR", "ZA")
+# Argentina is the default country everywhere in the app; the others are the
+# comparators preselected next to it
+DEFAULT_COUNTRY   <- "AR"
+DEFAULT_COUNTRIES <- c("AR", "US", "DE", "CN", "KR", "ZA")   # up to 6 countries
+DEFAULT_PEERS     <- c("AR", "US", "DE", "KR")               # up to 4 countries
 
 # World Bank regions (used for color coding)
 # (names match the Spanish region names in R/country_names_es.R)

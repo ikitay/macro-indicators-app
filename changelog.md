@@ -2,6 +2,19 @@
 
 Notable changes to *Exploring Macroeconomics Through Data*.
 
+## 2026-10-04 (Argentina as default)
+
+### Changed
+- **Argentina is the default country in every tab** (Explorar un país,
+  Comparar países, Perfil del país, Diagnóstico, Acontecimientos históricos,
+  Correlaciones). It is the first of the preselected countries where several are
+  shown, next to the same comparators as before. The defaults live in
+  `DEFAULT_COUNTRY`, `DEFAULT_COUNTRIES` and `DEFAULT_PEERS` (`R/constants.R`).
+- **Acontecimientos históricos** opens with the 2008 crisis and the COVID-19
+  pandemic both ticked (COVID-19 was already there, but only 2008 was selected,
+  so it looked missing).
+- Tests in `tests/testthat/test-defaults.R`.
+
 ## 2026-10-04 (Global Explorer scales)
 
 ### Added

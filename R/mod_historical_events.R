@@ -18,12 +18,12 @@ historical_events_ui <- function(id) {
       ),
       checkboxGroupInput(ns("events"), "📅 Acontecimientos históricos",
         choices  = EVENT_CHOICES,
-        selected = "gfc"
+        selected = c("gfc", "covid")
       ),
       hr(),
       selectizeInput(ns("countries"), "🌍 Países a comparar",
         choices  = NULL,
-        selected = c("US","DE","AR","KR"),
+        selected = DEFAULT_PEERS,
         multiple = TRUE,
         options  = list(maxItems=6, placeholder="Escribí para buscar…", maxOptions=300)
       ),
@@ -62,7 +62,7 @@ historical_events_server <- function(id, data) {
     observe({
       req(data())
       updateSelectizeInput(session,"countries",
-        choices=get_country_choices(data()), selected=c("US","DE","AR","KR"), server=FALSE)
+        choices=get_country_choices(data()), selected=DEFAULT_PEERS, server=FALSE)
     })
 
     selected_events <- reactive({

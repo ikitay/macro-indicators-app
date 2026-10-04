@@ -146,7 +146,7 @@ diagnosis_ui <- function(id) {
         )
       ),
       selectizeInput(ns("country"), "🌍 País",
-        choices = NULL, selected = "AR",
+        choices = NULL, selected = DEFAULT_COUNTRY,
         options = list(placeholder = "Escribí para buscar…", maxOptions = 300)
       ),
       sliderInput(ns("year"), "📅 Año", min = YEAR_MIN + DIAGNOSIS_LOOKBACK, max = YEAR_MAX,
@@ -201,7 +201,7 @@ diagnosis_server <- function(id, data) {
     observe({
       req(data())
       updateSelectizeInput(session, "country", choices = get_country_choices(data()),
-                           selected = "AR", server = FALSE)
+                           selected = DEFAULT_COUNTRY, server = FALSE)
     })
 
     # A random country-year with data for every central and sustainability indicator

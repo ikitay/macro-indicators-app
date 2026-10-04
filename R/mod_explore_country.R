@@ -28,7 +28,7 @@ explore_country_ui <- function(id) {
         ns("country"),
         label   = tags$span("🌍 País", info_icon("Crecimiento del PBI")),
         choices = NULL,       # Populated server-side
-        selected = "US",
+        selected = DEFAULT_COUNTRY,
         options = list(
           placeholder = "Escribí para buscar…",
           maxOptions  = 300
@@ -141,7 +141,7 @@ explore_country_server <- function(id, data) {
       choices <- get_country_choices(data())
       updateSelectizeInput(session, "country",
         choices  = choices,
-        selected = "US",
+        selected = DEFAULT_COUNTRY,
         server   = FALSE
       )
     })

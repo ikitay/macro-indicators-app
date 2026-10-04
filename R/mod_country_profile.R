@@ -41,7 +41,7 @@ country_profile_ui <- function(id) {
       ),
       selectizeInput(ns("countries"), "🌍 Países (hasta 4)",
         choices  = NULL,
-        selected = c("US", "DE", "KR", "AR"),
+        selected = DEFAULT_PEERS,
         multiple = TRUE,
         options  = list(maxItems=4, placeholder="Escribí para buscar…", maxOptions=300)
       ),
@@ -97,7 +97,7 @@ country_profile_server <- function(id, data) {
     observe({
       req(data())
       updateSelectizeInput(session, "countries",
-        choices=get_country_choices(data()), selected=c("US","DE","KR","AR"), server=FALSE)
+        choices=get_country_choices(data()), selected=DEFAULT_PEERS, server=FALSE)
     })
 
     # Scores always compare against the full global dataset (all countries, all

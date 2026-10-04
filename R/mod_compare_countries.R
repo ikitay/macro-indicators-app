@@ -28,7 +28,7 @@ compare_countries_ui <- function(id) {
         ns("countries"),
         label   = "🌍 Países (hasta 6)",
         choices = NULL,
-        selected = c("US", "DE", "CN", "AR", "KR", "ZA"),
+        selected = DEFAULT_COUNTRIES,
         multiple = TRUE,
         options  = list(
           maxItems    = 6,
