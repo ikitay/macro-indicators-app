@@ -58,24 +58,24 @@ CHALLENGES <- list(
       "Bajar la inflación puede tener un costo en empleo y actividad: es un ejemplo de ",
       "tensión entre objetivos. Encontrá un período de tres a cinco años en el que la ",
       "inflación haya bajado mucho (a menos de la mitad de su nivel inicial) mientras la ",
-      "tasa de empleo también bajaba. Después buscá un contraejemplo: un período en el ",
-      "que la inflación bajó y el empleo subió."
+      "tasa de desempleo subía. Después buscá un contraejemplo: un período en el que la ",
+      "inflación y el desempleo bajaron a la vez."
     ),
     hint         = paste0(
       "Mirá los planes de estabilización de principios de los noventa: países de América ",
       "Latina que dejaban atrás la alta inflación y economías poscomunistas de Europa del Este. ",
       "Para el contraejemplo, mirá la Argentina después de la crisis de 2002."
     ),
-    variables    = c("inflation", "employment"),
+    variables    = c("inflation", "unemployment"),
     solution_countries = list(
       list(country = "Argentina", years = "1991–1994",
-           note = "La Convertibilidad bajó la inflación del 172% al 4% mientras la tasa de empleo caía del 56,7% al 54,7%."),
+           note = "La Convertibilidad bajó la inflación del 172% al 4% mientras el desempleo subía del 5,4% al 11,8%."),
       list(country = "Brasil",    years = "1992–1996",
-           note = "La inflación bajó del 952% al 16% con el Plan Real mientras la tasa de empleo caía del 60,4% al 58,8%."),
+           note = "La inflación bajó del 952% al 16% con el Plan Real mientras el desempleo subía del 7,1% al 8,0%."),
       list(country = "Polonia",   years = "1991–1994",
-           note = "Desinflación durante la transición (del 77% al 33%) mientras la tasa de empleo caía del 53,0% al 50,9%."),
+           note = "Desinflación durante la transición (del 77% al 33%) mientras el desempleo subía del 13,6% al 14,8%."),
       list(country = "Argentina (contraejemplo)", years = "2002–2004",
-           note = "La inflación bajó del 26% al 4% mientras la tasa de empleo subía del 48,4% al 53,6% en la recuperación posterior a la crisis.")
+           note = "La inflación bajó del 26% al 4% mientras el desempleo bajaba del 19,6% al 13,5% en la recuperación posterior a la crisis.")
     ),
     pedagogical_note = paste0(
       "Reducir la inflación mientras se desacelera la actividad es una de las tensiones ",
@@ -87,7 +87,7 @@ CHALLENGES <- list(
     ),
     discussion_questions = c(
       "Tus casos, ¿confirman o cuestionan la idea de una disyuntiva entre inflación y empleo?",
-      "¿Por qué en la Argentina de 2002–2004 la inflación pudo bajar mientras el empleo subía?",
+      "¿Por qué en la Argentina de 2002–2004 la inflación y el desempleo pudieron bajar a la vez?",
       "¿Valió la pena el costo en empleo de bajar la inflación? ¿Qué más necesitarías saber para juzgarlo?"
     )
   ),
@@ -138,38 +138,41 @@ CHALLENGES <- list(
     icon         = "⭐",
     description  = paste0(
       "Encontrá un país al que le haya ido bien en los tres objetivos centrales durante ",
-      "al menos tres años seguidos: crecimiento del PBI mayor al 2%, una tasa de empleo ",
-      "por encima de su propio promedio de 1990–2023 e inflación de entre 0% y 5%. ",
+      "al menos tres años seguidos: crecimiento del PBI mayor al 2%, una tasa de desempleo ",
+      "por debajo de su propio promedio de 1991–2023 e inflación de entre 0% y 5%. ",
       "Después mirá la sostenibilidad en esos mismos años: ¿qué pasaba con el resultado ",
-      "fiscal y con el saldo comercial? ¿Podía durar la buena racha? ¿Qué la terminó?"
+      "fiscal, la deuda pública y la cuenta corriente? ¿Podía durar la buena racha? ",
+      "¿Qué la terminó?"
     ),
     hint         = paste0(
-      "Mirá el sur de Europa en los años previos a 2008 y el este de Asia en la década ",
-      "de 2010. Compará un caso en el que se acumularon grandes déficits durante los años ",
-      "buenos con otro en el que no."
+      "Mirá el sur de Europa en los años previos a 2008 y Europa central en la segunda ",
+      "mitad de la década de 2010. Compará un caso en el que se acumularon grandes ",
+      "desequilibrios durante los años buenos con otro en el que no."
     ),
-    variables    = c("gdp_growth", "employment", "inflation", "fiscal_balance", "trade_balance"),
+    variables    = c("gdp_growth", "unemployment", "inflation", "fiscal_balance", "public_debt",
+                     "current_account"),
     solution_countries = list(
-      list(country = "España",        years = "2001–2007",
-           note = "Buenos resultados centrales y cuentas públicas equilibradas, pero un déficit comercial de hasta el 6% del PBI. La crisis de 2008 terminó la racha: el PBI cayó en 2009 y otra vez en 2011–2013."),
-      list(country = "Grecia",        years = "1998–2004",
-           note = "Buenos resultados centrales junto con déficits fiscales del 4% al 9% del PBI y déficits comerciales del 9% al 11% del PBI todos los años: los desequilibrios detrás de la crisis de deuda de 2010."),
-      list(country = "Corea del Sur", years = "2013–2019",
-           note = "Buenos resultados centrales con superávit fiscal y comercial todos los años. La racha terminó con la pandemia de 2020, no por un desequilibrio propio.")
+      list(country = "España",  years = "2001–2007",
+           note = "Buenos resultados centrales y una deuda pública que bajó del 54% al 36% del PBI, pero un déficit de cuenta corriente que se duplicó, del 4,3% al 9,4% del PBI: el desequilibrio era externo, no fiscal. La crisis de 2008 terminó la racha: el PBI cayó en 2009 y otra vez en 2011–2013, y el desempleo llegó al 26%."),
+      list(country = "Grecia",  years = "1998–2004",
+           note = "Buenos resultados centrales con una deuda pública de más del 100% del PBI, déficits fiscales del 4% al 9% del PBI y déficits de cuenta corriente del 5% al 8% del PBI: los desequilibrios detrás de la crisis de deuda de 2010, cuando la deuda superó el 140% del PBI."),
+      list(country = "Chequia", years = "2015–2019",
+           note = "Buenos resultados centrales mientras la deuda pública bajaba del 40% al 30% del PBI, con cuentas públicas equilibradas y superávit de cuenta corriente. La racha terminó con la pandemia de 2020, no por un desequilibrio propio.")
     ),
     pedagogical_note = paste0(
       "Los buenos resultados de hoy no alcanzan para evaluar una economía: puede crecer, ",
       "crear empleo y mantener la inflación baja mientras acumula desequilibrios que ",
       "hacen difícil sostener esos resultados. Un déficit no es automáticamente un ",
-      "problema; lo que importa es si puede financiarse en el tiempo. La app muestra el ",
-      "saldo comercial y no la balanza de pagos completa, y no tiene datos de deuda ",
-      "pública, así que conviene pedir que digan qué información adicional necesitarían ",
-      "para llegar a una conclusión firme."
+      "problema; lo que importa es si puede financiarse en el tiempo. El contraste entre ",
+      "España y Grecia muestra que el desequilibrio puede ser fiscal, externo o ambos. ",
+      "La app no muestra la balanza de pagos completa ni las condiciones de financiamiento, ",
+      "así que conviene pedir que digan qué información adicional necesitarían para ",
+      "llegar a una conclusión firme."
     ),
     discussion_questions = c(
       "¿Cuáles de tus casos parecían sostenibles y cuáles no? ¿En qué datos te basaste?",
       "¿Qué terminó con la buena racha que encontraste?",
-      "¿Qué otra información (deuda pública, cómo se financiaban los déficits) necesitarías para tener certeza?"
+      "¿Qué otra información (cómo se financiaban los déficits, a qué tasas de interés) necesitarías para tener certeza?"
     )
   ),
 
@@ -219,21 +222,21 @@ CHALLENGES <- list(
     description  = paste0(
       "Después de la crisis financiera global de 2008, los países se recuperaron a ",
       "velocidades muy distintas. Compará al menos tres países: ¿cuál recuperó más rápido ",
-      "el crecimiento del PBI y cuál tardó más en recuperar el empleo? ¿El PBI y el empleo ",
-      "se recuperan al mismo ritmo?"
+      "el crecimiento del PBI y en cuál el desempleo tardó más en bajar? ¿El PBI y el ",
+      "empleo se recuperan al mismo ritmo?"
     ),
     hint         = paste0(
       "Compará Alemania, España, Estados Unidos y Corea del Sur. Fijate qué país volvió ",
-      "más rápido a crecer y cuál recuperó antes el empleo. Las respuestas pueden sorprenderte."
+      "más rápido a crecer y en cuál bajó antes el desempleo. Las respuestas pueden sorprenderte."
     ),
-    variables    = c("gdp_growth", "employment"),
+    variables    = c("gdp_growth", "unemployment"),
     solution_countries = list(
-      list(country = "Corea del Sur / Alemania", years = "2009–2012",
-           note = "Rápida recuperación del PBI, pero los mercados de trabajo se ajustaron de forma distinta."),
-      list(country = "España / Grecia",          years = "2009–2016",
-           note = "Recesión prolongada; el desempleo siguió muy alto durante años."),
-      list(country = "Estados Unidos",           years = "2009–2015",
-           note = "El PBI se recuperó antes de que el empleo volviera a los niveles previos a la crisis.")
+      list(country = "Alemania",        years = "2009–2012",
+           note = "El PBI cayó un 5,5% en 2009 y volvió a crecer en 2010, y el desempleo casi no subió: pasó del 7,5% en 2008 al 7,9% en 2009 y siguió bajando hasta el 5,4% en 2012."),
+      list(country = "España / Grecia", years = "2009–2016",
+           note = "Recesión prolongada: el desempleo superó el 26% en 2013 y seguía por encima del 19% en 2016."),
+      list(country = "Estados Unidos",  years = "2009–2017",
+           note = "El PBI volvió a crecer en 2010, pero el desempleo (9,6% ese año) recién bajó del nivel de 2007 (4,6%) en 2017.")
     ),
     pedagogical_note = paste0(
       "Este desafío introduce la idea de \"cicatrices\": las crisis pueden dañar el empleo ",

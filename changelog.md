@@ -14,6 +14,10 @@ Notable changes to *Exploring Macroeconomics Through Data*.
   public debt, trade balance and current account with their values five years
   earlier.
 - Glossary entries for Cuenta corriente and Inversión extranjera directa.
+- **Challenges** use the new series: C02 (cost of disinflation) and C06
+  (recoveries) use the unemployment rate; C04 (good today, sustainable
+  tomorrow?) uses unemployment, public debt and the current account, contrasting
+  Spain (external imbalance), Greece (fiscal and external) and Czechia (neither).
 - **Diagnóstico** lists every indicator under its objective, as in the notes'
   table: full employment shows the unemployment and employment rates, fiscal
   sustainability the fiscal balance and public debt, external sustainability the
