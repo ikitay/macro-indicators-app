@@ -44,5 +44,10 @@ REGION_COLORS <- c(
 # Example: as.Date("2026-10-20"). NULL never hides them.
 CHALLENGE_ANSWERS_HIDDEN_UNTIL <- as.Date("2026-10-14")
 
+# Minutes without clicks, typing or scrolling before a browser tab is
+# disconnected (www/idle_timeout.js), so forgotten tabs do not keep the app
+# running on the hosting service. NULL never disconnects.
+IDLE_TIMEOUT_MINUTES <- 10
+
 # Bundled offline WDI snapshot (see scripts/prepare_wdi_snapshot.R)
 WDI_SNAPSHOT_PATH <- file.path("data", "wdi_snapshot.csv")

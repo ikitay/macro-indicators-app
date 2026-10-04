@@ -186,6 +186,9 @@ about_modal <- function() {
 ui <- tagList(
   tags$head(
     tags$link(rel="stylesheet", type="text/css", href="styles.css"),
+    if (!is.null(IDLE_TIMEOUT_MINUTES))
+      tags$meta(name = "idle-timeout-minutes", content = IDLE_TIMEOUT_MINUTES),
+    tags$script(src = "idle_timeout.js"),
     tags$meta(name="viewport", content="width=device-width, initial-scale=1")
   ),
   page_navbar(
@@ -265,6 +268,9 @@ server <- function(input, output, session) {
   historical_events_server("mod_events",  macro_data)
   challenges_server("mod_challenges",     macro_data)
   correlation_server("mod_correlation",   macro_data)
+
+  # A tab idle for IDLE_TIMEOUT_MINUTES (www/idle_timeout.js) is disconnected
+  observeEvent(input$idle_timeout, session$close())
 
   # Modals
   observe({ showModal(welcome_modal()) })

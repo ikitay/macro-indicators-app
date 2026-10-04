@@ -2,6 +2,17 @@
 
 Notable changes to *Exploring Macroeconomics Through Data*.
 
+## 2026-10-05 (idle tabs disconnect)
+
+### Added
+- **A browser tab nobody uses for `IDLE_TIMEOUT_MINUTES` (10) is disconnected**
+  (`www/idle_timeout.js`, `R/constants.R`), with a notice asking to reload the
+  page. Mouse moves, clicks, typing and scrolling count as use. A forgotten tab
+  no longer keeps the app running, which matters on hosting plans billed by
+  active hours. Checked against the clock every 15 seconds, so it also works in
+  background tabs. `NULL` never disconnects. Checked in Chromium: an idle tab
+  disconnects, an active one stays connected, reloading reconnects.
+
 ## 2026-10-05 (Desafíos: hide the answers during an assignment)
 
 ### Added
