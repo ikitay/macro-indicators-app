@@ -39,5 +39,10 @@ REGION_COLORS <- c(
   "Otras"                           = "#95a5a6"
 )
 
+# Desafíos: the hints, solutions and teacher notes stay hidden up to and
+# including this date, e.g. during a graded assignment on the same countries.
+# Example: as.Date("2026-10-20"). NULL never hides them.
+CHALLENGE_ANSWERS_HIDDEN_UNTIL <- NULL
+
 # Bundled offline WDI snapshot (see scripts/prepare_wdi_snapshot.R)
 WDI_SNAPSHOT_PATH <- file.path("data", "wdi_snapshot.csv")

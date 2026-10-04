@@ -4,6 +4,12 @@
 #   patterns, exceptions, and trade-offs through data exploration.
 # =============================================================================
 
+# TRUE while the hints, solutions and teacher notes are hidden
+# (CHALLENGE_ANSWERS_HIDDEN_UNTIL in R/constants.R)
+challenge_answers_hidden <- function(today = Sys.Date(), until = CHALLENGE_ANSWERS_HIDDEN_UNTIL) {
+  !is.null(until) && today <= as.Date(until)
+}
+
 challenges_ui <- function(id) {
   ns <- NS(id)
   fluidPage(
@@ -40,16 +46,13 @@ challenges_ui <- function(id) {
             tags$div(style="padding-top:4px;",
               actionButton(ns("random_challenge"), "🎲 Desafío al azar",
                            class="btn btn-outline-primary btn-sm w-100 mb-2"),
-              checkboxInput(ns("instructor_mode"), "🎓 Modo docente", value=FALSE)
+              uiOutput(ns("instructor_toggle"))
             )
           )
         ),
         card(
           card_body(padding="10px",
-            tags$div(style="padding-top:4px;",
-              actionButton(ns("show_hint"),    "💡 Ver pista",    class="btn btn-outline-warning btn-sm w-100 mb-2"),
-              actionButton(ns("show_solution"),"✅ Ver solución", class="btn btn-outline-success btn-sm w-100")
-            )
+            tags$div(style="padding-top:4px;", uiOutput(ns("answer_buttons")))
           )
         )
       ),
@@ -71,6 +74,33 @@ challenges_ui <- function(id) {
 
 challenges_server <- function(id, data) {
   moduleServer(id, function(input, output, session) {
+
+    # Checked per session, so the answers come back after the date without
+    # restarting the app. While hidden, the buttons are not drawn and the
+    # panels never render, so their text is never sent to the browser.
+    answers_hidden <- challenge_answers_hidden()
+
+    output$instructor_toggle <- renderUI({
+      if (answers_hidden) return(NULL)
+      checkboxInput(session$ns("instructor_mode"), "🎓 Modo docente", value = FALSE)
+    })
+
+    output$answer_buttons <- renderUI({
+      if (answers_hidden) {
+        return(tags$div(
+          style = "color:#64748b; font-size:0.85rem; line-height:1.5;",
+          "🔒 Las pistas y las soluciones están desactivadas hasta el ",
+          tags$b(format(as.Date(CHALLENGE_ANSWERS_HIDDEN_UNTIL), "%d/%m/%Y")),
+          ", mientras dura el trabajo grupal."
+        ))
+      }
+      tagList(
+        actionButton(session$ns("show_hint"),     "💡 Ver pista",
+                     class = "btn btn-outline-warning btn-sm w-100 mb-2"),
+        actionButton(session$ns("show_solution"), "✅ Ver solución",
+                     class = "btn btn-outline-success btn-sm w-100")
+      )
+    })
 
     # State
     show_hint_rv     <- reactiveVal(FALSE)
@@ -163,7 +193,7 @@ challenges_server <- function(id, data) {
 
     # ── Hint panel ─────────────────────────────────────────────────────────────
     output$hint_panel <- renderUI({
-      req(show_hint_rv())
+      req(!answers_hidden, show_hint_rv())
       ch <- current_challenge()
       tags$div(
         style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px;
@@ -176,7 +206,7 @@ challenges_server <- function(id, data) {
 
     # ── Solution panel ─────────────────────────────────────────────────────────
     output$solution_panel <- renderUI({
-      req(show_solution_rv())
+      req(!answers_hidden, show_solution_rv())
       ch <- current_challenge()
       tags$div(
         style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px;
@@ -205,7 +235,7 @@ challenges_server <- function(id, data) {
 
     # ── Instructor panel ───────────────────────────────────────────────────────
     output$instructor_panel <- renderUI({
-      req(input$instructor_mode)
+      req(!answers_hidden, input$instructor_mode)
       ch <- current_challenge()
       tags$div(
         style="background:#f5f3ff; border:1px solid #ddd6fe; border-radius:8px;

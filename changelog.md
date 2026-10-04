@@ -2,6 +2,18 @@
 
 Notable changes to *Exploring Macroeconomics Through Data*.
 
+## 2026-10-05 (Desafíos: hide the answers during an assignment)
+
+### Added
+- **`CHALLENGE_ANSWERS_HIDDEN_UNTIL`** (`R/constants.R`): up to and including
+  that date, the Desafíos tab hides the hint and solution buttons and the
+  "Modo docente" checkbox, and shows a notice with the date instead. The panels
+  never render on the server, so their text is never sent to the browser. The
+  date is checked per session, so the answers come back the next day without
+  restarting the app. `NULL` (the default) never hides them. Meant for graded
+  assignments on the same countries as the challenges.
+- Tests in `tests/testthat/test-challenge-lock.R`.
+
 ## 2026-10-04 (glossary aligned with the course notes)
 
 ### Added
