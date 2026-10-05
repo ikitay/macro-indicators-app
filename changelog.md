@@ -2,6 +2,18 @@
 
 Notable changes to *Exploring Macroeconomics Through Data*.
 
+## 2026-10-05 (starts on servers without a UTF-8 locale)
+
+### Fixed
+- **The app failed to start on Posit Connect Cloud** ("Error sourcing
+  R/mod_compare_countries.R"). The server asks for the es_419.UTF-8 locale,
+  which is not installed, so R fell back to "C" and could not read the UTF-8
+  code (accents, emoji). `app.R` now switches to a UTF-8 locale before
+  sourcing anything, and `R/_disable_autoload.R` stops Shiny from sourcing
+  `R/` on its own before that. The snapshot is read as UTF-8. Checked by
+  running the app with LANG=es_419.UTF-8: it starts and the text is not
+  garbled.
+
 ## 2026-10-05 (no text boxes)
 
 ### Removed

@@ -3,6 +3,15 @@
 # An Interactive Educational R Shiny Application
 # =============================================================================
 
+# The code and data are UTF-8 (accents, emoji). Some servers start R in the
+# "C" locale (e.g. Posit Connect Cloud, whose es_419.UTF-8 is not installed),
+# where they cannot be read; switch to a UTF-8 locale first.
+if (!isTRUE(l10n_info()[["UTF-8"]])) {
+  for (loc in c("C.UTF-8", "en_US.UTF-8", "English_United States.utf8")) {
+    if (nzchar(suppressWarnings(Sys.setlocale("LC_CTYPE", loc)))) break
+  }
+}
+
 suppressPackageStartupMessages({
   library(shiny)
   library(bslib)

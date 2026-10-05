@@ -296,7 +296,7 @@ load_bundled_snapshot <- function(start_year = YEAR_MIN, end_year = YEAR_MAX) {
   if (!file.exists(WDI_SNAPSHOT_PATH)) return(NULL)
 
   df <- tryCatch(
-    read.csv(WDI_SNAPSHOT_PATH, stringsAsFactors = FALSE),
+    read.csv(WDI_SNAPSHOT_PATH, stringsAsFactors = FALSE, encoding = "UTF-8"),
     error = function(e) {
       message("[macro_data] Could not read bundled snapshot: ", conditionMessage(e))
       NULL
