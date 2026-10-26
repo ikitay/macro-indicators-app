@@ -42,7 +42,7 @@ REGION_COLORS <- c(
 # Desafíos: the hints, solutions and teacher notes stay hidden up to and
 # including this date, e.g. during a graded assignment on the same countries.
 # Example: as.Date("2026-10-20"). NULL never hides them.
-CHALLENGE_ANSWERS_HIDDEN_UNTIL <- as.Date("2026-10-14")
+CHALLENGE_ANSWERS_HIDDEN_UNTIL <- as.Date("2026-11-20")
 
 # Minutes without clicks, typing or scrolling before a browser tab is
 # disconnected (www/idle_timeout.js), so forgotten tabs do not keep the app

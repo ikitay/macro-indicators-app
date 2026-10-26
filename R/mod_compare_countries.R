@@ -163,8 +163,8 @@ compare_countries_server <- function(id, data) {
 
       df <- data() %>%
         filter(iso2c %in% input$countries) %>%
-        select(country, iso2c, year, val = all_of(input$variable),
-               src = any_of(paste0(input$variable, "_source"))) %>%
+        mutate(src = var_source(., input$variable)) %>%
+        select(country, iso2c, year, val = all_of(input$variable), src) %>%
         arrange(country, year)
 
       # Change since base year, computed on all years so the base year may lie

@@ -2,6 +2,25 @@
 
 Notable changes to *Exploring Macroeconomics Through Data*.
 
+## 2026-10-26 (every hover names its source)
+
+### Fixed
+- **The hover named the source only for inflation, fiscal balance and public
+  debt**, the series whose source the snapshot records per row. The others
+  (GDP growth, unemployment, employment, trade balance, current account, FDI)
+  showed none. `var_source()` now falls back to the series' own source (World
+  Bank WDI or IMF WEO), in Explorar un país, Comparar países and
+  Acontecimientos históricos. The "Niveles y tasas" charts also name theirs.
+  The assignment tells students to copy the source from the hover.
+
+### Changed
+- `CHALLENGE_ANSWERS_HIDDEN_UNTIL` set to 20/11/2026: several challenges
+  (China, Polonia, Japón, Alemania, Argentina) answer parts of the graded
+  assignment on the same countries.
+
+### Added
+- `tests/testthat/test-sources.R`: every value of every indicator has a source.
+
 ## 2026-10-05 (starts on servers without a UTF-8 locale)
 
 ### Fixed

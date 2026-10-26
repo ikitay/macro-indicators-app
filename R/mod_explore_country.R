@@ -346,7 +346,10 @@ explore_country_server <- function(id, data) {
         inflation    = df$inflation,
         price_index  = change_since_base(df$inflation, df$year, base, chain_growth = TRUE),
         gdp_nominal  = level_index(df$gdp_nominal_lcu, df$year, base),
-        gdp_real     = level_index(df$gdp_real_lcu, df$year, base)
+        gdp_real     = level_index(df$gdp_real_lcu, df$year, base),
+        inflation_src   = var_source(df, "inflation"),
+        gdp_nominal_src = var_source(df, "gdp_nominal_lcu"),
+        gdp_real_src    = var_source(df, "gdp_real_lcu")
       )
     })
 
@@ -373,7 +376,8 @@ explore_country_server <- function(id, data) {
                   name = "Índice de precios", line = list(color = var_color("inflation"), width = 2.5),
                   marker = list(color = var_color("inflation"), size = 5),
                   text = paste0("Índice: ", num_es(d$price_index), "<br>Inflación del año: ",
-                                ifelse(is.na(d$inflation), "s/d", paste0(num_es(d$inflation), "%"))),
+                                ifelse(is.na(d$inflation), "s/d", paste0(num_es(d$inflation), "%")),
+                                source_hover(d$inflation_src)),
                   hoverinfo = "text") %>%
         level_layout(paste0("Índice de precios (", d$year[1], " = 100)"), d$price_index)
     })
@@ -385,11 +389,13 @@ explore_country_server <- function(id, data) {
       plot_ly(d, x = ~year) %>%
         add_trace(y = ~gdp_nominal, type = "scatter", mode = "lines+markers", name = "PBI nominal",
                   line = list(color = "#d97706", width = 2.5), marker = list(color = "#d97706", size = 5),
-                  text = paste0("PBI nominal: ", num_es(d$gdp_nominal)), hoverinfo = "text") %>%
+                  text = paste0("PBI nominal: ", num_es(d$gdp_nominal), source_hover(d$gdp_nominal_src)),
+                  hoverinfo = "text") %>%
         add_trace(y = ~gdp_real, type = "scatter", mode = "lines+markers", name = "PBI real",
                   line = list(color = var_color("gdp_growth"), width = 2.5),
                   marker = list(color = var_color("gdp_growth"), size = 5),
-                  text = paste0("PBI real: ", num_es(d$gdp_real)), hoverinfo = "text") %>%
+                  text = paste0("PBI real: ", num_es(d$gdp_real), source_hover(d$gdp_real_src)),
+                  hoverinfo = "text") %>%
         level_layout(paste0("Índice (", d$year[1], " = 100)"), c(d$gdp_nominal, d$gdp_real))
     })
 

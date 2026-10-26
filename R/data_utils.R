@@ -468,10 +468,18 @@ var_objective <- function(v) if (v %in% names(VARS)) VARS[[v]]$objective else v
 # "Economic growth: GDP Growth (%)"
 var_objective_label <- function(v) paste0(var_objective(v), ": ", var_label(v))
 
-# Per-row data source for variable v (NA when the data has no source column)
+# The source a series comes from when the snapshot records none per row,
+# keyed by the `source` field of VARS and EXTRA_SERIES
+SERIES_SOURCES <- c(wdi = "World Bank WDI", imf = "IMF World Economic Outlook")
+
+# Per-row data source for variable v: the snapshot's *_source column where it
+# has one, else the series' own source; NA where there is no value
 var_source <- function(df, v) {
   col <- paste0(v, "_source")
-  if (col %in% names(df)) df[[col]] else rep(NA_character_, nrow(df))
+  src <- if (col %in% names(df)) df[[col]] else rep(NA_character_, nrow(df))
+  meta <- if (v %in% names(VARS)) VARS[[v]] else EXTRA_SERIES[[v]]
+  if (is.null(meta) || !v %in% names(df)) return(src)
+  ifelse(is.na(src) & !is.na(df[[v]]), unname(SERIES_SOURCES[meta$source]), src)
 }
 
 # Spanish names of the data sources recorded in the snapshot's *_source columns

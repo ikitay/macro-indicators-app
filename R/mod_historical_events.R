@@ -116,8 +116,8 @@ historical_events_server <- function(id, data) {
       df <- data() %>%
         filter(iso2c %in% input$countries,
                year >= input$year_range[1], year <= input$year_range[2]) %>%
-        select(country, iso2c, year, val = all_of(input$variable),
-               src = any_of(paste0(input$variable, "_source"))) %>%
+        mutate(src = var_source(., input$variable)) %>%
+        select(country, iso2c, year, val = all_of(input$variable), src) %>%
         arrange(country, year)
 
       palette <- c("#2563eb","#dc2626","#16a34a","#d97706","#7c3aed","#0891b2")
