@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Investigación macroeconómica con la app</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: tres documentos como hojas, con barra de vistas y selector de país */
+:root{
+  --bg:#f6f7f9; --paper:#ffffff; --ink:#1c2230; --muted:#5b6475; --line:#dde1e8;
+  --accent:#1f4e8c; --accent-soft:#e7eef8; --deci:#a35b00; --deci-soft:#fbf0e1; --ok:#2c6e49; --ok-soft:#e5f2ea;
+  --f-display:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12151b; --paper:#1a1f28; --ink:#e6e9ef; --muted:#9aa3b3; --line:#2c3341;
+  --accent:#8fb4ea; --accent-soft:#1d2a3e; --deci:#f0b25e; --deci-soft:#33261a; --ok:#7cc79b; --ok-soft:#18291f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12151b; --paper:#1a1f28; --ink:#e6e9ef; --muted:#9aa3b3; --line:#2c3341;
+  --accent:#8fb4ea; --accent-soft:#1d2a3e; --deci:#f0b25e; --deci-soft:#33261a; --ok:#7cc79b; --ok-soft:#18291f; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:900px;margin:0 auto;padding-block:20px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:18px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:1.85rem} h2{font-size:1.3rem}
+p{margin:0}
+.eyebrow{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;border-bottom:1px solid var(--line);display:grid;gap:8px}
+.views,.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.views button{font:inherit;font-weight:600;font-size:.92rem;border:0;border-bottom:2px solid transparent;background:none;color:var(--muted);padding:6px 8px;cursor:pointer}
+.views button[aria-pressed="true"]{color:var(--accent);border-color:var(--accent)}
+.tabs button{font:inherit;font-size:.84rem;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:5px 10px;border-radius:999px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+a{color:var(--accent)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:32px clamp(18px,4vw,44px);display:grid;gap:14px}
+.sheet h2{margin-top:12px;padding-top:14px;border-top:1px solid var(--line)}
+.sheet ul,.sheet ol{margin:0;padding-left:20px;display:grid;gap:4px}
+.help{font-style:italic;color:var(--muted);font-size:.93rem}
+.help b{font-style:normal;color:var(--ink)}
+.tw{overflow-x:auto}
+table.t{border-collapse:collapse;width:100%;font-size:.86rem}
+table.t th,table.t td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+table.t th{background:var(--bg);font-weight:600}
+table.t td.e{height:30px}
+.frase{font-family:var(--f-mono);font-size:.85rem;background:var(--accent-soft);border-radius:4px;padding:8px 10px;line-height:1.8}
+.b{display:inline-block;min-width:3.2em;border-bottom:1.5px solid currentColor;margin:0 2px;transform:translateY(-3px)}
+.why{font-size:.88rem;color:var(--muted)} .why b{color:var(--ink)}
+.deci{display:inline-flex;font-size:.74rem;font-weight:600;color:var(--deci);background:var(--deci-soft);border-radius:3px;padding:1px 6px;white-space:nowrap;font-style:normal}
+.blk{display:grid;gap:8px;border-left:3px solid var(--accent);padding:2px 0 2px 14px}
+.blk .ap{font-size:.74rem;letter-spacing:.07em;text-transform:uppercase;font-weight:600;color:var(--accent)}
+.task{display:grid;gap:3px}
+.task + .task{border-top:1px dotted var(--line);padding-top:8px}
+.task .write{color:var(--muted);font-size:.9rem}
+.task .write::before{content:"Queda escrito: ";font-weight:600;color:var(--ink)}
+.pq{font-family:var(--f-display);font-size:1.15rem}
+.check{list-style:none;padding-left:0 !important}
+.check li{padding-left:1.4em;text-indent:-1.4em}
+.check li::before{content:"☐  ";color:var(--muted)}
+.vas{background:var(--ok-soft);border-radius:6px;padding:14px 16px;display:grid;gap:8px}
+.vas h3{color:var(--ok);font-size:1.05rem}
+.vas li::before{color:var(--ok)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Economía · Trabajo grupal</div>
+    <h1>Investigación macroeconómica con la app</h1>
+  </header>
+  <div class="bar">
+    <div class="views" id="views" role="group" aria-label="Documento">
+      <button type="button" data-v="gen">Consigna general</button>
+      <button type="button" data-v="pais">Consigna de tu país</button>
+      <button type="button" data-v="pla">Plantilla y rúbrica</button>
+    </div>
+    <div class="tabs" id="tabs" role="group" aria-label="País"></div>
+  </div>
+
+  <!-- CONSIGNA GENERAL -->
+  <section id="v-gen" class="sheet">
+    <h1>Consigna general</h1>
+    <h2>Tres documentos, una sola numeración</h2>
+    <p>Este trabajo usa tres documentos. Cada uno cumple una función distinta:</p>
+    <ul>
+      <li><b>Consigna general</b> (este documento): para qué se investiga, con qué herramienta y con qué reglas.</li>
+      <li><b>Consigna de tu país</b>: qué pide tu caso. Está organizada por apartados del informe.</li>
+      <li><b>Plantilla del informe y rúbrica</b>: dónde se escribe. Tiene diez apartados, los mismos para los ocho países.</li>
+    </ul>
+    <p>Trabajá con la consigna de tu país y la plantilla abiertas al mismo tiempo. Cada bloque de tu consigna empieza con el número del apartado donde se escribe: <i>Apartado 3 · Datos</i> va en el apartado 3 de la plantilla. Si algo de tu informe no está dentro de un apartado, está en el lugar equivocado.</p>
+
+    <h2>Pregunta general</h2>
+    <p class="pq">¿Qué muestran —y qué no alcanzan a mostrar— los indicadores sobre la situación macroeconómica del país en el período analizado?</p>
+    <p>Cada grupo investiga un país con la app y responde una pregunta específica, que está en la consigna de su país. La respuesta no puede reducirse a “mejoró” o “empeoró”. Todos los informes tienen que mostrar:</p>
+    <ul>
+      <li>en qué dimensiones se observan mejoras y en cuáles dificultades;</li>
+      <li>qué relaciones o tensiones aparecen entre indicadores;</li>
+      <li>qué evidencia complica la primera interpretación;</li>
+      <li>qué puede decirse sobre la sostenibilidad de esa situación (¿puede mantenerse en el tiempo?);</li>
+      <li>qué no puede determinarse con los indicadores utilizados.</li>
+    </ul>
+    <p>Material de base: apunte <i>La mirada macroeconómica: objetivos e indicadores</i>.</p>
+
+    <h2>Cómo usar la app</h2>
+    <div class="tw"><table class="t">
+      <tr><th>Enlace</th><td><a href="https://ikitay-macro-indicators-app.share.connect.posit.cloud" target="_blank" rel="noopener">ikitay-macro-indicators-app.share.connect.posit.cloud</a></td></tr>
+      <tr><th>Guardado</th><td>La app no guarda nada y no tiene dónde escribir. Todas las respuestas van en el informe.</td></tr>
+      <tr><th>Pausa</th><td>Si pasan 10 minutos sin usarla, la página se pausa. Recargala y volvé a elegir el país y los años.</td></tr>
+      <tr><th>Al terminar</th><td>Cerrá la pestaña.</td></tr>
+      <tr><th>Gráficos</th><td>Se descargan como PNG con el ícono de la cámara.</td></tr>
+      <tr><th>Fuentes</th><td>La fuente de cada dato aparece al pasar el mouse sobre el punto.</td></tr>
+    </table></div>
+
+    <h2>Indicadores disponibles</h2>
+    <p>Se usan solo los indicadores de la app, organizados como en la tabla del apunte: objetivos centrales (¿qué está ocurriendo?) y de sostenibilidad (¿puede sostenerse?).</p>
+    <div class="tw"><table class="t">
+      <tr><th>Tipo</th><th>Objetivo</th><th>Indicador en la app</th><th>Aclaración</th></tr>
+      <tr><td>Central</td><td>Crecimiento económico</td><td>Crecimiento del PBI real (%)</td><td>Es una tasa, no un nivel: un año con +2% puede seguir por debajo del nivel de años anteriores. El nivel se ve en “Niveles y tasas” (pestaña Explorar un país).</td></tr>
+      <tr><td>Central</td><td>Pleno empleo</td><td>Tasa de desempleo (%)</td><td>Indicador principal: proporción de la población económicamente activa que busca trabajo y no lo encuentra.</td></tr>
+      <tr><td>Central</td><td>Pleno empleo</td><td>Tasa de empleo (%), en “Otros indicadores”</td><td>Complementario: proporción de toda la población de 15 años o más que está empleada. Si la usás, decí qué mide y en qué se diferencia del desempleo.</td></tr>
+      <tr><td>Central</td><td>Estabilidad de precios</td><td>Inflación (%)</td><td>Variación anual del IPC. El nivel del IPC se ve en “Niveles y tasas”.</td></tr>
+      <tr><td>Sostenibilidad</td><td>Fiscal</td><td>Resultado fiscal (% del PBI)</td><td>Positivo = superávit; negativo = déficit.</td></tr>
+      <tr><td>Sostenibilidad</td><td>Fiscal</td><td>Deuda pública (% del PBI)</td><td>Junto con el resultado fiscal permite observar la trayectoria.</td></tr>
+      <tr><td>Sostenibilidad</td><td>Externa</td><td>Saldo comercial de bienes y servicios (% del PBI)</td><td>Exportaciones menos importaciones. El apunte define la balanza comercial solo con bienes; el indicador de la app suma también los servicios.</td></tr>
+      <tr><td>Sostenibilidad</td><td>Externa</td><td>Cuenta corriente (% del PBI)</td><td>Incluye el comercio y también rentas y transferencias con el exterior.</td></tr>
+      <tr><td>Sostenibilidad</td><td>Externa</td><td>Inversión extranjera directa, ingreso neto (% del PBI)</td><td>Uso opcional.</td></tr>
+    </table></div>
+    <p>La app no muestra la balanza de pagos completa: no permite ver cómo se financia un déficit externo, las reservas ni la deuda externa.</p>
+
+    <h2>Cómo se trabaja</h2>
+    <ol>
+      <li><b>Antes de explorar a fondo</b>, escribí la hipótesis inicial y una primera observación de la app (apartado 2). No hace falta acertar.</li>
+      <li><b>Seguí la consigna de tu país</b>, bloque por bloque. Cada bloque dice qué hacer, qué tiene que quedar escrito y en qué apartado.</li>
+      <li><b>Cuando un bloque tiene la marca <span class="deci">◆ decisión</span></b>, tu grupo elige entre caminos posibles. Además de hacerlo, anotalo en el registro de decisiones del apartado 4.</li>
+      <li><b>Todos los grupos cierran igual:</b> dato incómodo (7), diagnóstico (8), revisión de la hipótesis (9) y límites (10).</li>
+    </ol>
+    <p>Los apartados están en el orden en que se lee el informe. A veces el trabajo va en otro orden: por ejemplo, primero mirás los datos, después elegís el período (apartado 4) y recién entonces completás la tabla (apartado 3). Está bien; lo importante es que al final cada cosa quede en su apartado.</p>
+    <p>Tres reglas para todo el trabajo:</p>
+    <ul>
+      <li>Cada dato lleva año, valor y unidad, y queda escrito en el informe.</li>
+      <li>Distinguí entre una situación en un año (deuda, tasa de desempleo) y una variación respecto del año anterior (crecimiento del PBI, inflación). Cuando una tasa sube de 7% a 9%, aumentó 2 puntos porcentuales, no 2%.</li>
+      <li>No elijas años solo porque sus valores sean extremos. Si un año extremo sirve, decí qué muestra para tu pregunta.</li>
+    </ul>
+
+    <h2>Evidencia mínima</h2>
+    <ul>
+      <li>3 indicadores como mínimo, con al menos uno de un objetivo central y uno de sostenibilidad;</li>
+      <li>2 años o períodos comparables;</li>
+      <li>1 gráfico de la app (apartado 3);</li>
+      <li>1 evidencia que complique o matice la primera interpretación (apartado 7);</li>
+      <li>1 límite explícito de la evidencia (apartado 10);</li>
+      <li>3 decisiones de investigación registradas (apartado 4).</li>
+    </ul>
+    <p>La comparación obligatoria es temporal. Comparar con otro país es opcional y se valora como evidencia adicional. La pestaña Correlaciones tampoco es obligatoria: con pocos años, un coeficiente cambia mucho al agregar o quitar uno y no demuestra causalidad. Si la usás, decí cuántos años incluiste.</p>
+
+    <h2>El informe</h2>
+    <p><b>Entrega:</b> un documento por grupo, en la plataforma que prefieran. Compártanlo con el docente como editor al correo del docente, en el momento en que lo crean, cuando todavía está en blanco. Todo el trabajo se escribe ahí.</p>
+    <p><b>Estructura:</b> la de la plantilla, apartados 1 a 10, más la declaración de uso de IA y los aportes individuales.</p>
+    <p><b>Extensión:</b> hasta 1500 palabras para los apartados 1 a 10. No cuentan las tablas, los gráficos, el registro de decisiones, la declaración de uso de IA ni los aportes individuales. No hay un mínimo de palabras: el informe está completo cuando tiene todo lo que enumera el recuadro “Vas bien si tu informe ya tiene…”, al final de la consigna de tu país.</p>
+
+    <h2>Uso de IA</h2>
+    <p>No está prohibido, pero no reemplaza la exploración de la app ni la elaboración del diagnóstico. No se penaliza usar IA; se penaliza no poder explicar, justificar o defender lo que aparece en el trabajo. La declaración es obligatoria y está al final de la plantilla.</p>
+
+    <h2>Aporte individual</h2>
+    <p>Cada integrante escribe 80 a 120 palabras: “Mi principal aporte al trabajo fue ___. La evidencia que trabajé directamente fue ___. La decisión que ayudé a tomar fue ___.”</p>
+
+    <h2>Plazos</h2>
+    <p>Cada grupo organiza su semana como le convenga. Hay solo dos momentos fijos:</p>
+    <ul>
+      <li><b>Al empezar:</b> escriban en el documento la hipótesis inicial y una primera observación de la app (apartado 2), antes de explorar a fondo.</li>
+      <li><b>Al terminar:</b> el informe completo tiene que estar en el documento antes de la defensa oral. Fecha: a confirmar.</li>
+    </ul>
+
+    <h2>Defensa oral</h2>
+    <p>Cada grupo expone brevemente su diagnóstico y responde preguntas del docente sobre sus decisiones y su evidencia. La primera pregunta puede ser la de profundización que figura al final de la consigna de tu país. Cualquier integrante puede recibir una pregunta. No se usa la app: todo dato tiene que estar en el informe, como texto o imagen. Fecha y horario: a confirmar.</p>
+  </section>
+
+  <!-- CONSIGNA DE TU PAÍS -->
+  <section id="v-pais" class="sheet"></section>
+
+  <!-- PLANTILLA -->
+  <section id="v-pla" class="sheet">
+    <h1>Informe de investigación macroeconómica</h1>
+    <p class="help">Sirve para los ocho países. Copiá esta plantilla al documento del grupo, el que ya compartieron con el docente, y completá cada apartado. La consigna de tu país dice qué va en cada uno: buscá el número. Los textos en gris y cursiva, como este, son ayudas: borralos antes de entregar. Los ejemplos usan un país inventado, con datos inventados, solo para mostrar la forma. La rúbrica está al final.</p>
+    <p><b>País asignado:</b> ________ &nbsp; <b>Grupo n.º:</b> ____ &nbsp; <b>Fecha de entrega:</b> ________<br><b>Integrantes:</b> ________</p>
+    <p class="help">Extensión: hasta 1500 palabras para los apartados 1 a 10. No cuentan las tablas, los gráficos, el registro de decisiones, la declaración de uso de IA ni los aportes individuales. No hay mínimo: usen el recuadro “Vas bien si…” de su consigna para saber si está completo.</p>
+
+    <h2>1. Pregunta de investigación</h2>
+    <p class="help"><b>Cómo completarlo:</b> copiá textual la pregunta de tu país. No la reformules.</p>
+    <p>________</p>
+
+    <h2>2. Hipótesis inicial</h2>
+    <p class="help"><b>Cómo completarlo:</b> se escribe antes de explorar la app a fondo y después no se toca, aunque resulte equivocada. Una hipótesis es una respuesta tentativa a la pregunta, con un motivo. No es otra pregunta ni una definición.</p>
+    <div class="frase">Antes de analizar los datos, creemos que ___ porque ___.</div>
+    <div class="frase">Primera observación de la app: indicador ___ · año ___ · valor ___</div>
+    <p class="why"><b>Para qué sirve:</b> comprometerse con una respuesta que después se pone a prueba con los datos.</p>
+
+    <h2>3. Datos</h2>
+    <p class="help"><b>Cómo completarlo:</b> armá la tabla que pide la consigna de tu país en el apartado 3: una fila por año, una columna por indicador, con la unidad en el encabezado. Debajo, pegá un gráfico de la app y escribí la fuente, que aparece al pasar el mouse sobre el punto. En la defensa no se abre la app: todo dato que usen tiene que estar acá.</p>
+    <div class="tw"><table class="t">
+      <tr><th>Año</th><th>Indicador ___ (unidad)</th><th>Indicador ___ (unidad)</th><th>Indicador ___ (unidad)</th><th>…</th></tr>
+      <tr><td class="e"></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="e"></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td class="e"></td><td></td><td></td><td></td><td></td></tr>
+    </table></div>
+    <p>Fuente: ________</p>
+    <p>[Pegar acá el gráfico descargado de la app]</p>
+    <div class="frase">Gráfico 1: ___ (indicador), ___ (país), ___–___. Elegimos este gráfico porque ___.</div>
+    <p class="why"><span class="deci">◆ decisión</span> Qué gráfico incluir es una decisión: anotala en el apartado 4.</p>
+
+    <h2>4. Recorte y registro de decisiones</h2>
+    <p><b>Período explorado:</b> de ____ a ____</p>
+    <div class="tw"><table class="t">
+      <tr><th>Indicador elegido</th><th>Objetivo que permite observar</th><th>¿Central o de sostenibilidad?</th></tr>
+      <tr><td class="e"></td><td></td><td></td></tr><tr><td class="e"></td><td></td><td></td></tr><tr><td class="e"></td><td></td><td></td></tr>
+    </table></div>
+    <p class="help"><b>Recorte:</b> si la consigna de tu país pide elegir años o un tramo, usá la frase que indica en su apartado 4. Si los años ya están dados, pasá directo al registro.</p>
+    <div class="frase">Elegimos ___ (años o período) porque ___.</div>
+    <p class="why"><b>Para qué sirve:</b> justificar el recorte con lo que se ve en la tabla del apartado 3.</p>
+    <p class="help"><b>Registro de decisiones:</b> una decisión es un momento en que podían hacer dos cosas y eligieron una: cambiar un año, sumar o descartar un indicador, abandonar una idea. “Abrimos la app” o “buscamos el país” no son decisiones. La consigna de tu país marca con ◆ los momentos de decisión: cada uno es una fila. Si toman otras decisiones, agréguenlas. Ejemplo inventado: observamos que el indicador casi no cambiaba entre los dos años elegidos; decidimos ampliar el período tres años hacia atrás; porque así se ve si el valor era estable o venía de un cambio grande.</p>
+    <div class="tw"><table class="t">
+      <tr><th>Decisión</th><th>¿Qué observamos?</th><th>¿Qué decidimos hacer?</th><th>¿Por qué?</th></tr>
+      <tr><td>1</td><td class="e"></td><td></td><td></td></tr><tr><td>2</td><td class="e"></td><td></td><td></td></tr><tr><td>3</td><td class="e"></td><td></td><td></td></tr>
+    </table></div>
+
+    <h2>5. Interpretación</h2>
+    <p class="help"><b>Cómo completarlo:</b> un párrafo por cada indicador que pida la consigna de tu país en el apartado 5, con este modelo. El modelo dice qué muestra el dato; todavía no explica por qué ocurrió. Si comparás tres años, encadenalo: “pasó de ___ a ___ y luego a ___”.</p>
+    <div class="frase">Entre ___ y ___ (años), ___ (indicador) pasó de ___ a ___ (valores con unidad). Ese indicador permite observar ___ (objetivo). Esto muestra que ___.</div>
+    <p class="help">Ejemplo con un país inventado: entre 2001 y 2004, la tasa de desempleo pasó de 6,0% a 9,0%. Ese indicador permite observar el pleno empleo, un objetivo central. Esto muestra que una proporción mayor de quienes buscan trabajo no lo encuentra: la economía se alejó de ese objetivo en el período.</p>
+    <p class="why"><b>Para qué sirve:</b> llevar cada dato, con año y unidad, a lo que dice sobre un objetivo macroeconómico.</p>
+    <p>________</p>
+
+    <h2>6. Análisis del caso</h2>
+    <p class="help"><b>Cómo completarlo:</b> la consigna de tu país tiene uno o más bloques “Apartado 6”. Escribí cada uno con un subtítulo propio. Es la parte que responde lo específico de tu pregunta.</p>
+    <p>________</p>
+
+    <h2>7. Dato incómodo</h2>
+    <p class="help"><b>Cómo completarlo:</b> es un dato de la app que no encaja con lo que venían pensando: un indicador que se mueve distinto de lo esperado, un año que rompe la tendencia o un nivel que contradice la variación. Si nada los incomodó, todavía no lo buscaron: prueben con otro indicador, otro año o el nivel en lugar de la variación.</p>
+    <div class="frase">Nuestra primera interpretación era ___. Sin embargo, encontramos ___ (indicador, año, valor). Esto nos obliga a ___ nuestra interpretación porque ___.</div>
+    <p class="why"><b>Para qué sirve:</b> poner a prueba la propia lectura antes de cerrar el diagnóstico. <span class="deci">◆ decisión</span> Qué dato eligen es una decisión.</p>
+
+    <h2>8. Diagnóstico</h2>
+    <p class="help"><b>Cómo completarlo:</b> empezá con la frase de cierre que indica la consigna de tu país en el apartado 8, completa. Después desarrollala en texto corrido hasta responder la pregunta del apartado 1. No repitan indicador por indicador: relaciónenlos. No escriban “causó” o “provocó” si los datos solo muestran que dos cosas pasaron al mismo tiempo.</p>
+    <p><b>Lista de control.</b> Antes de entregar, verificá que tu diagnóstico diga:</p>
+    <ul class="check">
+      <li>qué evolucionó favorablemente, con un dato;</li>
+      <li>qué presenta dificultades, con un dato;</li>
+      <li>qué tensión aparece entre dos indicadores;</li>
+      <li>qué muestran los datos sobre la sostenibilidad;</li>
+      <li>qué haría falta saber para completar el diagnóstico.</li>
+    </ul>
+    <p class="why"><b>Para qué sirve:</b> la frase de cierre ordena la respuesta según lo que pregunta tu caso; la lista asegura que no falte ninguna dimensión.</p>
+
+    <h2>9. Revisión de la hipótesis</h2>
+    <p class="help"><b>Cómo completarlo:</b> elijan una sola opción y borren las otras. Cambiar la hipótesis no baja la nota: lo que se evalúa es que la decisión se apoye en un dato.</p>
+    <div class="frase">La hipótesis inicial: la mantenemos / la modificamos / la rechazamos. La evidencia decisiva fue ___ porque ___. Si la modificaron, la nueva versión es: ___.</div>
+
+    <h2>10. Límites</h2>
+    <p class="help"><b>Cómo completarlo:</b> un límite sirve cuando dice qué dato falta y por qué importa. “Faltan datos” no alcanza. Lugares donde buscar: años sin datos, cambios de fuente dentro de la serie, diferencia entre tasa y cantidad, y lo que la app no muestra. Si la consigna de tu país tiene un bloque “Apartado 10”, usalo acá.</p>
+    <div class="frase">A partir de estos indicadores podemos afirmar que ___, pero no podemos concluir ___.</div>
+    <p class="why"><b>Para qué sirve:</b> separar lo que los datos sostienen de lo que no.</p>
+
+    <h2>Declaración de uso de IA</h2>
+    <p class="help"><b>Cómo completarlo:</b> usar IA no baja la nota; lo que cuenta es que puedan explicar y defender todo lo que entregan. Si no usaron ninguna, escriban “No usamos herramientas de IA” y dejen el resto en blanco.</p>
+    <p>Herramientas de IA utilizadas: ___<br>¿Para qué las utilizamos? ___<br>¿Qué parte del trabajo produjeron o ayudaron a producir? ___<br>¿Qué revisamos o modificamos nosotros? ___</p>
+
+    <h2>Aportes individuales</h2>
+    <p class="help"><b>Cómo completarlo:</b> un bloque por integrante, de 80 a 120 palabras, escrito por cada uno.</p>
+    <p>Integrante (nombre y apellido): ___<br>Mi principal aporte al trabajo fue ___. La evidencia que trabajé directamente fue ___. La decisión que ayudé a tomar fue ___.</p>
+
+    <h2>Rúbrica</h2>
+    <p class="help">Cada criterio dice qué tiene que mostrar el trabajo. Las dos columnas de la derecha están en blanco: ahí el docente anota qué lograron y qué falta. Antes de entregar, úsenla ustedes: lean cada criterio y revisen los apartados indicados.</p>
+    <div class="tw"><table class="t">
+      <tr><th>Criterio</th><th>Dónde se ve</th><th>Qué se logró</th><th>Qué falta</th></tr>
+      <tr><td><b>1. Evidencia.</b> Usan datos concretos (año, valor, unidad), transcriptos en el informe, y dicen qué muestra cada indicador sobre su objetivo.</td><td>3, 5</td><td class="e"></td><td></td></tr>
+      <tr><td><b>2. Diagnóstico.</b> Relacionan los indicadores para responder la pregunta del caso, sin confundir coincidencia con causa, y distinguen resultados actuales de sostenibilidad.</td><td>6, 8</td><td class="e"></td><td></td></tr>
+      <tr><td><b>3. Proceso.</b> Justifican sus decisiones, revisan la hipótesis con un dato y dicen qué no se puede concluir.</td><td>2, 4, 7, 9, 10</td><td class="e"></td><td></td></tr>
+      <tr><td><b>4. Defensa.</b> Todos pueden explicar el razonamiento y ubicar en el informe el dato que sostiene cada afirmación.</td><td>Todo el informe</td><td class="e"></td><td></td></tr>
+    </table></div>
+  </section>
+</div>
+
+<script>
+const blank=s=>s.replace(/___/g,'<span class="b"></span>');
+const T=(w,e,d)=>({w,e,d:!!d}), N=s=>({note:s}), F=s=>({frase:s});
+const G3=T('Elegí qué gráfico de la app incluís: el que mejor muestre algo que vas a usar en el diagnóstico. Descargalo con el ícono de la cámara.','el gráfico, su título, la fuente y por qué lo eligieron.',1);
+const G7=T('Revisá tu tabla y buscá un dato que no encaje con lo que escribiste hasta acá: un indicador que se mueve distinto de lo esperado, un año que rompe la tendencia o un nivel que contradice la variación.','la frase del dato incómodo, completa (plantilla, apartado 7).',1);
+const TIT={2:'Hipótesis inicial',3:'Datos',4:'Recorte y decisiones',5:'Interpretación',6:'Análisis del caso',7:'Dato incómodo',8:'Diagnóstico',9:'Revisión de la hipótesis',10:'Límites'};
+const P={
+ 'Argentina':{q:'¿Cómo evolucionaron conjuntamente la actividad económica, el empleo y los precios en Argentina entre 2012 y 2019?',
+  pr:['Pregunta de profundización','¿Podés decir simplemente que la situación macroeconómica mejoró o empeoró? ¿Qué cambia cuando separás las distintas dimensiones?'],a:{
+  3:[T('Buscá crecimiento del PBI, tasa de desempleo e inflación para cada año de 2012 a 2019.','una tabla con los tres indicadores, año por año.')],
+  4:[T('Dividí 2012–2019 en dos tramos, o elegí dos años, que muestren situaciones distintas.','“Elegimos ___ y ___ porque ___.”',1)],
+  5:[T('Compará los dos períodos para cada indicador con el modelo de interpretación.','un párrafo por indicador: tres en total.'),T('Sumá la sostenibilidad: elegí resultado fiscal, deuda pública o cuenta corriente y seguí su trayectoria en todo el período.','un párrafo con el modelo y una oración que diga si ese indicador mejora, empeora o se mantiene.',1)],
+  6:[T('<b>Evolución conjunta.</b> Marcá en tu tabla los años en que el PBI cae. En esos años, ¿la inflación y el desempleo suben, bajan o no muestran un patrón claro?','una oración que solo describa lo que se ve: “En los años en que ___, ___.” Sin explicar por qué.'),T('<b>Nivel y variación.</b> En Explorar un país, abrí “Niveles y tasas” y empezá el período en 2011, el año anterior al tramo (ese año vale 100). Compará el valor de 2019 con 100.','una oración que diga si en 2019 se producía más, menos o lo mismo que en 2011, y qué dice eso sobre los años de crecimiento positivo.')],
+  8:[F('Si miramos solo ___, diríamos que la situación ___; pero al incorporar ___ vemos que ___.')]}},
+ 'China':{q:'¿El fuerte crecimiento económico de China entre 1991 y 2005 estuvo acompañado por una mejora equivalente del empleo?',
+  pr:['Pregunta de profundización','¿Qué parte de tu respuesta es observación y qué parte es explicación?'],a:{
+  3:[T('Buscá crecimiento del PBI, tasa de desempleo y tasa de empleo para cada año de 1991 a 2005.','una tabla con los tres indicadores, año por año.')],
+  4:[T('Elegí un período de al menos cinco años seguidos de crecimiento positivo. Marcá un año inicial y uno final.','“Elegimos de ___ a ___ porque ___.”',1)],
+  5:[T('Antes, aclará qué mide cada tasa (está en la tabla de indicadores de la consigna general). Después compará el año inicial con el final para cada indicador, con el modelo de interpretación.','un párrafo por indicador: tres en total, y una oración que diga en qué se diferencian la tasa de desempleo y la tasa de empleo.'),T('Sumá la sostenibilidad: elegí resultado fiscal o deuda pública y fijate desde qué año tiene datos.','un párrafo con el modelo y el primer año con datos.',1)],
+  6:[T('<b>Describir la relación.</b> Fijate si el crecimiento, el desempleo y el empleo se mueven en el mismo sentido durante el período.','una oración que solo describa lo que se ve: “Mientras ___, ___.” Sin explicar por qué.'),T('<b>Proponer una explicación y ponerla a prueba.</b> Pensá una razón posible para lo que describiste. Después preguntate qué dato haría falta para comprobarla y si la app lo tiene.','“Una posible explicación es ___. Para comprobarla haría falta ___. La app ___ lo muestra.”')],
+  8:[F('Observamos que ___. Una posible explicación es ___, pero los datos no permiten demostrarla porque ___.')],
+  10:[N('El dato que, según el apartado 6, haría falta para comprobar tu explicación es un buen punto de partida para este apartado.')]}},
+ 'Japón':{q:'¿Qué nos muestra Japón sobre la diferencia entre la situación fiscal y la situación externa?',
+  pr:['Pregunta de profundización','¿Por qué déficit fiscal y déficit comercial no significan lo mismo?'],a:{
+  3:[T('Buscá resultado fiscal, saldo comercial y deuda pública para cada año de 2000 a 2008.','una tabla año por año que indique, para resultado fiscal y saldo comercial, si hay déficit o superávit.')],
+  4:[T('Elegí dos años o dos tramos dentro de 2000–2008 que muestren situaciones distintas.','“Elegimos ___ y ___ porque ___.”',1)],
+  5:[T('Compará los dos períodos para resultado fiscal y saldo comercial con el modelo. Decí qué objetivo permite observar cada uno.','un párrafo por indicador: dos en total.'),T('Compará la trayectoria de la deuda pública con la del resultado fiscal: cuando el déficit se achica, ¿la deuda baja?','un párrafo con el modelo y una oración que responda la pregunta con dos años concretos.'),T('Sumá un objetivo central: elegí crecimiento o inflación para los mismos períodos.','un párrafo con el modelo.',1)],
+  6:[T('<b>Comparar las dos dimensiones.</b> Fijate si resultado fiscal y saldo comercial tienen el mismo signo en los mismos años.','una oración que responda, con años de tu tabla: ¿puede un país tener déficit fiscal y superávit comercial a la vez?')],
+  8:[F('El resultado fiscal permite observar ___; el saldo comercial permite observar ___. Por eso ___.')],
+  10:[T('La app dice cuánto debe el Estado, pero no en qué condiciones. Pensá qué le preguntarías a alguien que debe mucho dinero para saber si va a poder pagarlo.','dos preguntas que la app no responde y, para cada una, cómo cambiaría tu conclusión según la respuesta.')]}},
+ 'España':{q:'¿La recuperación de la economía española después de la crisis ocurrió al mismo tiempo en producción, empleo y precios?',
+  pr:['Pregunta de precisión','¿Estás hablando del nivel de una variable o de su variación?'],a:{
+  3:[T('Buscá crecimiento del PBI, tasa de desempleo e inflación para cada año de 2008 a 2019, desde el comienzo de la crisis.','una tabla con los tres indicadores, año por año.')],
+  4:[T('Ubicá tres años clave: el de mayor deterioro (decí con qué indicador lo definís: no todos tocan fondo el mismo año), el año desde el cual el crecimiento es positivo todos los años y el último del período.','los tres años y, para cada uno, el dato que lo justifica.',1)],
+  5:[T('Compará esos tres años para cada indicador con el modelo de interpretación.','un párrafo por indicador: tres en total.'),T('Sumá la deuda pública y compará su trayectoria con la del crecimiento.','un párrafo con el modelo.')],
+  6:[T('<b>Nivel y variación.</b> En Explorar un país, abrí “Niveles y tasas” y empezá el período en 2007, antes de la crisis (ese año vale 100). Buscá en qué año el PBI real vuelve a superar 100.','una oración con ese año y otra que lo compare con el año en que el crecimiento pasó a ser positivo.'),T('<b>Secuencia.</b> Ordená en el tiempo cuándo cambia cada indicador. Para el desempleo, anotá en qué año empieza a bajar y con qué valor termina el período.','una línea por indicador: deterioro (años) → cambio (año) → recuperación (años), y una oración que diga si el desempleo de 2019 es alto o bajo comparado con el de 2012.')],
+  8:[F('La recuperación de ___ empieza en ___; la de ___, en ___. Hablamos de nivel cuando ___ y de variación cuando ___.')]}},
+ 'Alemania':{q:'¿Qué podemos concluir y qué no podemos concluir a partir de una balanza comercial persistentemente positiva?',
+  intro:'En la app, la balanza comercial aparece como “Saldo comercial de bienes y servicios”: incluye los servicios, que la definición del apunte no cuenta.',
+  pr:['Pregunta de profundización','¿Qué información adicional necesitarías para transformar este indicador en un diagnóstico más completo?'],a:{
+  3:[T('Buscá el saldo comercial y la cuenta corriente para cada año de 1993 a 2008. Cuando elijas el tramo (apartado 4), sumá crecimiento, desempleo y resultado fiscal para esos años.','una tabla año por año, completa.')],
+  4:[T('Elegí un tramo de entre cinco y ocho años seguidos con saldo comercial positivo.','“Elegimos de ___ a ___ porque ___.”',1)],
+  5:[T('Interpretá con el modelo, dentro del tramo, el saldo comercial, el crecimiento, el desempleo y el resultado fiscal.','un párrafo por indicador: cuatro en total.')],
+  6:[T('<b>Poner a prueba dos ideas.</b> “Si hay superávit comercial, la economía crece mucho” y “si hay superávit comercial, hay superávit fiscal”. Buscá en tu tabla años del tramo que las confirmen o las contradigan.','para cada idea: si se cumple siempre, a veces o nunca, con el año y el dato que lo muestran.'),T('<b>Comparar con la cuenta corriente.</b> Mirá todo 1993–2008: ¿desde qué año hay datos de cuenta corriente? ¿Tiene siempre el mismo signo que el saldo comercial?','una oración con los años en que coinciden y los años en que no.')],
+  8:[F('La balanza comercial permite observar ___, pero no permite determinar ___.')]}},
+ 'Corea del Sur':{q:'¿Podemos caracterizar 2004–2007 como un período de desempeño macroeconómico favorable?',
+  pr:['Pregunta de profundización','¿Un período favorable implica que la economía resolvió definitivamente sus problemas macroeconómicos?'],a:{
+  3:[T('Elegí un indicador por cada uno de los cinco objetivos (crecimiento, pleno empleo, estabilidad de precios, sostenibilidad fiscal, sostenibilidad externa) y buscá sus valores de 2004 a 2009.','una tabla de cinco indicadores por seis años.',1)],
+  4:[N('El período está dado: no hace falta la frase “Elegimos…”. Completá el período explorado, la tabla de indicadores y el registro de las decisiones ◆ de los otros apartados.')],
+  5:[T('Compará 2004 con 2007 para cada indicador con el modelo de interpretación.','un párrafo breve (dos o tres oraciones) por indicador: cinco en total.')],
+  6:[T('<b>Clasificar.</b> Decidí si cada indicador muestra un resultado favorable, desfavorable o no concluyente para su objetivo entre 2004 y 2007.','una tabla: indicador, clasificación y el dato que la justifica.'),T('<b>El menos claro.</b> Es el que más te costó clasificar o el que cambia de dirección dentro del período.','cuál es y por qué, en dos oraciones.',1),T('<b>Extender la observación.</b> Mirá 2008 y 2009 en tu tabla.','una oración por cada indicador que cambie de dirección.')],
+  8:[F('Caracterizamos 2004–2007 como ___ porque ___, aunque ___.'),N('En el desarrollo, respondé: ¿hace falta que todos los indicadores sean favorables para hablar de una buena situación macroeconómica? Apoyá la respuesta en tu tabla.')]}},
+ 'Polonia':{q:'¿La fuerte reducción de la inflación entre 1991 y 1995 implicó una mejora general de la situación macroeconómica de Polonia?',
+  pr:['Pregunta de profundización','¿Qué muestra este caso sobre los límites de un diagnóstico construido con pocos indicadores?'],a:{
+  3:[T('Buscá crecimiento del PBI, inflación, tasa de desempleo y tasa de empleo para cada año de 1991 a 1995.','una tabla con los cuatro indicadores, año por año.')],
+  4:[T('Vas a comparar 1991 y 1995. Sumá un año intermedio que ayude a ver cómo fue el camino.','“Sumamos ___ porque ___.”',1)],
+  5:[T('Compará esos tres años para crecimiento, inflación y desempleo con el modelo de interpretación.','un párrafo por indicador: tres en total.'),T('Revisá la sostenibilidad: buscá resultado fiscal, deuda pública, saldo comercial y cuenta corriente, y anotá desde qué año tiene datos cada uno. Elegí uno para interpretar: puede ser uno con datos para todo el período o uno que empieza después; en ese caso, decí desde qué año lo mirás y qué años quedan sin observar.','qué indicadores tienen datos para 1991–1995 y cuáles no, y un párrafo con el modelo para el que elegiste.',1)],
+  6:[T('<b>Diagnóstico con dos indicadores.</b> Mirá solo el crecimiento y la inflación.','una oración con la conclusión a la que llegarías.'),T('<b>Sumar el empleo.</b> Fijate si la tasa de desempleo mejoró, empeoró o quedó igual. Después comparala con la tasa de empleo: ¿cuentan la misma historia?','una oración que diga si la conclusión anterior se mantiene y otra que compare las dos tasas.')],
+  8:[F('Con crecimiento e inflación solamente concluiríamos que ___; al incorporar ___, el diagnóstico ___.')],
+  10:[N('Incluí lo que no podés evaluar por falta de datos de sostenibilidad (apartado 5).')]}},
+ 'Sudáfrica':{q:'¿Podemos afirmar que la situación macroeconómica de Sudáfrica mejoró o empeoró entre 2008 y 2009?',
+  pr:['Pregunta de profundización','¿Cómo puede ocurrir que un indicador mejore mientras otros empeoran?'],a:{
+  3:[T('Elegí un indicador por cada uno de los cinco objetivos (crecimiento, pleno empleo, estabilidad de precios, sostenibilidad fiscal, sostenibilidad externa) y buscá sus valores de 2008, 2009 y 2010. Agregá una columna que diga si cada uno sube, baja o se mantiene entre 2008 y 2009.','una tabla de cinco indicadores.',1)],
+  4:[N('Los años están dados: no hace falta la frase “Elegimos…”. Completá el período explorado, la tabla de indicadores y el registro de las decisiones ◆ de los otros apartados.')],
+  5:[T('Compará 2008 con 2009 para cada indicador con el modelo de interpretación.','un párrafo breve (dos o tres oraciones) por indicador: cinco en total.')],
+  6:[T('<b>Clasificar.</b> Decidí si cada movimiento es favorable, desfavorable o no concluyente para su objetivo. Ojo: que un saldo pase de negativo a positivo, o que un número baje, no significa automáticamente una mejora.','otra columna en la tabla, con una oración que justifique cada clasificación.'),T('<b>Sentidos opuestos.</b> Compará las clasificaciones y elegí indicadores que vayan en sentidos opuestos.','al menos un par: “Mientras ___, ___.”',1),T('<b>Extender a 2010.</b> Mirá la columna de 2010.','una oración que diga si la dirección de cada indicador se mantiene.')],
+  8:[F('No puede afirmarse simplemente que la situación ___, porque ___.')]}}
+};
+function blocks(k){
+  const a=P[k].a,o={};
+  o[2]=[T('Antes de explorar la app a fondo, escribí la hipótesis inicial y una primera observación (indicador, año y valor).','la hipótesis con su motivo y la primera observación.')];
+  o[3]=[...a[3],G3];
+  for(const n of [4,5,6]) o[n]=a[n]||[];
+  o[7]=[G7];
+  o[8]=[...a[8],N('Después de la frase, desarrollá el diagnóstico con la lista de control de la plantilla.')];
+  o[9]=[N('Seguí la plantilla: decidan si mantienen, modifican o rechazan la hipótesis, con el dato decisivo.')];
+  o[10]=a[10]||[N('Seguí la plantilla.')];
+  return o;
+}
+const rItem=x=>x.note?`<p class="why">${blank(x.note)}</p>`:x.frase?`<div class="frase">${blank(x.frase)}</div><p class="why">Queda escrito: la frase completa.</p>`:`<div class="task"><div>${x.d?'<span class="deci">◆ decisión</span> ':''}${blank(x.w)}</div><div class="write">${blank(x.e)}</div></div>`;
+const strip=s=>s.replace(/<[^>]+>/g,'');
+function renderPais(k){
+  const B=blocks(k), i=Object.keys(P).indexOf(k)+1;
+  const nd=Object.values(B).flat().filter(x=>x.d).length;
+  let h=`<p class="help">Cada bloque lleva el número del apartado de la plantilla donde se escribe. <span class="deci">◆ decisión</span> marca un momento en que tu grupo elige: además de hacerlo, anotalo en el registro del apartado 4 (tu caso tiene ${nd}). El modelo de interpretación está en la plantilla, apartado 5. Las reglas comunes están en la consigna general.</p>
+  <div class="eyebrow">Grupo ${i}</div><h1>${k}</h1>
+  <div class="blk"><div class="ap">Apartado 1 · Pregunta de investigación</div><p class="pq">${P[k].q}</p></div>${P[k].intro?'<p>'+P[k].intro+'</p>':''}`;
+  for(let n=2;n<=10;n++) h+=`<div class="blk"><div class="ap">Apartado ${n} · ${TIT[n]}</div>${B[n].map(rItem).join('')}</div>`;
+  h+=`<h2>Para preparar la defensa</h2><p class="why">${P[k].pr[0]}. El docente puede empezar la defensa por esta pregunta: no se responde por escrito, pero tu diagnóstico tiene que darte con qué contestarla.</p><p class="pq">${P[k].pr[1]}</p>`;
+  // lista de verificación
+  const items=[];
+  for(let n=2;n<=10;n++) B[n].forEach(x=>{ if(x.e) items.push(`<b>${n}.</b> ${blank(x.e.charAt(0).toUpperCase()+x.e.slice(1))}`); else if(x.frase) items.push(`<b>${n}.</b> La frase de cierre, completa, y el desarrollo con la lista de control.`); });
+  items.push('<b>9 y 10.</b> La revisión de la hipótesis y el límite, con las frases de la plantilla.');
+  h+=`<div class="vas"><h3>Vas bien si tu informe ya tiene…</h3><ul class="check">${items.map(x=>'<li>'+x+'</li>').join('')}</ul><p class="why">Si tenés todo esto en su apartado, cumplís con lo que pide tu caso. Lo que sigue es mejorar la calidad: datos con unidad, relaciones entre indicadores y nada de “causó” sin evidencia.</p></div>`;
+  document.getElementById('v-pais').innerHTML=h;
+}
+let view='pais',cur='Argentina';
+function render(){
+  document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===view));
+  ['gen','pais','pla'].forEach(v=>document.getElementById('v-'+v).hidden=v!==view);
+  const tabs=document.getElementById('tabs'); tabs.hidden=view!=='pais';
+  tabs.innerHTML=Object.keys(P).map((k,i)=>`<button type="button" aria-pressed="${k===cur}" data-k="${k}">Grupo ${i+1} · ${k}</button>`).join('');
+  if(view==='pais')renderPais(cur);
+}
+document.getElementById('views').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;view=b.dataset.v;render();scrollTo(0,0)});
+document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cur=b.dataset.k;render()});
+document.querySelectorAll('#v-pla .frase, #v-gen p').forEach(el=>{el.innerHTML=blank(el.innerHTML)});
+render();
+</script>
+</body>
+</html>

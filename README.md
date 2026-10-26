@@ -30,6 +30,14 @@ Rscript tests/testthat.R
 The tests load the bundled snapshot, build every tab's UI and render every
 chart and panel with real data, so a change that breaks a tab fails the run.
 
+## Assignment page
+
+`docs/consigna/index.html` is the group assignment built on the app (in
+Spanish): the general brief, one brief per country and the report template with
+its rubric. It is a single static page with no build step. `netlify.toml`
+publishes that folder on Netlify; `.rscignore` keeps it out of the Shiny
+deployment.
+
 ## Data
 
 The app loads data in this order:

@@ -1,0 +1,5 @@
+# The assignment page (docs/consigna) is published on Netlify; the Shiny app
+# itself runs on Posit Connect Cloud. No build step: the page is static HTML.
+[build]
+  publish = "docs/consigna"
+  command = ""

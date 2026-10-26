@@ -2,6 +2,13 @@
 
 Notable changes to *Exploring Macroeconomics Through Data*.
 
+## 2026-10-26 (assignment page)
+
+### Added
+- **`docs/consigna/index.html`**: the group assignment that uses the app, with
+  the teacher's e-mail replaced by "al correo del docente" and the app's
+  address as a link. `netlify.toml` publishes it on Netlify.
+
 ## 2026-10-26 (every hover names its source)
 
 ### Fixed
