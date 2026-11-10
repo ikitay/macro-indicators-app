@@ -65,6 +65,9 @@ table.t td.e{height:30px}
 .vas{background:var(--ok-soft);border-radius:6px;padding:14px 16px;display:grid;gap:8px}
 .vas h3{color:var(--ok);font-size:1.05rem}
 .vas li::before{color:var(--ok)}
+.aviso{background:var(--deci-soft);border-left:3px solid var(--deci);border-radius:6px;padding:14px 16px;display:grid;gap:10px}
+.aviso h3{color:var(--deci);font-size:1.05rem}
+.aviso .dl{font-weight:600}
 </style>
 </head>
 <body>
@@ -106,6 +109,28 @@ table.t td.e{height:30px}
       <li>qué no puede determinarse con los indicadores utilizados.</li>
     </ul>
     <p>Material de base: apunte <i>La mirada macroeconómica: objetivos e indicadores</i>.</p>
+
+    <div class="aviso" id="sin-app">
+      <h3>Si la app no está disponible</h3>
+      <p>La app puede quedar fuera de servicio. Para terminar el trabajo igual, tenés dos caminos. La consigna, la plantilla y la rúbrica no cambian.</p>
+      <p class="dl">1. <a href="datos_app_8_paises.xlsx" download>Descargar la planilla con los datos de la app</a> (Excel, 8 países, 1990–2023)</p>
+      <p>Son los mismos valores que mostraba la app: una hoja por país, una fila por año, una columna por indicador. La hoja «Léeme» dice la fuente y el código de cada indicador.</p>
+      <p class="dl">2. Buscar los datos directamente en las fuentes</p>
+      <div class="tw"><table class="t">
+        <tr><th>Indicador</th><th>Fuente y código</th></tr>
+        <tr><td>Crecimiento del PBI real (%)</td><td><a href="https://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG" target="_blank" rel="noopener">Banco Mundial · NY.GDP.MKTP.KD.ZG</a></td></tr>
+        <tr><td>Tasa de desempleo (%)</td><td><a href="https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS" target="_blank" rel="noopener">Banco Mundial · SL.UEM.TOTL.ZS</a></td></tr>
+        <tr><td>Tasa de empleo (%)</td><td><a href="https://data.worldbank.org/indicator/SL.EMP.TOTL.SP.ZS" target="_blank" rel="noopener">Banco Mundial · SL.EMP.TOTL.SP.ZS</a></td></tr>
+        <tr><td>Inflación (%)</td><td><a href="https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG" target="_blank" rel="noopener">Banco Mundial · FP.CPI.TOTL.ZG</a> (Argentina 2007–2016: usá la planilla)</td></tr>
+        <tr><td>Resultado fiscal (% del PBI)</td><td><a href="https://www.imf.org/external/datamapper/GGXCNL_NGDP@WEO" target="_blank" rel="noopener">FMI · GGXCNL_NGDP</a></td></tr>
+        <tr><td>Deuda pública (% del PBI)</td><td><a href="https://www.imf.org/external/datamapper/GGXWDG_NGDP@WEO" target="_blank" rel="noopener">FMI · GGXWDG_NGDP</a></td></tr>
+        <tr><td>Saldo comercial de bienes y servicios (% del PBI)</td><td><a href="https://data.worldbank.org/indicator/NE.RSB.GNFS.ZS" target="_blank" rel="noopener">Banco Mundial · NE.RSB.GNFS.ZS</a></td></tr>
+        <tr><td>Cuenta corriente (% del PBI)</td><td><a href="https://data.worldbank.org/indicator/BN.CAB.XOKA.GD.ZS" target="_blank" rel="noopener">Banco Mundial · BN.CAB.XOKA.GD.ZS</a></td></tr>
+        <tr><td>Inversión extranjera directa (% del PBI)</td><td><a href="https://data.worldbank.org/indicator/BX.KLT.DINV.WD.GD.ZS" target="_blank" rel="noopener">Banco Mundial · BX.KLT.DINV.WD.GD.ZS</a></td></tr>
+      </table></div>
+      <p>En el Banco Mundial elegí el país con «Add country» y bajá los datos con «Download → Excel». En el FMI elegí el país en el mapa o la lista. Los años posteriores a 2023 del FMI son proyecciones: no los uses.</p>
+      <p><b>Sin la app:</b> el gráfico del apartado 3 puede ser una captura del gráfico de la fuente o uno hecho por el grupo en una planilla. En «Fuente» escribí el organismo, el código del indicador y la fecha de consulta.</p>
+    </div>
 
     <h2>Cómo usar la app</h2>
     <div class="tw"><table class="t">
